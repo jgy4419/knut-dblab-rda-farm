@@ -1,0 +1,113 @@
+.h3_middle{
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+}
+
+.h3_left{
+    display: flex;
+    text-align: center;
+
+    font-size: 22px;
+    float: left;
+}
+
+.h3_left1{
+    display: inline;
+    text-align: center;
+
+    font-size: 22px;
+    float: left;
+
+}
+
+.h4_left{
+    text-align: left;
+
+    font-size: 15px;
+    float: left;
+    
+}
+
+.divw100 {
+    background-color: #fff;
+    height: 100px;
+    border-top: 10px solid #f1f1f1;
+  }
+  
+  .divinw100 {
+    margin: 5%;
+    
+  }
+
+  .divw250 {
+    background-color: #fff;
+    height: 130px;
+    border-top: 10px solid #f1f1f1;
+  }
+  
+
+  
+  .styled2 {
+    display: inline;
+    border: 0;
+    line-height: 3;
+    text-align: center;
+    color: #fff;
+    border-radius: 13px;
+    background-color: lightsalmon;
+    width: 15%;
+    border-radius:15px;
+    float: right;
+  }
+
+  .styled3 {
+    display: inline;
+    border: 0;
+    line-height: 3;
+    text-align: center;
+    color: #fff;
+    border-radius: 13px;
+    background-color: lightsalmon;
+    width: 35%;
+    border-radius:15px;
+    float: left;
+    margin-left: 10%;
+  }
+
+  .styled4 {
+    display: inline;
+    border: 0;
+    line-height: 3;
+    text-align: center;
+    color: #fff;
+    border-radius: 13px;
+    background-color: lightsalmon;
+    width: 35%;
+    border-radius:15px;
+    float: right;
+    margin-right: 10%;
+  }
+
+  .select_box{
+      display: inline;
+      display: inline-block;
+      margin-left: 10%;
+  }
+
+  .state_button.qna1 {
+    display: inline;
+    text-align: center;  
+    width: 55px;
+    height: 20px;
+    margin: 0 auto;
+    color: #a5a5a5;
+    font-size: 12px;
+    line-height: 18px;
+    text-decoration: none;
+}
+
+.whitefont1 {
+    color: #fff;
+    font-size: 15px;
+}

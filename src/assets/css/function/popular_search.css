@@ -1,0 +1,114 @@
+.home .aside .group_aside .aside_popular {
+    border-top: 0 none;
+}
+
+.home .aside .group_aside .aside_area {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    padding-top: 28px;
+    border-top: 1px solid #d1d1d1;
+}
+
+.home .aside h3.h_popular {
+    background-position: 0 -650px;
+}
+
+.home .aside h3 {
+    height: 17px;
+    background: url(https://ssl.pstatic.net/static/nfinance/2018/10/24/h_home.png) no-repeat;
+    font-size: 12px;
+}
+
+.aside h3 {
+    height: 17px;
+    background: #fff url(https://ssl.pstatic.net/static/nfinance/img2/h_aside.gif) no-repeat;
+    font-size: 12px;
+}
+
+
+h3 {
+    display: block;
+    font-size: 1.17em;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+}
+
+.tbl_home tbody th {
+    height: 22px;
+    padding-top: 2px;
+    font-weight: normal;
+    text-align: left;
+}
+
+.tbl_home tbody td {
+    /* color: #666; */
+    font-family: tahoma,sans-serif;
+    text-align: right;
+}
+
+.tbl_home tbody tr.down td {
+    color: #003ace;
+}
+
+.tbl_home tbody tr.up td {
+    color: #e00400;
+}
+
+.tbl_home tbody td em.bu_p {
+    margin: -1px 0 1px;
+    _margin: 1px 0 -1px;
+    vertical-align: middle;
+}
+
+.bu_pup {
+    width: 7px !important;
+    height: 6px !important;
+}
+
+
+
+.bu_p {
+    display: inline-block !important;
+    background: url(https://ssl.pstatic.net/static/nfinance/img/spr_bu.gif) no-repeat;
+}
+
+.bu_pdn {
+    width: 7px !important;
+    height: 6px !important;
+    background-position: 0 -80px;
+}
+
+.tbl_home {
+    width: 100%;
+    margin-top: 6px;
+    border: 0;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+.home .aside .tbl_home tbody th em {
+    margin-right: 5px;
+    color: #6879ab;
+    font-family: tahoma;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+em, address {
+    font-style: normal;
+    margin-right: 5px;
+    color: #6879ab;
+    font-family: tahoma;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.btn_more em.btn_more4 {
+    width: 38px;
+    height: 15px;
+    background-position: 0 -90px;
+}

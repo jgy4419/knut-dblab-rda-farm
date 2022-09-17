@@ -1,0 +1,47 @@
+.check {
+	margin-top:15px;
+}
+.check>li {
+	float:left;
+	width:50%;
+	height:60px;
+}
+.check>li>button {
+	display:block;
+	width:100%;
+	/* height:100%; */
+	font-size:20px;
+	text-align:center;
+	line-height:60px;
+}
+
+.button1::after {
+	content:"";
+	display:block;
+	clear:both;
+}
+
+.button-100::after>li {
+	float:left;
+	width:100%;
+	height:60px;
+}
+
+.button-100>li>button {   
+	float:left;
+	width:50%;
+	height:60px;
+	display:block;
+	width:100%;
+	/* height:100%; */
+	font-size:20px;
+	text-align:center;
+	line-height:60px;
+	content:"";
+	display:block;
+	clear:both;
+}
+
+.circle_image{
+	border-radius: 70%;
+}

@@ -1,0 +1,88 @@
+.h4_middle_20{
+    text-align: center;
+    font-size: 20PX;
+    font: bold;
+}
+
+.h4_middle_17_left{
+    text-align: center;
+    font-size: 20PX;
+    font: bold;
+    width: 50%;
+    float: left; 
+}
+
+.h4_middle_17_right{
+
+    text-align: center;
+    font-size: 20PX;
+    font: bold;
+    width: 50%;
+    float: right; 
+}
+
+.button_little {
+    display: inline;
+    border: 0;
+    line-height: 2;
+    text-align: center;
+    color: #fff;
+    border-radius: 13px;
+    background-color: lightsalmon;
+    width: 80%;
+    margin: 10%;
+  }
+
+.div50_left{
+    display: flex;
+    border: 0;
+    width: 50%;
+    height: 200px;
+    float: left;
+
+}
+
+.div50_right {
+    display: flex;
+    border: 0;
+    width: 50%;
+    height: 200px;
+    float: right;
+
+}
+
+.div12_left{
+    display: flex;
+    border: 0;
+    margin-left: 2%;
+    width: 12%;
+    float: left;
+    margin-bottom: 5px;
+    text-align: center;
+
+}
+
+.div12_middle{
+    display: flex;
+    border: 0;
+    width: 12%;
+    float: left;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.div12_right{
+    display: flex;
+    border: 0;
+    width: 12%;
+    margin-right: 2%;
+    float: right;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.trand_image3{
+    width: 90%;
+    margin: 5%;
+
+}

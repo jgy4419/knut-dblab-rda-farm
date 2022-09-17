@@ -1,0 +1,95 @@
+
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    margin: 0px 30px;
+  }
+
+  .login-form-label{
+    font-family : bold;
+  }
+  
+  .login-form__input {
+    padding: 15px 0px;
+    border: none;
+    font-size: 16px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    transition: border-color 0.3s ease-in-out;
+  }
+  
+  .login-form__input::placeholder {
+    color: rgba(0, 0, 0, 0.4);
+  }
+  
+  .login-form__input:focus {
+    border-color: lightsalmon;
+  }
+  
+  .login-form__btn {
+    background-color: lightsalmon;
+    border-radius: 20px;
+    border: 1px solid lightgrey;
+    border-width: 0 3px 5px 0;
+    cursor: pointer;
+    padding: 15px 0px;
+    margin-bottom: 20px;
+    font-size: 16px;
+  }
+
+  .login-form__btn_right {
+    background-color: lightsalmon;
+    border-radius: 20px;
+    border: 1px solid lightgrey;
+    border-width: 0 3px 5px 0;
+    cursor: pointer;
+    padding: 15px 0px;
+    margin-bottom: 20px;
+    font-size: 16px;
+  }
+  
+  .login-form__a {
+    text-align: center;
+    font-size: 14px;
+  }
+  
+  @keyframes hideSplashScreen {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+      visibility: hidden;
+      /* visibility:hidden 있어야 애니메이션 사라지고 정상적으로 화면 클릭 등 가능해짐 */
+    }
+  }
+  
+  .splash-screen {
+    background-color: white;
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 150px;
+    animation: hideSplashScreen 1s ease-in-out forwards;
+    animation-delay: 1s;
+    /* delay하면 그동안 멈춰있다가 이 시간 후에 애니메이션 시작 */
+  }
+  
+  h3 {
+    margin: 19px 0 8px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+  .information-form__input {
+    padding: 15px 0px;
+    border: none;
+    font-size: 16px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    transition: border-color 0.3s ease-in-out;
+  }

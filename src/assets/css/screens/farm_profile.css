@@ -1,0 +1,104 @@
+.n-section-title {
+    border-bottom: 3px solid #000000;
+    padding-bottom: 14px;
+    margin-top: 48px;
+    font-family: "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    line-height: 1.5;
+    font-size: 14px;
+    position: relative;
+}
+
+/* 상단 제목 */
+.n-section-title .tit {
+    display: inline-block;
+    font-size: 24px;
+    font-family: "Musinsa", sans-serif !important;
+}
+
+
+.n-table {
+    width: 100%;
+    font-family: "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    line-height: 1.5;
+    font-size: 14px;
+    border-collapse: collapse;
+    /* table-layout: fixed; */
+}
+
+.n-table.table-row th {
+    text-align: left;
+    font-weight: normal;
+    vertical-align: middle;
+}
+
+.n-table.table-row th,
+.n-table.table-row td {
+    height: auto;
+    padding: 15px 0;
+    box-sizing: border-box;
+    border-top: 1px solid #f1f1f1;
+    border-bottom: none;
+    font-size: 14px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.n-table tr.my-info-img .img {
+    display: block;
+    width: 80px;
+    height: 80px;
+    margin: 10px 0 0 -6px;
+    /* background: url(/skin/musinsa/images/mypage/bg_user2.png) no-repeat 50% 50%; */
+    background-size: cover;
+    border-radius: 100%;
+    overflow: hidden;
+}
+
+.mypage-cont .n-table.table-row td {
+    vertical-align: inherit;
+}
+
+
+
+/* 버튼 */
+.n-btn.btn-default {
+    border: 1px solid #e5e5e5;
+    background-color: #ffffff;
+    color: #000000;
+    min-width: 70px;
+    height: 32px;
+    line-height: 30px;
+    padding-top: 0;
+    float: left;
+    font-family: "Apple SD Gothic Neo", "Noto Sans KR", sans-serif !important;
+}
+
+
+/* .n-table a,
+.n-table button {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.n-table button {
+    font-family: inherit;
+    display: inline-block;
+} */
+
+.n-btn {
+    display: inline-block;
+    min-width: 100px;
+    height: 40px;
+    line-height: 36px;
+    color: #ffffff;
+    box-sizing: border-box;
+    padding: 2px 8px 0 8px;
+    font-size: 14px;
+    text-align: center;
+    cursor: pointer;
+    vertical-align: middle;
+    -webkit-transition: border 0.2s, background 0.2s ease-in-out;
+    -moz-transition: border 0.2s, background 0.2s ease-in-out;
+    -o-transition: border 0.2s, background 0.2s ease-in-out;
+    transition: border 0.2s, background 0.2s ease-in-out;
+}

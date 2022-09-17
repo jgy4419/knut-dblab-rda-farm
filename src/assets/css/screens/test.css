@@ -1,0 +1,25 @@
+.summary_block .firstArticle {
+    float: left;
+    font-size: 11px;
+    color: #909090;
+    padding: 12px 0px 0 4px;
+    width: 72px;
+    _width: 76px;
+    margin-right: 6px;
+    display: inline;
+    text-align: center;
+}
+
+.summary_block {
+    display: inline;
+    float: left;
+    width: 293px;
+    height: 164px;
+    margin-left: 10px;
+}
+
+.summary_block ul {
+    float: left;
+    margin: 0;
+    padding: 12px 0 0 4px;
+}

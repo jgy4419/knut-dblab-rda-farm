@@ -1,0 +1,88 @@
+/* navbar */
+.main_t_nav {
+    background-color: #FFC1AA;
+    padding: 15px 50px;
+    border-top: 1px solid lightgrey;
+    position: fixed;
+    border-top: 0;
+    width: 100%;
+    box-sizing: border-box;
+    border-bottom-width: 3px;
+    border-bottom-color: red;
+    border-bottom-style: none;
+}
+
+.main_t_nav_list {
+    display: flex;
+    justify-content: space-between;
+}
+
+.fa-house:before {
+    content: "\f015";
+}
+
+.fa-magnifying-glass:before {
+    content: "\f002";
+}
+
+.fa-apple-whole:before{
+    content: "\f5d1";
+}
+
+.fa-leaf:before{
+    content: "\f06c";
+}
+
+.fa-user-large:before{
+    content: "\f406";
+}
+
+
+.fa, .far, .fas {
+    font-family: "Font Awesome 5 Free";
+}
+
+.fa-2x {
+    font-size: 2em;
+}
+
+.main_nav_t_div{
+    width: 100%;
+    height: 100px;
+}
+
+.main_nav_m_div{
+    width: 100%;
+    height: 100px;
+}
+
+.main_nav_b_div{
+    width: 100%;
+    height: 70px;
+    bottom: 0;
+}
+
+.main_div {
+    margin: 0;
+    padding: 80%;
+    border: 1px solid #dadada;
+    border-radius: 2px;
+    background: #fff;
+  }
+  
+  .main_logo{
+      width: 40%;
+      height: 40%;
+      display: inline;
+      transform: translate(77%);
+  }
+
+  .main_text{
+      display: inline;
+      color: green;
+  }
+
+  .main_nav_t_review_div {
+    width: 100%;
+    height: 30px;
+}

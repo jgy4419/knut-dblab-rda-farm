@@ -1,0 +1,230 @@
+
+/* profile */
+  
+fieldset{
+    border: 0;
+  }
+  
+  fieldset{
+    display: block;
+    margin-inline-start: 2px;
+    margin-inline-end: 2px;
+    padding-block-start: 0.35em;
+    padding-inline-start: 0.75em;
+    padding-inline-end: 0.75em;
+    padding-block-end: 0.625em;
+    min-inline-size: min-content;
+    border-width: 2px;
+    /* border-style: groove; */
+    border-color: threedface;
+    border-image: initial;
+  }
+  
+  #container {
+    position: relative;
+    z-index: 20;
+    max-width: 954px;
+    height: 100%;
+    margin: 0 auto;
+  }
+  
+  #content.section_home {
+    line-height: 14px;
+    zoom: 1;
+    padding: 16px 12px 94px;
+  }
+  
+  .sh_group {
+    min-height: 185px;
+  }
+  
+  div {
+    display: block;
+  }
+
+  .profile_photo2{
+    display: block; 
+    margin: 0px auto;
+  }
+  
+  .sh_group, .sh_group2, .sh_group3, .sh_group4 {
+    margin: 16px 8px 0;
+    padding: 32px 29px 30px;
+
+    border: 1px solid #dadada;
+    border-radius: 2px;
+    background: #fff;
+  }
+  
+  dl {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+  }
+  
+  .blind, legend {
+    position: absolute;
+    clip: rect(0 0 0 0);
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+  }
+  
+  .sh_header {
+    position: relative;
+  }
+  
+  .sh_group .sh_content {
+    min-height: 131px;
+    padding-top: 9px;
+  }
+  
+  .spico, .spimg, .sptxt {
+    line-height: 999px!important;
+    display: inline-block;
+    overflow: hidden;
+    width: 0;
+    height: 0;
+    vertical-align: top;
+    background-repeat: no-repeat;
+    background-position: 0 999px;
+  }
+  
+  element.style {
+    background-color: #fff;
+  }
+  
+  #content {
+    position: relative;
+    padding: 32px 51px 95px;
+  }
+  
+  div {
+    display: block;
+  }
+  
+  .tbl_model {
+    position: relative;
+    width: 100%;
+    table-layout: fixed;
+    border-spacing: 0;
+    border-collapse: collapse;
+    word-wrap: break-word;
+    word-break: keep-all;
+    border: 0;
+    border-bottom: 1px solid #e5e5e5;
+  }
+  
+  caption {
+    display: table-caption;
+    text-align: -webkit-center;
+  }
+  
+  tbody {
+    display: table-row-group;
+    vertical-align: middle;
+    border-color: inherit;
+  }
+  
+  .tbl_model th {
+      color: #333;
+      border-right: 1px solid #e5e5e5;
+      background: #f9f9f9;
+  }
+
+  .btn_model .btn1, .btn_model .btn2, .btn_model .btn3 {
+    min-width: 52px;
+    height: 21px;
+    padding: 10px 15px 0;
+    color: #a3a3a3;
+}
+
+.btn_model b, .btn_model>em, .btn_model>span {
+  display: inline-block;
+  overflow: hidden;
+  text-align: center;
+  vertical-align: top;
+  letter-spacing: -1px;
+}
+
+body, button, input, select, table, textarea {
+  font-family: -apple-system,BlinkMacSystemFont,"Malgun Gothic","맑은 고딕",helvetica,"Apple SD Gothic Neo",sans-serif;
+  font-size: 14px;
+}
+
+.profile_photo+.btn_area_btm {
+  overflow: visible;
+  position: relative;
+  height: 33px;
+  padding-top: 21px;
+}
+
+.tbl_model .btn_area_btm {
+  overflow: hidden;
+  margin-right: 3px;
+  padding-top: 14px;
+  text-align: left;
+}
+
+.tbl_model .tdcell {
+  padding: 32px 0 32px 30px;
+}
+
+.btn_file label .btn2 {
+  color: #333;
+}
+
+.btn_model .btn2 {
+  border: 1px solid #bfbfbf;
+  background: #fff;
+}
+
+.profileh2{
+    font-size: 1.4rem;
+    margin-block-start: 0.83em;
+    margin-block-end: 0.83em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+}
+
+
+.profile_loc_h2{
+    font-size: 1.4rem;
+    margin-block-start: 0.83em;
+    margin-block-end: 0.83em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.profile_photo2{
+    border-radius: 70%;
+    margin-left: -3px;
+}
+
+.profile_photo3{
+    display: block; 
+    margin: 20px auto;
+    width: 70%;
+    height: 85%;
+}
+
+.profile_textarea{
+    margin: 2%;
+    width: 96%;
+    height: 200px;
+    outline-color: lightsalmon;
+}
+
+.main_div {
+  margin: 0;
+  padding: 80%;
+  border: 1px solid #dadada;
+  border-radius: 2px;
+  background: #fff;
+}

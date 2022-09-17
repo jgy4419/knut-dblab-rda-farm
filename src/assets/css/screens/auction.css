@@ -1,0 +1,142 @@
+#header .lnb_area {
+    border-bottom: 1px solid #e5e5e5;
+    width: 100%;
+}
+
+#header .snb_inner, #header .lnb_inner {
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+    font-family: Helvetica Neue,Apple SD Gothic Neo,sans-serif;
+    font-size: 12px;
+    line-height: 14px;
+    text-align: left;
+}
+
+#menu {
+    clear: both;
+    position: relative;
+    z-index: 10;
+}
+
+#menu .menu li {
+    display: inline-block;
+    *display: inline;
+    text-align: center;
+    float: left;
+    width: 25%;
+    vertical-align: top;
+}
+
+#menu {
+    clear: both;
+    position: relative;
+    z-index: 10;
+}
+
+#menu .menu50 li {
+    display: inline-block;
+    *display: inline;
+    text-align: center;
+    float: left;
+    width: 50%;
+    vertical-align: top;
+}
+
+#menu .menu50 li.first {
+    margin-left: 0;
+}
+
+#menu .menu50 li.on a .tx {
+    color: #03C75A;
+}
+
+
+#menu .menu li.first {
+    margin-left: 0;
+}
+
+#menu .menu li.on a .tx {
+    color: #03C75A;
+}
+
+#menu .tx {
+    display: block;
+    font-size: 14px;
+    color: #000;
+    font-weight: bold;
+    letter-spacing: -.3px;
+}
+
+#menu .menu li a {
+    line-height: 45px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.table-100 {
+	border-collapse:collapse;
+	border-color:#aaa;
+	border-spacing:0;
+	width: 100%;
+}
+.table-100 td {
+	background-color:#fff;
+	border-color:#aaa;
+	border-style:solid;
+	border-width:1px;
+	color:#333;
+	font-family:Arial,sans-serif;
+	font-size:14px;
+	overflow:hidden;
+	padding:10px 5px;
+	word-break:normal;
+}
+.table-100 th {
+	/* background-color:#f38630; */
+	border-color:#aaa;
+	border-style:solid;
+	border-width:1px;
+	color:#fff;
+	font-family:Arial,sans-serif;
+	font-size:14px;
+	font-weight:normal;
+	overflow:hidden;
+	padding:10px 5px;
+	word-break:normal;
+}
+.table-100 .table-100-tyfk {
+	background-color:#f56b00;
+	border-color:inherit;
+	color:#ffffff;
+	text-align:center;
+	vertical-align:top;
+	width: 20%;
+
+}
+
+.table-100 .table-100-iks7 {
+	background-color:#ffffff;
+	border-color:#000000;
+	text-align:center;
+	vertical-align:top;
+}
+
+.table-100 .table-100-0pky {
+	border-color:inherit;
+	text-align:left;
+	vertical-align: top;
+}
+
+.table-100 .table-100-1pky {
+	border-color:inherit;
+	text-align:center;
+	vertical-align: top;
+}
+
+.td_input_text{
+	    outline: none;
+		border: none;
+	}
+
+

@@ -1,0 +1,147 @@
+.welcome-header1 {
+  margin: 90px 0px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: 500;
+}
+
+.welcome-header__title1 {
+  margin-bottom: 20px;
+  font-size: 30px;
+}
+
+.welcome-header__text1 {
+  width: 60%;
+  opacity: 0.7;
+  line-height: 20px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  margin: 0px 30px;
+}
+
+.login-form__input {
+  /* padding: 15px 0px; */
+  width: 95%;
+  padding: 2%;
+  border: none;
+  font-size: 16px;
+  margin-bottom: 25px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  transition: border-color 0.3s ease-in-out;
+}
+
+.login-form__input::placeholder {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.login-form__input:focus {
+  border-color: lightsalmon;
+}
+
+.login-form__btn {
+  width: 96%;
+  margin-left: 2%;
+  background-color: lightsalmon;
+  border-radius: 20px;
+  border: 1px solid lightgrey;
+  border-width: 0 3px 5px 0;
+  cursor: pointer;
+  padding: 15px 0px;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.login-form__btn_right {
+  width: 96%;
+  background-color: lightsalmon;
+  border-radius: 20px;
+  border: 1px solid lightgrey;
+  border-width: 0 3px 5px 0;
+  cursor: pointer;
+  padding: 15px 0px;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.login-form__a {
+  text-align: center;
+  font-size: 14px;
+}
+
+@keyframes hideSplashScreen {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    visibility: hidden;
+    /* visibility:hidden 있어야 애니메이션 사라지고 정상적으로 화면 클릭 등 가능해짐 */
+  }
+}
+
+.splash-screen {
+  background-color: white;
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 150px;
+  animation: hideSplashScreen 1s ease-in-out forwards;
+  animation-delay: 1s;
+  /* delay하면 그동안 멈춰있다가 이 시간 후에 애니메이션 시작 */
+}
+
+.login_keep_wrap {
+  position: relative;
+  margin-top: 22px;
+  padding-right: 90px;
+}
+
+.keep_check {
+  position: relative;
+  padding-left: 30px;
+  margin-left: 10%;
+  margin-bottom: 5%;
+}
+
+.keep_check .input_keep {
+  position: absolute;
+  top: 2px;
+  left: 3px;
+  width: 15px;
+  height: 15px;
+}
+
+.keep_check .keep_text {
+  display: inline-block;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 19px;
+}
+
+.keep_check .keep_text::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: 0;
+  background-position: -155px -139px;
+  background-repeat: no-repeat;
+  width: 23px;
+  height: 23px;
+  background-color: #fff;
+}
+
+.keep_check .keep_text::before,
+.keep_check input:checked + .keep_text::before {
+  background-image: url(https://ssl.pstatic.net/static/nid/login/m_sp_01_login_2d02c3e8.png);
+  background-size: 229px 196px;
+  background-repeat: no-repeat;
+}
