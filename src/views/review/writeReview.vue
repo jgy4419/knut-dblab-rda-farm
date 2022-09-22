@@ -7,11 +7,11 @@
                 <p>상품명 : {{getTest.name}}</p>
                 <p>최종낙찰 : {{getTest.price}}</p>
             </div>
-        </div>
+        </div>  
         <hr class="line"/>
         <div class="star-select">
             <h2>별점 선택</h2>
-            <i v-for="star in setTest.starState" :key="star" class="fa fa-star review-star"/>
+            <i v-for="star in reqData.starState" :key="star" class="fa fa-star review-star"/>
             <div class="starState">
                 <button class="star-choice-button" v-for="state in starState" :key="state">
                     {{state}}
@@ -21,15 +21,19 @@
         <hr class="line"/>
         <div class="review-comment">
             <h2>내용</h2>
-            <textarea placeholder="상품에 대한 평가를 20저 이상 작성해주세요!" name="" id="" cols="40" rows="5"/>
+            <textarea placeholder="상품에 대한 평가를 20자 이상 작성해주세요!" name="" id="product-contents" cols="40" rows="5"/>
         </div>
         <hr class="line"/>
-        <label for="input-file" class="select-img">+</label>
-            <input id="input-file" class="select-img-hidden" type="file"/>
-            <!-- <button>+</button> -->
+        <h2 class="title">사진 등록</h2>
+        <div class="file-img-container">
+            <label for="input-file" class="select-img">+</label>
+            <input @change="imgPreview($event)" id="input-file" class="select-img-hidden" type="file"/>
+            <!-- 파일 크기 조절하기 -->
+            <div id="image_container" class="image_container"></div>
+        </div>
         <div class="final-buttons">
             <button class="final-button">취소</button>
-            <button class="final-button">등록</button>
+            <button class="final-button" @click="reqDatas()">등록</button>
         </div>
     </div>    
 </template>
@@ -50,7 +54,7 @@ export default {
                 price: 10000,
             },
             // 벡엔드한테 보낼 데이터
-            setTest: {
+            reqData: {
                 starState: 0,
                 comment: '',
                 selectPicture: '',
@@ -58,14 +62,44 @@ export default {
         }
     },
     mounted(){
+        console.log(this.$store.state.login.userInfo.consumer_id);
         // 별점 선택
         let starStateBtns = document.querySelectorAll('.star-choice-button');
         starStateBtns.forEach((starStateBtns, i) => {
             starStateBtns.addEventListener('click', () => {
-                this.setTest.starState = i+1;
+                this.reqData.starState = i+1;
             })
         })
     },
+    methods: {
+        imgPreview(event){
+            var reader = new FileReader();
+            reader.onload = function(event) {
+                var img = document.createElement("img")
+                img.setAttribute("src", event.target.result);
+                img.setAttribute("width", '60px');
+                img.setAttribute("height", '60px');
+                document.getElementById("image_container").appendChild(img);
+            };
+            reader.readAsDataURL(event.target.files[0]);
+            console.log(event.target.files[0]);
+        },
+        reqDatas(){ 
+            // 리뷰 등록 요청 시 JSON 데이터에 "checkUser: consumer or farm" 추가해주기
+            let data = {
+                productContents: document.getElementById('product-contents').value,
+                start: this.reqData.starState,
+                img: document.getElementById('input-file').value,
+                checkUser: this.$store.state.login.userInfo.checkUser === undefined ? false : true
+            }
+            // axios.post('', {})
+            // .then(res => {
+            //     console.log(res);
+            // }).catch(err => {
+            //     console.log(err);
+            // })
+        }
+    }
 }
 </script>
 
@@ -73,6 +107,10 @@ export default {
 .line{
     border: .7px solid lightgrey;
     margin-top: 20px;
+}
+h2{
+    font-size: 18px;
+    font-weight: 700;
 }
 .contain{
     position: relative;
@@ -100,10 +138,6 @@ export default {
     .star-select{
         margin-top: 10px;
         margin-left: 10px;
-        h2{
-            font-size: 18px;
-            font-weight: 700;
-        }
         .review-star{
             color: #FFC1AA;
             font-size: 25px;
@@ -146,17 +180,27 @@ export default {
             border-radius: 10px;
         }
     }
-    .select-img{
-        position: absolute;
-        color: #333;
-        margin-top: 20px;
-        margin-left: 10px;
-        text-align: center;
-        cursor: pointer;
-        padding: 2px 10px;
-        font-size: 30px;
-        border: 2px solid #333;
-        border-radius: 10px;
+    .title{
+        margin: 10px 10px 0px;
+    }
+    .file-img-container{
+        display: flex;
+        .select-img{
+            position: absolute;
+            color: #333;
+            margin-top: 20px;
+            margin-left: 10px;
+            text-align: center;
+            cursor: pointer;
+            padding: 2px 10px;
+            font-size: 30px;
+            // border: 2px solid #333;
+            border-radius: 10px;
+        }
+        .image_container{
+            margin-left: 70px;
+            margin-top: 10px;
+        }
     }
     .select-img-hidden{
         display: none;

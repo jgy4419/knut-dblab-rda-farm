@@ -3,10 +3,7 @@ import Vuex from 'vuex'
 
 export const login = new Vuex.Store({
     state: {
-        allUsers: [
-            {id: 1, name: "1dnjsqja", email: "1dnjsqja@naver.com", password: "123123"},
-            {id: 2, name: "2dnjsqja", email: "2dnjsqja@naver.com", password: "123123"}
-        ],
+        userInfo: JSON.parse(localStorage.getItem('user')),
         isLogin: false,
         isLoginError: false
     },
@@ -26,13 +23,19 @@ export const login = new Vuex.Store({
             state.isLogin = false
             state.isLoginError = false
             state.userInfo = null
-        }
+        },
+        TOKEN_SAVE: (state, token) => {
+            console.log("TOKEN_SAVE: "+ token);
+            state.userInfo = token;
+            console.log(state.userInfo);
+        },
     },
-	// auction:{
-	// 	login({ state, commit }, signObj){
-    //         console.log(signObj);
-	// 	}
-	// }
+	actions:{
+		// login({ state, commit }, signObj){
+        //     console.log(signObj);
+		// }
+        
+	}
 })
 
 

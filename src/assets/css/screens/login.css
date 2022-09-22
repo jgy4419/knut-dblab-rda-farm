@@ -43,16 +43,15 @@
   border-color: lightsalmon;
 }
 
-.login-form__btn {
-  width: 96%;
-  margin-left: 2%;
+.login-form__btn{
+  width: 100%;
+  margin-top: 20px;
   background-color: lightsalmon;
   border-radius: 20px;
   border: 1px solid lightgrey;
   border-width: 0 3px 5px 0;
   cursor: pointer;
   padding: 15px 0px;
-  margin-bottom: 20px;
   font-size: 16px;
 }
 
@@ -71,6 +70,12 @@
 .login-form__a {
   text-align: center;
   font-size: 14px;
+}
+.v-field__overlay{
+  background-color: rgb(234, 234, 234);  
+}
+.v-input__append{
+  background-color: rgb(234, 234, 234);
 }
 
 @keyframes hideSplashScreen {
@@ -107,11 +112,15 @@
 
 .keep_check {
   position: relative;
+  display: flex;
+  justify-content: space-around;
   padding-left: 30px;
   margin-left: 10%;
   margin-bottom: 5%;
 }
-
+#consumer, #farm{
+  margin-right: 10px;
+}
 .keep_check .input_keep {
   position: absolute;
   top: 2px;

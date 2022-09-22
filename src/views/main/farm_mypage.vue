@@ -1,27 +1,6 @@
 <template>
-<div>
-    <div class="main_nav_t_div">
-        <nav class="main_t_nav">
-            <ul class="main_t_nav_list">
-                <li class="nav__btn">
-                    <a class="nav__link" href="alert"><i class="fas fa-bell fa-2x" aria-hidden="true"></i>
-                    </a>
-                </li>
-
-                <li class="nav__btn">
-                    <a class="nav__link" href="main"><i class="fas fa-running fa-2x" aria-hidden="true" image
-                            src="../image/123.jpg"></i>
-                    </a>
-                </li>
-
-                <li class="nav__btn">
-                    <div class="nav__notification-dot"></div>
-                    <a class="nav__link" href="auction"><i class="fas fa-plus fa-2x" aria-hidden="true"></i>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </div>
+<div class="mypage-contain">
+    <Header :headerProps="headerProps"/>
 
     <fieldset>
         <div class="goods_group">
@@ -71,11 +50,15 @@
 </template>
 
 <script>
+import Header from '@/components/Header/bellAndAddHeader';
 import bottomNav from '@/components/bottomNav.vue';
 
 export default {
-    components: {bottomNav},
+    components: {bottomNav, Header},
+    data(){
+        return{
+            headerProps: 'logo'
+        }
+    }
 }
 </script>
-<style>
-</style>

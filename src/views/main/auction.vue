@@ -1,74 +1,10 @@
 <template>
-<div>
-  <Header :headerProps="headerProps"/>
-  <v-carousel>
-    <v-carousel-item
-      v-for="(item,i) in items"
-      :key="i"
-      :src="item.src"
-      reverse-transition="fade-transition"
-      transition="fade-transition"
-    ></v-carousel-item>
-  </v-carousel>
-
-    <fieldset>
-        <div class="white_div">
-            <div class="goods_pay_section ">
-                <div class="goods_group">
-                    <ul class="goods_group_list">
-                        <li v-on:click="navigateProduct(auction)"  v-for="auction in this.$store.state.auctionList" :key="auction.auction_Id"
-                            id="_rowLi20220203162708CHK2022020394386781"
-                            class="goods_pay_item _interlockNo20220211200904406814">
-                            <div class="goods_item">
-                              <!-- a 태그 -> router 태그 -->
-                                <div class="goods_thumb">
-                                    <img :src='`/product_images/${auction.productDTO.product_img_name}.png`'
-                                        alt="" width="90" height="90" /></div>
-                                <div class="goods_info">
-                                    <div class="goods">
-                                        <p class="name">
-                                            {{auction.auction_name}}
-                                        </p>
-                                        <ul class="info">
-                                            <li><span class="blind">상품금액</span>{{auction.bid_price}}원</li>
-                                            <li class="date"><span class="blind">등록일</span> {{auction.productDTO.p_reg_date}}
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div 
-                                        class="state _statusName value_color_green _click(nmp.front.order.timeline.home.list.openDeliveryPopup(/o/orderStatus/deliveryTracking/2022020394386781/ORDER_DELIVERY/api)) _stopDefault">{{auction.bid_status}}
-                                        ({{updateDeadlineDate(auction.deadline_date)}} 경매 종료)</div>
-                                    <p class="guide">
-                                        {{auction.productDTO.p_explanation}}
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="seller_item">
-                                <div class="inner">
-
-                                    <span class="seller">{{auction.f_farm_name}}</span>
-                                    <span class="tel">{{auction.f_phonenum}}</span>
-                                    <!-- <router-link :to="{ name: 'auction_detail', params: { auction}, }"> auction_detail </router-link> -->
-                                    <br><br>
-                                    
-                                    <!-- <a v-on:click="navigateProduct(auction)" 
-                                        class="state_button qna _click(nmp.front.order.timeline.home.list.shoppingInquiry(/merchant/shoppingInquiry/2022020394386781)) _stopDefault">경매 상세</a> -->
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </fieldset>
-    <div></div>
-        <div>
-      <button class="more-data" @click="moreProduct()">더보기</button>
-    </div>
-    <p style="display: none">{{now}}</p>
-    <InfiniteLoading :comments="auction" @infinite="moreProduct()"/>
-    <bottom-nav/>
-</div>
+  <div class="auction-contain">
+    <Header :headerProps="headerProps"/>
+    <Slide />
+    <AuctionList/>
+      <bottom-nav/>
+  </div>
 </template>
 
 
@@ -77,6 +13,8 @@
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
 import Header from '../../components/Header/bellAndBackHeader.vue';
+import Slide from '../../components/slide';
+import AuctionList from '../../components/Auction/auctionList.vue';
 import bottomNav from '@/components/bottomNav.vue';
 import axios from "axios"
 // import { ref } from 'vue';
@@ -84,32 +22,18 @@ import axios from "axios"
 
 export default{
 
-  components: { bottomNav, Header },
+  components: { bottomNav, Header, AuctionList, Slide },
   data() {
       return {        
         headerProps: '경매 알림',
         limit: 0,
-          // auctionList: [], // 배열에 저장 v-for="product in productList" -> v-for 문 사용해서 표시
-        items: [
-          {
-            src: 'https://cdn.011st.com/11dims/resize/600x600/quality/75/11src/pd/v2/9/4/9/6/5/4/cPJKf/4569949654_B.jpg',
-          },
-          {
-            src: 'https://cdn.vuetifyjs.com/images/carousel/sky.jpg',
-          },
-          {
-            src: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg',
-          },
-          {
-            src: 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg',
-          },
-        ],
         infiniteId: +new Date(),
         now: 0,
       }
   },
   mounted () {
     this.updateNow();
+    
     setInterval(this.updateNow.bind(this) , 1000);
   },
   //데이터베이스 에서 배열로 가져와서
@@ -145,46 +69,6 @@ export default{
       let minutes = Math.floor(tmp_time % (60*60) / 60);
       let seconds = Math.floor(tmp_time % (60*60) % 60);
       return `${day}일 ${hours}시 ${minutes}분 ${seconds}초 후`;
-    },
-    navigateProduct (auction) {
-      console.log("navigateProduct");
-      console.log(auction);
-      console.log(auction.bid_num);
-      // this.$router.push({path:`/user/${auction_id}`, params: { auction_id: 3}});
-      this.$router.push({name:'auction_detail', params: { id: auction.auction_Id, auction: JSON.stringify(auction) }});
-      
-    },
-    navigategoback() {
-      console.log('!!');
-        this.$router.go(-1);
-    },
-    moreProduct($state) {
-      console.log('state', $state);
-      this.send(), 
-      then(({ data }) => {
-        if (data.hits.length) {
-          this.page += 1;
-          this.list.push(...data.hits);
-          $state.loaded();
-        } else {
-          $state.complete();
-        }
-      });
-    },
-    send() {
-      console.log("limit:" + this.$store.state.limit);
-      console.log(this.stompClient);
-      console.log(this.stompClient.connected);
-      if (this.stompClient && this.stompClient.connected) {
-        console.log(this.$store.state.limit);
-        console.log(this.$store.state.config.headers.TOKEN);
-        this.stompClient.send("/receive_limit/"+this.$store.state.config.headers.TOKEN, this.$store.state.limit, {});
-        
-        this.$store.commit('UP_LIMIT', 4);
-        console.log('st', this.$store.state);
-
-        console.log(this.$store.state.auctionList);
-      }
     },
     connect() {
       const serverURL = "/socket"
@@ -238,25 +122,6 @@ export default{
 }
 </script>
 
-<style lang="scss" scoped>
-.main_nav_t_div{
-  position: relative;
-  z-index: 10;
-}
-.more-data{
-  width: 100vw;
-  height: 55px;
-  font-size: 16px;
-  font-weight: 700;
-  background-color: #FFC1AA;
-}
-.goods_pay_item{
-  position: relative;
-  width: 100vw;
-  .goods_item{
-    position: absolute;
-    left: 0;
-    width: 100%;
-  }
-}
-</style>
+
+
+

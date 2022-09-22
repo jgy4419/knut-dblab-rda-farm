@@ -5,6 +5,7 @@
             <input multiple="multiple" @change="upload()" type="file" id="product_img_file" name="product_img_file"
                 accept="image/*"><br>
             <img src="image">
+            <!-- <Slide/> -->
         </div>
 
         <fieldset>
@@ -78,7 +79,7 @@
                 <ul class="main_m_ui_list">
                     <li class="nav__btn">
                         <a class="nav__link" href="#">
-                            <h4 class="user-component__title" @click="submitProduct()">등록하기</h4>
+                            <h4 class="user-component__title" @click="submitProduct()">{{auctionSubmit}}</h4>
                         </a>
                     </li>
                 </ul>
@@ -90,16 +91,18 @@
 <script>
     import axios from "axios"
     import Header from '../../components/Header/bellAndBackHeader.vue';
+    import Slide from '../../components/slide.vue';
 
     export default {
         components: {
-            Header
+            Header,
+            Slide
         },
         name: 'submitProduct',
         data() {
             return {
                 headerProps: '경매 등록',
-
+                auctionSubmit: '등록하기',
                 p_name: null,
                 product: null,
                 product_kg: null,
@@ -113,9 +116,41 @@
                 p_explanation: null,
                 product_img_file: null,
                 farm_id: 1,
+
+                auctionId: 0,
             };
         },
+        mounted(){
+            // 실제 구현 시 !== -> === 로 바꿔주기
+            if(this.$store.state.login.userInfo.checkUser !== undefined){
+                alert('농가회원이 아닙니다!');
+                this.$router.go(-1);
+            }
+            if(this.$route.path !== '/auction_reg'){
+                this.headerProps = '경매 수정';
+                this.auctionSubmit = '수정하기';
+                this.writeState();   
+            }
+        },
         methods: {
+            writeState(){
+                let auction_id = this.$route.params.id;
+                // 글 수정 페이지면 ex) /auction_reg/33 => input창의 value에 값을 가각 넣어주기
+                axios.get(`/api/auctionInfo/${auction_id}`).then(res => {
+                    console.log(res.data[0]);
+                    const data = res.data[0];
+                    this.p_name = data.auction_name;
+                    // this.product = data.
+                    // this.product_kg = 
+                    this.p_starting_price = data.a_starting_price;
+                    this.p_max_price = data.a_max_price; 
+                    // this.p_drop_date = 
+                    this.start_date = data.start_date;
+                    this.deadline_date = data.deadline_date;
+                    // this.p_status = 
+                    // this.p_explanation = 
+                }).catch(err => console.log(err));
+            },
             upload() {
                 this.product_img_file = document.getElementById("product_img_file");
                 console.log(this.product_img_file.files[0]);
@@ -148,19 +183,33 @@
                 if(this.product_img_file = ''){
                     alert('이미지 파일이 없습니다.');
                 }
-
-                axios.post('/api/registAuction', frm, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
-                    .then(res => {
-                        console.log(res);
+                // 글 수정
+                if(this.$route.path !== '/auction_reg'){
+                    axios.patch('/api/updateAuction', frm, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }).then(() => {
+                        alert('등록 완료!');
+                        this.$router.push('/auction');
                     })
                     .catch(err => {
                         console.log(err);
-                        alert('!!');
                     });
+                }else{
+                    // 글 등록
+                    axios.post('/api/registAuction', frm, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }).then(() => {
+                        alert('등록 완료!');
+                        this.$router.push('/auction');
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+                }
             },
         },
 

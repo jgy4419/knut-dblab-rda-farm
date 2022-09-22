@@ -27,7 +27,7 @@
 
 <style lang="scss" scoped>
 .fpmgBt1, .fpmgBt2{
-    width: 50vw;
+    width: 100%;
     height: 60px;
     font-size: 18px;
     font-weight: 500;

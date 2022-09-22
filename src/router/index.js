@@ -3,7 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 const routes = [
   {
     path: '/',
-    redirect : '/login',
+    redirect : localStorage.getItem('user') ? '/main' : '/login',
   },
   {
     path: '/test',
@@ -21,17 +21,27 @@ const routes = [
   //   component: () => import('../views/NotfoundPage.vue')
   // },
 
-  //로그인 회원가입
+  // 로그인 회원가입
   {
     path: '/login',
     name: 'login',
     component: () => import('../views/login/login.vue')
   },
   {
-    path: '/login',
-    name: 'login',
-    component: () => import('../views/login/login.vue')
+    path: '/login/searchId',
+    name: 'searchId',
+    component: () => import('../views/login/searchIdOrPw.vue')
   },
+  {
+    path: '/login/searchPw',
+    name: 'searchPw',
+    component: () => import('../views/login/searchIdOrPw.vue')
+  },
+  // {
+  //   path: '/login',
+  //   name: 'login',
+  //   component: () => import('../views/login/login.vue')
+  // },
   {
     path: '/clause',
     name: 'clause',
@@ -85,6 +95,12 @@ const routes = [
     name: 'auction_reg',
     component: () => import('../views/main/auction_reg.vue')
   },
+  // 경매 수정 페이지
+  {
+    path: '/auction_reg/:id',
+    name: 'auction_reg_patch',
+    component: () => import('../views/main/auction_reg.vue')
+  },
   {
     path: '/search',
     name: 'search',
@@ -95,7 +111,7 @@ const routes = [
     name: 'trand',
     component: () => import('../views/main/trand.vue')
   },
-  {
+  { 
     path: '/farm_mypage',
     name: 'farm_mypage',
     component: () => import('../views/main/farm_mypage.vue')
@@ -128,7 +144,11 @@ const routes = [
     // props: true,
     component: () => import('../views/auction/auction_detail.vue')
   },
-
+  {
+    path: '/auction_detail/farm_intro',
+    name: 'farm_intro',
+    component: () => import('../views/auction/farm_intro')
+  },
   //마이페이지
   {
     path: '/farm_mypage_auction',
@@ -191,10 +211,15 @@ const routes = [
     name: 'add_profile',
     component: () => import('../components/add_profile.vue')
   },
+  // {
+  //   path: '/kakaoMap',
+  //   name: 'kakaoMap',
+  //   component: () => import('../components/kakaoMap.vue')
+  // },
   {
-    path: '/kakaoMap',
-    name: 'kakaoMap',
-    component: () => import('../components/kakaoMap.vue')
+    path: '/slide',
+    name: 'slide',
+    component: () => import('../components/slide.vue')
   },
 
 
@@ -216,6 +241,12 @@ const routes = [
     name: 'consumer_loc',
     component: () => import('../views/consumer/consumer_loc.vue')
   },
+  {
+    path: '/KakaoMap',
+    name: 'KakaoMap',
+    component: () => import('../views/auction/KakaoMap.vue')
+  },
+  
   
 ]
 

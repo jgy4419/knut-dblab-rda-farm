@@ -1,30 +1,6 @@
 <template>
 <div>
-    <div class="main_nav_t_div">
-        <nav class="main_t_nav">
-            <ul class="main_t_nav_list">
-                <li class="nav__btn">
-                    <div class="nav__notification-dot"></div>
-                    <a class="nav__link"><i class="fas fa-bars fa-2x" aria-hidden="true"></i>
-                    </a>
-                </li>
-
-                
-                <li class="main_m_li_list">
-                    <a class="nav_m_link" href="workout.html">
-                        <h4 class="user-component__title">경매 알림</h4><i class=" fa-2x" aria-hidden="true" image
-                            src="../image/123.jpg"></i>
-                    </a>
-                </li>
-
-                <li class="nav__btn">
-                    <a class="nav__link" v-on:click="navigategoback"><i class="fas fa-chevron-left fa-2x"
-                            aria-hidden="true"></i>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </div>
+    <Header :headerProps="headerProps"/>
 
     <div class="main-screen">
         <fieldset>
@@ -78,10 +54,15 @@
 </template>
 
 <script>
+import Header from '../../components/Header/backHeader.vue';
 import axios from 'axios'
 export default {
+    components: {
+        Header
+    },
     data() {
         return {
+            headerProps: '경매 알림',
             // 나중에 Store나 로컬스토리지에 있는 사용자 데이터로 변경해서 사용
             checkUser: null,
             id: null,

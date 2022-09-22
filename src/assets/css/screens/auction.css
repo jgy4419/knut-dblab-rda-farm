@@ -135,8 +135,12 @@
 }
 
 .td_input_text{
-	    outline: none;
-		border: none;
-	}
+	outline: none;
+	border: none;
+}
+
+.more-data{
+	margin-bottom: 50px;
+}
 
 

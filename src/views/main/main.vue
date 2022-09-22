@@ -1,28 +1,7 @@
 
 <template>
 <div>
-	<div class="main_nav_t_div">
-        <nav class="main_t_nav">
-            <ul class="main_t_nav_list">
-                <li class="nav__btn">
-                    <a class="nav__link" href="alert"><i class="fas fa-bell fa-2x" aria-hidden="true"></i>
-                    </a>
-                </li>
-
-                <li class="nav__btn">
-                    <a class="nav__link" href="/main"><i class="fas fa-running fa-2x" aria-hidden="true" image
-                            src="../image/123.jpg"></i>
-                    </a>
-                </li>
-
-                <li class="nav__btn">
-                    <div class="nav__notification-dot"></div>
-                    <a class="nav__link" href="auction_reg"><i class="fas fa-plus fa-2x" aria-hidden="true"></i>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </div>
+    <Header :headerProps="headerProps"/>
 
 	<fieldset>
         <div class="sh_group">
@@ -50,6 +29,7 @@
 
 <script>
 import { useStorage } from "vue3-storage";
+import Header from '../../components/Header/bellAndAddHeader.vue';
 import bottomNav from '@/components/bottomNav.vue';
 import { values } from 'sockjs-client/lib/transport-list';
 import check_userVue from '../login/check_user.vue';
@@ -58,9 +38,10 @@ import axios from "axios"
 const bbb = 1;
 
 export default{
-  components: { bottomNav },
+  components: { bottomNav, Header },
     data() {
         return {
+            headerProps: 'Main',
             name: null,
             f_data: []
             
@@ -70,7 +51,7 @@ export default{
         logout(){
             // 로컬스토리지에서 checkUser, email 가져오기
             let user = JSON.parse(localStorage.getItem('user'))
-
+            localStorage.removeItem('user');
             console.log(user);
 
             let email = user.c_email;
@@ -89,7 +70,7 @@ export default{
                 console.log('res: ' + res);
                 
                 // 로컬스토리지 초기화
-                localStorage.setItem('user', '');
+                // localStorage.setItem('user', '');
                 this.$router.push({name: 'login'});
             })
             .catch(err => {

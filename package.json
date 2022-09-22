@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build --no-clean"
   },
   "dependencies": {
     "@mdi/font": "5.9.55",
@@ -17,6 +17,7 @@
     "lodash": "^4.17.21",
     "roboto-fontface": "*",
     "sockjs-client": "^1.6.0",
+    "swiper": "^8.4.2",
     "v3-infinite-loading": "^1.0.6",
     "vue": "^3.2.33",
     "vue-router": "^4.0.3",

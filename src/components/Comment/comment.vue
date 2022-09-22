@@ -8,7 +8,9 @@
                     <h2>댓글 쓰기</h2>
                     <p class="close" @click="inputState = 0">X</p>
                 </div>
-                <textarea type="text" placeholder="댓글을 입력해주세요!"/>
+                <textarea type="text" v-model="reqData.comment" placeholder="댓글을 입력해주세요!"/>
+                <br/>
+                <button @click="commentPush()" class="comment-button">확인</button>
             </div>
         </div>
         <div class="commentList">
@@ -28,7 +30,18 @@ export default {
                 user: ['jgy', 'mjh', 'pss', 'jgy', 'mjh', 'pss'],
                 comment: ['저도 사고싶네요 ㅠㅠ', '맛있겠네요!', '상태가 좋네요^^', '저도 사고싶네요 ㅠㅠ', '맛있겠네요!', '상태가 좋네요^^'],
             },
+            reqData: {
+                comment: ''
+            },
             inputState: 0,
+        }
+    },
+    methods: {
+        commentPush(){
+            const req = {
+                nickName: '',
+                comment: this.reqData.comment
+            }
         }
     }
 }
@@ -48,7 +61,7 @@ export default {
         }
         .commentInput{
             position: relative;
-            height: 120px;
+            height: 150px;
             top: 50px;
             text-align: left;
             .inputHeader{
@@ -68,10 +81,24 @@ export default {
             textarea{
                 height: 50px;
                 width: 80%;
+                font-size: 12px;
                 margin-left: 20px;
                 padding: 5px;
                 border: 1px solid #333;
                 border-radius: 5px;
+            }
+            .comment-button{
+                position: absolute;
+                margin-top: 5px;
+                right: 12%;
+                width: 40px;
+                height: 30px;
+                border-radius: 5px;
+                cursor: pointer;
+                color: #333;
+                background-color: rgb(232, 232, 232);
+                font-size: 14px;
+                font-weight: 700;
             }
         }
     }

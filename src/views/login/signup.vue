@@ -1,36 +1,30 @@
 <template>
-<div>
+<div class="signup-contain">
     <header class="welcome-header">
-    <h1 class="welcome-header__title">회 원 가 입</h1>
-</header>
+        <h1 class="welcome-header__title">회 원 가 입</h1>
+    </header>
     <v-form ref="form" lazy-validation @submit.prevent="SignupForm">
         <v-row>
             <v-col cols="12">
-            <v-text-field v-model="c_name" label="이름*" :rules="c_name_rule" required></v-text-field>
+            <v-text-field class="inutBox" v-model="c_name" label="이름*" :rules="c_name_rule" required></v-text-field>
             </v-col>
             <v-col cols="12">
-                <v-text-field v-model="c_email" label="이메일*" :rules="emailRules"
+                <v-text-field class="inutBox" v-model="c_email" label="이메일*" :rules="emailRules"
                     :disabled="state == 'ins' ? false : true" required></v-text-field>
             </v-col>
 
             <button class="login-form__btn_right" @click="existEmail(c_email)">이메일 중복 검사</button>
 
             <v-col cols="12">
-                <v-text-field v-model="c_passwd" label="비밀번호*" type="password" :rules="c_passwd_rule"></v-text-field>
+                <v-text-field class="inutBox" v-model="c_passwd" label="비밀번호*" type="password" :rules="c_passwd_rule"></v-text-field>
             </v-col>
             <v-col cols="12">
-                <v-text-field v-model="c_passwd_chk" label="비밀번호 확인*" type="password" :rules="c_passwd_rule2">
+                <v-text-field class="inutBox" v-model="c_passwd_chk" label="비밀번호 확인*" type="password" :rules="c_passwd_rule2">
                 </v-text-field>
             </v-col>
-            <v-col cols="12">
-                <v-text-field v-model="c_phonenum" label="핸드폰 번호" :rules="c_phonenum_rule"></v-text-field>
-            </v-col>
-            <!-- <v-col cols="12">
-                <v-select v-model="user_auth" label="권한*" :items="authList" item-text="name" item-value="value"
-                    return-object :rules="user_auth_rule"></v-select>
-            </v-col> -->
+            <Auth/>
         </v-row>
-
+        <br/><br/>
         <button class="login-form__btn_right"
             @click="signupConsumer()">다음</button>
     </v-form>
@@ -41,9 +35,12 @@
 
 <script>
 import axios from "axios"
-
+import Auth from '../../components/auth.vue';
 export default {
     name: 'SignupForm',
+    components: {
+        Auth
+    },
     data() {
         return {
             c_name: null,
@@ -147,14 +144,55 @@ export default {
                     .catch(err => {
                         console.log(err);
                     });
-            }
-        }}
+            }},
+        },
     }
 </script>
 
-
-
-
-<style>
-
+<style lang="scss" scoped>
+button{
+    margin: auto;
+    font-weight: 700;
+    width: 100%;
+    height: 50px;
+    border-radius: 20px;
+    background-color: #FFC1AA;
+    cursor: pointer;
+}
+.signup-contain{
+    width: 100%;
+    height: 100vh;
+    .auth-box{
+        .auth-title{
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-left: 10px;
+        }
+        .auth{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            .auth-input{
+                font-size: 15px;
+                padding: 10px;
+                width: 45vw;
+                height: 50px;
+            }
+            .auth-complete-btn{
+                width: 25vw;
+                height: 40px;
+            }
+            .timer{
+                width: 50px;
+                font-size: 12px;
+                color: rgb(174, 174, 174);
+            }
+        }
+    }
+}
+.inutBox{
+    background-color: #fff;
+}
 </style>

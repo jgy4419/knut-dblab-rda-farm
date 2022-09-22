@@ -9,8 +9,8 @@
     <ul class="check button1">
     <ul class="check button1">
         
-        <li><button type="button" class="fpmgBt1" v-on:click="navigatesignup">소비자 회원</button></li>
-        <li><button type="button" class="fpmgBt2" v-on:click="navigatecheck_farm">농가 회원</button></li>
+        <li class="button"><button type="button" class="fpmgBt1" v-on:click="navigatesignup">소비자 회원</button></li>
+        <li class="button"><button type="button" class="fpmgBt2" v-on:click="navigatecheck_farm">농가 회원</button></li>
     </ul>
     </ul>
 	</div>
@@ -34,7 +34,9 @@ export default{
 
 </script>
 
-
-	
-<style>
+<style lang="scss" scoped>
+.fpmgBt1, .fpmgBt2{
+    font-size: 17px;
+    font-weight: 500;
+}
 </style>

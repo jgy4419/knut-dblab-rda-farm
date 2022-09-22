@@ -32,7 +32,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.main_t_nav{
+    width: 28vw;
+}
 .nav_m_link{
     margin-top: 3px;
+}
+@media screen and (max-width: 500px){
+    .main_t_nav{
+        width: 100vw;
+    } 
 }
 </style>

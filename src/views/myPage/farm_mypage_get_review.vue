@@ -1,28 +1,6 @@
 <template>
 <div>
-    <div class="main_nav_t_div">
-        <nav class="main_t_nav">
-            <ul class="main_t_nav_list">
-                <li class="nav__btn">
-                    <div class="nav__notification-dot"></div>
-                    <a class="nav__link"><i class="fas fa-bars fa-2x" aria-hidden="true"></i>
-                    </a>
-                </li>
-
-
-                <li class="main_m_li_list">
-                    <a class="nav_m_link" href="workout.html">
-                        <h4 class="user-component__title">이용 후기</h4><i class=" fa-2x" aria-hidden="true" image
-                            src="../image/123.jpg"></i>
-                    </a>
-                </li>
-                <li class="nav__btn">
-                    <a class="nav__link" onclick="goBack()"><i class="fas fa-chevron-left fa-2x" aria-hidden="true"></i>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </div>
+    <Header/>
 
     <fieldset>
         <div class="main_nav_t_review_div">
@@ -115,18 +93,17 @@
             </div>
         </div>
     </fieldset>
-
-<bottom-nav></bottom-nav>
 </div>
 </template>
 
 
 <script>
+import Header from '../../components/Header/backHeader.vue';
 import bottomNav from '@/components/bottomNav.vue';
 import axios from "axios";
 
 export default {
-    components: {bottomNav},
+    components: {Header, bottomNav},
     methods() {
       axios.get='/getAuctionReview/{checkUser}/id';  
     },

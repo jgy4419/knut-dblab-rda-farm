@@ -14,6 +14,7 @@
                 minlength="6">
             <input v-model="phonenum" class="login-form__input" type="number" name="phonenum" required placeholder="휴대폰번호">
 		<!-- 인증번호 받는 부분 추가 요망 -->
+        <input class="login-form__btn_right" type="submit" value="인증번호 받기">
             <!-- <input class="login-form__btn_right" type="submit" value="인증번호 받기">
             <input class="login-form__input" type="text" required placeholder="인증번호를 입력해주세요">
             <input class="login-form__btn_right" type="submit" value="인 증 확 인"> -->
@@ -63,6 +64,8 @@ export default {
 
 
 
-<style>
-
+<style lang="scss" scoped>
+.auth-button, .login-form__btn_right{
+    width: 300px;
+}
 </style>

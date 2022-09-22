@@ -11,15 +11,21 @@ input::-moz-placeholder {
 .div_search{
     height: 50px;
     width: 90%;
-    border: 1px solid #1b5ac2;
+    border: 1px solid rgb(222, 222, 222);
+    border-radius: 5px;
     background: #ffffff;
     margin: 5%;
 }
 
+.upRow{
+    width: 100px;
+    display: flex;
+    justify-content: space-between;
+}
+
 .input_search{
     font-size: 16px;
-
-    padding: 10px;
+    padding: 12px;
     border: 0px;
     outline: none;
     float: left;
@@ -29,12 +35,14 @@ input::-moz-placeholder {
     width: 50px;
     height: 100%;
     border: 0px;
-    background: #1b5ac2;
+    background: #FFC1AA;
     outline: none;
     float: right;
     color: #ffffff
  }
-
+ .btn_file label{
+    width: 120px;
+ }
  .btn4 {
     min-width: 52px;
     height: 21px;
@@ -58,3 +66,26 @@ input::-moz-placeholder {
     border-radius: 2px;
     background: #fff;
 }
+.aside_area{
+    width: 100%;
+    text-align: center;
+    margin: auto;
+}
+.recentSearchBox{ 
+    padding: 0px 10px;
+    border-radius: 5px;
+}
+.profileh2{
+    padding: 0px 10px;
+}
+
+.popularityBox{
+    padding: 0px 10px;
+    border-radius: 5px;
+}
+
+.popularityList{
+    line-height: 1.4;
+    font-size: 12px;
+    font-weight: 500;
+ }

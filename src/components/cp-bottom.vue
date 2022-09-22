@@ -1,23 +1,42 @@
 <template>
-<div class="bottom-contain">
-    <v-btn v-for="btn, i in button.url.length" :key="i" :to=button.url[i] class="button">
-        <span class="icon-text">{{button.text[i]}}</span>
-        <v-icon class="icon">{{button.icon[i]}}</v-icon>
+<v-bottom-navigation
+ value="value"
+    color="teal"
+    grow
+>
+    <v-btn to="/main">
+        <span>Home</span>
+
+        <v-icon>mdi-home</v-icon>
     </v-btn>
+
+    <v-btn to="/search">
+        <span>Search</span>
+
+        <v-icon>mdi-magnify</v-icon>
+    </v-btn>
+
+    <v-btn to="/auction">
+        <span>Auction</span>
+
+        <v-icon>mdi-gavel</v-icon>
+    </v-btn>
+
     <!-- <v-btn to="/trand">
         <span>Trand</span>
 
         <v-icon>mdi-chart-box-outline</v-icon>
     </v-btn> -->
 
-    <v-btn v-on:click="navigatedivision()" class="button">
-        <span class="icon-text">My Page</span>
-        <v-icon class="icon">mdi-account</v-icon>
+    <v-btn v-on:click="navigatedivision()">
+        <span>My Page</span>
+
+        <v-icon>mdi-account</v-icon>
         
     </v-btn>
 
 
-</div>
+</v-bottom-navigation>
 </template>
 
 <script>
@@ -27,12 +46,7 @@ export default {
 		return {
             user: JSON.parse(localStorage.getItem("user")) || "",
             consumer_id: this.consumer_id,
-            farm_id: this.farm_id,
-            button: {
-                url: ['/main', '/search', '/auction'],
-                icon: ['mdi-home', 'mdi-magnify', 'mdi-gavel'],
-                text: ['Home', 'Search', 'Auction']
-            }
+            farm_id: this.farm_id
 		}
 	},
     methods: {
@@ -54,27 +68,8 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style>
 .v-bottom-navigation--grow .v-bottom-navigation__content > .v-btn {
     width: 25%;
-}
-.bottom-contain{
-    position: absolute;
-    padding: 5px;
-    bottom: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    .button{
-        width: 24%;
-        display: flex;
-        flex-direction: column;
-        border-radius: 5px;
-        color: 3333;
-        .icon-text{
-            font-size: 10px;
-            color: grey;
-        }
-    }
 }
 </style>

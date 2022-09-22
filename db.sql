@@ -194,6 +194,16 @@ FOREIGN KEY(`consumer_Id`) REFERENCES consumer_member(consumer_id),
 FOREIGN KEY(`farm_id`) REFERENCES farm_member(farm_id)
 );
 
+-- -----------------------------------------------------
+-- Table `wish`
+-- -----------------------------------------------------
+CERATE TABLE IF NOT EXISTS `wish` (
+  `auction_id` INT NULL COMMENT '경매번호',
+  `consumer_id` INT NULL COMMENT '소비자회원번호',
+  FOREIGN KEY(`auction_Id`) REFERENCES consumer_member(auction_id),
+  FOREIGN KEY(`consumer_Id`) REFERENCES consumer_member(consumer_id),
+)
+
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

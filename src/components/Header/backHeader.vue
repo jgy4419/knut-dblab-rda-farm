@@ -2,20 +2,24 @@
     <!-- 컴포넌트로 나누기 -->
     <header class="header">
         <nav>
-            <li class="navLi">
-                <a class="nav__link" onclick="goBack()"><i class="fas fa-chevron-left fa-2x"
-                        aria-hidden="true"></i>
-                </a>
-            </li>
+            <li class="navLi"><router-link to="/"><v-icon>mdi-home</v-icon></router-link></li>
             <li class="navLi">리뷰 작성</li>
-            <li class="navLi"><v-icon>mdi-home</v-icon></li>
+            <li class="navLi">
+                <p class="nav__link" @click="goBack()"><i class="fas fa-chevron-left fa-2x"
+                        aria-hidden="true"></i>
+                </p>
+            </li>
         </nav>
     </header>   
 </template>
 
 <script>
 export default {
-    
+    methods: {
+        goBack(){
+            this.$router.go(-1);
+        }
+    }
 }
 </script>
 
@@ -25,7 +29,7 @@ export default {
 }
 .header{
     position: relative;
-    width: 100vw;
+    width: 100%;
     height: 60px;
     background-color: #FFC1AA;
     padding: 10px;
@@ -36,8 +40,12 @@ export default {
         justify-content: space-between;
         align-items: center;
         .navLi{
-            font-size: 18px;
+            cursor: pointer;
+            font-size: 16px;
             font-weight: 700;
+        }
+        .navLi:nth-child(1){
+            font-size: 23px;
         }
     }
 }
