@@ -1,5 +1,6 @@
 <template>
     <div>
+        <!--  -->
         <Header :headerProps="headerProps"/>
         <div class="contain">
             <p :style="[getData.length === 0 ? {display: 'block'} : {display: 'none'}]" class="not-auction-title">경매 내역이 없습니다.</p>
