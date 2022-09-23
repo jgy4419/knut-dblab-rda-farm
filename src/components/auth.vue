@@ -41,7 +41,8 @@ export default {
         authState(){
             if(this.c_phonenum.length >= 8){
                 this.auth.phoneAuthState = true;
-
+                
+                axios.post()
                 // axios.get('', params = {
                 //     phoneNumber: this.c_phonenum
                 // }).then(res => {

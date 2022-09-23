@@ -68,7 +68,7 @@ export default {
 
 <style lang="scss" scoped>
     .reviewContain{
-        width: 100vw;
+        width: 100%;
         height: 100vh;
         .header{
             width: 100%;

@@ -3,7 +3,7 @@
     <header class="header">
         <nav>
             <li class="navLi"><router-link to="/"><v-icon>mdi-home</v-icon></router-link></li>
-            <li class="navLi">리뷰 작성</li>
+            <li class="navLi">{{headerProps}}</li>
             <li class="navLi">
                 <p class="nav__link" @click="goBack()"><i class="fas fa-chevron-left fa-2x"
                         aria-hidden="true"></i>
@@ -15,6 +15,9 @@
 
 <script>
 export default {
+    props: {
+        headerProps: String
+    },
     methods: {
         goBack(){
             this.$router.go(-1);

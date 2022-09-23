@@ -81,7 +81,6 @@ export default{
   },
   mounted () {
     this.updateNow();
-    
     setInterval(this.updateNow.bind(this) , 1000);
   },
   //데이터베이스 에서 배열로 가져와서
@@ -92,9 +91,8 @@ export default{
 
   methods: {
     updateNow() {
-      this.now = Math.round(Date.now() / 1000)
+      this.now = Math.round(Date.now() / 1000);
       // aution들이 가지고 있는 시간 빼기
-
     },
     updateDeadlineDate(deadline){
       let date = new Date(); // 2022-07-25 00:00:00.0
@@ -143,19 +141,11 @@ export default{
         }
       });
     },
-    send() {
-      console.log("limit:" + this.$store.state.limit);
-      console.log(this.stompClient);
-      console.log(this.stompClient.connected);
+    // 소켓 연결 -> 데이터 가져옴
+    send() { // 데이터 불러오는 부분
       if (this.stompClient && this.stompClient.connected) {
-        console.log(this.$store.state.limit);
-        console.log(this.$store.state.config.headers.TOKEN);
         this.stompClient.send("/receive_limit/"+this.$store.state.config.headers.TOKEN, this.$store.state.limit, {});
-        
-        this.$store.commit('UP_LIMIT', 4);
-        console.log('st', this.$store.state);
-
-        console.log(this.$store.state.auctionList);
+        // this.$store.commit('UP_LIMIT', 4);
       }
     },
     connect() {
@@ -163,10 +153,7 @@ export default{
       let socket = new SockJS(serverURL);
       this.stompClient = Stomp.over(socket);
       console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
-
-      console.log(this.$store.state.config.headers);
       let headers = { TOKEN: this.$store.state.config.headers.TOKEN };
-      console.log(headers);
       this.stompClient.connect(
         headers,
         frame => {
@@ -176,17 +163,15 @@ export default{
           this.stompClient.subscribe("/send_auction_data/"+this.$store.state.config.headers.TOKEN,  res => {
 
             const response_data = JSON.parse(res.body);
-            console.log(response_data[0]);
-            console.log('deadline: ' + response_data[0].deadline_date);
-            console.log('deadline_date type 확인: ' + typeof(response_data[0].deadline_date));
-            console.log(response_data.length);
-            JSON.parse(res.body)
-            for (let i = 0; i < response_data.length; i++) {
-              this.$store.commit('PUSH_AUCTION', response_data[i]);
-              // this.auctionList.push(response_data[i])
+            console.log("response_data.length: " + response_data.length);
+            
+            if(response_data.length){
+                for (let i = 0; i < response_data.length; i++) {
+                  this.$store.commit('PUSH_AUCTION', response_data[i]);
+                }
             }
-            console.log("this.auctionList");
-            console.log(this.$store.state.auctionList[0]);
+            this.$store.commit('UP_LIMIT', 4);
+            console.log("2131231limit:" + this.$store.state.limit);
           });
           this.stompClient.subscribe("/send_bidding",  res => {
 
@@ -204,7 +189,7 @@ export default{
           console.log('소켓 연결 실패', error);
           this.connected = false;
         }
-      );        
+      );
     }
   },
 }

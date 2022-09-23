@@ -1,7 +1,6 @@
 <template>
 <div>
-    <Header/>
-
+    <Header :headerProps="headerProps"/>
     <fieldset>
         <div class="main_nav_t_review_div">
             <div class="lnb_area ">
@@ -103,6 +102,11 @@ import bottomNav from '@/components/bottomNav.vue';
 
 export default {
     components: {Header, bottomNav},
+    data(){
+        return {
+            headerProps: '이용후기',
+        }
+    },
 }
 </script>
 

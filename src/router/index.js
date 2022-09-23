@@ -211,11 +211,6 @@ const routes = [
     name: 'add_profile',
     component: () => import('../components/add_profile.vue')
   },
-  // {
-  //   path: '/kakaoMap',
-  //   name: 'kakaoMap',
-  //   component: () => import('../components/kakaoMap.vue')
-  // },
   {
     path: '/slide',
     name: 'slide',
@@ -240,11 +235,6 @@ const routes = [
     path: '/consumer_loc',
     name: 'consumer_loc',
     component: () => import('../views/consumer/consumer_loc.vue')
-  },
-  {
-    path: '/KakaoMap',
-    name: 'KakaoMap',
-    component: () => import('../views/auction/KakaoMap.vue')
   },
   
   

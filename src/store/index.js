@@ -70,7 +70,6 @@ export default createStore({
       state.auctionList = [];
     },
     UP_LIMIT: (state, addNum) => {
-      console.log(addNum);
       state.limit += addNum;
     },
     RESET_LIMIT: (state) => {

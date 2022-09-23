@@ -42,10 +42,8 @@ export default {
                     alert('좋아요를 클릭했습니다!');
                 }).catch(err => {console.log(err)});
             }else if(this.like.state === 1){
-                axios.delete('/api/deleteWish', {params: {
-                    auction_id: this.like.auction_id,
-                    consumer_id: this.like.consumer_id
-                }}).then(() => {
+                axios.delete(`/api/deleteWish/${this.like.auction_id}/${this.like.consumer_id}`)
+                .then(() => {
                     alert('좋아요를 취소하였습니다!')
                 }).catch(err => console.log(err))
             }

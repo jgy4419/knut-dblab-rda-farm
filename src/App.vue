@@ -22,6 +22,11 @@ export default {
   width: 28vw;
   height: 100vh;
 }
+.header-icon-size{
+  font-size: 30px;
+  font-weight: 700;
+}
+// .header
 @media screen and (max-width: 500px){
   .app{
     margin: auto;

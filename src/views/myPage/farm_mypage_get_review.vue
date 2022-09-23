@@ -1,6 +1,6 @@
 <template>
 <div>
-    <Header/>
+    <Header :headerProps="headerProps"/>
 
     <fieldset>
         <div class="main_nav_t_review_div">
@@ -104,6 +104,11 @@ import axios from "axios";
 
 export default {
     components: {Header, bottomNav},
+    data(){
+        return {
+            headerProps: '이용후기',
+        }
+    },
     methods() {
       axios.get='/getAuctionReview/{checkUser}/id';  
     },

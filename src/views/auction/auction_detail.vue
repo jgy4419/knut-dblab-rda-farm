@@ -51,7 +51,7 @@
                 </v-btn>
                 <!-- <v-text-field type="number" id=bid_price v-model="bid_price"></v-text-field> -->
                 <div class="stateBtn">
-                    <Like class="like-button" :key="likeReload" @click="!likeReload"/>
+                    <Like class="like-button" :key="likeState" @click="likeStateFunc()"/>
                     <v-btn class="bid-button" block @click="bid()">입찰하기</v-btn>
                 </div>
             </div>
@@ -130,7 +130,7 @@ export default {
         user: JSON.parse(localStorage.getItem("user")),
         testConsumerId: 12,
         userState: false,
-        likeReload: 0
+        likeState: 0
     }),
     mounted(){
         this.$store.state.login.userInfo.consumer_id === this.testConsumerId 
@@ -145,7 +145,15 @@ export default {
         console.log(this.auction); 
     },
     methods: {
+        likeStateFunc(){
+            this.likeState === 0 ? this.likeState = 1 : this.likeState = 0;
+        },
         bid(){
+            console.log('datas', this.auction.consumer_id);
+            console.log('user', this.$store.state.login.userInfo.consumer_id);
+            if(this.auction.consumer_id === null || this.auction.comsumer_id.includes(this.$store.state.login.userInfo.consumer_id)){
+                alert('이미 경매에 참여하셨습니다!');
+            }
             console.log("auction.auction_Id:" + this.auction.auction_Id);
             console.log("auction.a_starting_price: " + this.auction.a_starting_price);
             console.log("bid_price:" + this.bid_price);

@@ -35,7 +35,7 @@ export default {
     position: fixed;
     top: 0;
     z-index: 10;
-    width: 100vw;
+    width: 28vw;
     height: 100vh;
     .back{
         position: absolute;

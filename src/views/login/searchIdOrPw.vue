@@ -26,11 +26,15 @@
                 </div>
             </div>
             <v-text-field v-model="name" :rules="emailRules" label="이름" required ></v-text-field>
+            <v-text-field :style="[$route.path === '/login/searchId' ? {display: 'block'} : {display: 'none'}]"
+            v-model="phone" :rules="emailRules" label="핸드폰 번호" required ></v-text-field>
 
             <v-text-field :style="[$route.path === '/login/searchId' ? {display: 'none'} : {display: 'block'}]"
             v-model="email" :rules="emailRules" label="E-mail" required ></v-text-field>
         </v-form>
-        <Auth @authRes="log"/>
+        <button class="id-search-btn"
+         :style="[$route.path === '/login/searchId' ? {display: 'block'} : {display: 'none'}]">아이디 찾기</button>
+        <Auth :style="[$route.path === '/login/searchId' ? {display: 'none'} : {display: 'block'}]" @authRes="log"/>
         <div :style="[authModal === true ? {display: 'block'} : {display: 'none'}]" class="search-pw-input-box">
             <div class="back"/>
             <div class="inner">
@@ -134,6 +138,13 @@ export default {
 </style>
 
 <style lang="scss" scoped>
+.pw-change-btn, .id-search-btn{
+    width: 100%;
+    height: 60px;
+    font-weight: 700;
+    font-size: 16px;
+    background-color: #FFC1AA;
+}
 label{
   font-size: 17px;
   font-weight: 500;
@@ -189,13 +200,6 @@ label{
             font-size: 18px;
             font-weight: 700;
             margin: 40px 0;
-        }
-        .pw-change-btn{
-            width: 100%;
-            height: 60px;
-            font-weight: 700;
-            font-size: 16px;
-            background-color: #FFC1AA;
         }
     }
 }

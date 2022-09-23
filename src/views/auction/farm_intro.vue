@@ -30,13 +30,13 @@
             <div class="farm-address">
                 <button @click="addressToggle()" class="address">농가 주소</button>
                 <div class="address-detail">
-                    <div id="map" class="map" style="width: 600px; height: 600px" v-if="this.addressState === true">지도 생길 부분</div>
+                    <!-- <div id="map">456</div> -->
+                    <!-- <div id="map" class="map" style="width: 600px; height: 600px" v-if="this.addressState === true">지도 생길 부분</div> -->
                 </div>
             </div>
         </div> 
-        <div id="map" class="map">123</div>   
         <div id="map">456</div>   
-        <div id="map" v-if="this.addressState === true">789</div>   
+        <!-- <div id="map" v-if="this.addressState === true">789</div>    -->
     </div>
 </template>
 
@@ -50,7 +50,7 @@ export default {
     data(){
         return {
             headerName: '',
-            map: null,
+            // map: null,
             test: {
                 farmName: '따과의 즐거운 농장',
                 name: '김따과',
@@ -65,10 +65,12 @@ export default {
             },
             bestState: false,
             addressState: false,
+            f_location: '충북 충주시 대소원면 대학로 50',
+            f_farm_name: '교통농가',
         }
     },
     mounted(){
-        if (window.kakao && window.kakao.maps) {
+        if (window.kakao && window.kakao.maps && !(new kakao.maps.services.Geocoder())) {
             this.initMap();     
         } else {
             const script = document.createElement("script");
@@ -76,25 +78,47 @@ export default {
             script.style.height = '300px';
             /* global kakao */
             script.onload = () => kakao.maps.load(this.initMap);
-            script.src = "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=e912469aedfe46c334cf869f731be1fa";
+            script.src = "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=e912469aedfe46c334cf869f731be1fa&libraries=services";
             document.head.appendChild(script);
         }
-        // // window.onload = () => {
-        //     window.kakao && window.kakao.maps ? this.addScript() : this.initMap();
-            
-        // // }
     },
     methods: {
         initMap() {
             const container = document.getElementById("map");
+            container.style.width = '300px';
+            container.style.height = '300px';
             const options = {
                 center: new kakao.maps.LatLng(33.450701, 126.570667),
                 level: 5,
             };
-            console.log('sdfsdfsd');
-            //지도 객체를 등록합니다.
-            //지도 객체는 반응형 관리 대상이 아니므로 initMap에서 선언합니다.
-            this.map = new kakao.maps.Map(container, options);
+            var map = new kakao.maps.Map(container, options);
+
+
+            // 주소-좌표 변환 객체를 생성합니다
+            var geocoder = new kakao.maps.services.Geocoder();
+
+            // 주소로 좌표를 검색합니다
+            geocoder.addressSearch(this.f_location, (result, status) => {
+                console.log(result);
+                console.log(status);
+                // 정상적으로 검색이 완료됐으면 
+                if (status === kakao.maps.services.Status.OK) {
+                    var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+                    // 결과값으로 받은 위치를 마커로 표시합니다
+                    var marker = new kakao.maps.Marker({
+                        map: map,
+                        position: coords
+                    });
+                    // 인포윈도우로 장소에 대한 설명을 표시합니다
+                    var infowindow = new kakao.maps.InfoWindow({
+                        content: `<div style="width:150px;text-align:center;padding:6px 0;">${this.f_farm_name}</div>`
+                    });
+                    infowindow.open(map, marker);
+                    // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+                    map.setCenter(coords);
+                }
+            });
         },
         addScript() {
             const script = document.createElement('script');
@@ -109,18 +133,6 @@ export default {
         addressToggle(){
             this.addressState = !this.addressState;
         },
-        // initMap() {
-        //     const container = document.getElementById("map");
-        //     const options = {
-        //         center: new kakao.maps.LatLng(33.450701, 126.570667),
-        //         level: 5,
-        //     };
-
-        //     //지도 객체를 등록합니다.
-        //     //지도 객체는 반응형 관리 대상이 아니므로 initMap에서 선언합니다.
-        //     this.map = new kakao.maps.Map(container, options);
-        //     console.log(container);
-        // },
     }
 }
 </script>

@@ -64,7 +64,7 @@ export default {
             script.onload = () => kakao.maps.load(this.initMap);
             // src 속성을 추가해야 javaScript API를 불러올 수 있다
             // 카카오 맵 api 를 동적으로 script를 로딩하긴 위해선 autoload=false 옵션을 지정해주어야 함
-            script.src = 'http://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=9d1005957d532bc9535412a3ca609640';
+            script.src = '//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=e912469aedfe46c334cf869f731be1fa&libraries=services';
             document.head.appendChild(script);
         },
         search() { //@click을 사용할 때 함수는 이렇게 작성해야 한다.
