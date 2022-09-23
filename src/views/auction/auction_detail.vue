@@ -49,7 +49,7 @@
                 <v-btn class="delete-button" v-if="userState === true" block @click="$router.push(`/auction_reg/${auction}`)">
                     수정하기
                 </v-btn>
-                <!-- <v-text-field type="number" id=bid_price v-model="bid_price"></v-text-field> -->
+                <v-text-field type="number" id=bid_price v-model="bid_price"></v-text-field>
                 <div class="stateBtn">
                     <Like class="like-button" :key="likeState" @click="likeStateFunc()"/>
                     <v-btn class="bid-button" block @click="bid()">입찰하기</v-btn>
@@ -120,7 +120,7 @@ import Slide from '../../components/slide.vue';
 
 export default {
     name: 'App',
-    components: { Header, Slide, Like},
+    components: { Header, Slide, Like },
 
     data: () => ({
         headerProps: '경매 상세',
@@ -151,9 +151,13 @@ export default {
         bid(){
             console.log('datas', this.auction.consumer_id);
             console.log('user', this.$store.state.login.userInfo.consumer_id);
+
+            // 이미 경매에 참여한 사람들 알아내기
             if(this.auction.consumer_id === null || this.auction.comsumer_id.includes(this.$store.state.login.userInfo.consumer_id)){
                 alert('이미 경매에 참여하셨습니다!');
+                return;
             }
+            
             console.log("auction.auction_Id:" + this.auction.auction_Id);
             console.log("auction.a_starting_price: " + this.auction.a_starting_price);
             console.log("bid_price:" + this.bid_price);

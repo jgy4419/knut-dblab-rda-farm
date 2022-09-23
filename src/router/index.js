@@ -157,7 +157,7 @@ const routes = [
   },
   // 리뷰 작성 페이지
   {
-    path: '/farm_mypage_auction/writeReview',
+    path: '/farm_mypage_auction/writeReview/:id',
     name: 'writeReview',
     component: () => import('../views/review/writeReview.vue')
   },

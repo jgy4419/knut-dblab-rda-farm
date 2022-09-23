@@ -89,8 +89,8 @@ export default{
 
             const response_data = JSON.parse(res.body);
             console.log(response_data[0]);
-            console.log('deadline: ' + response_data[0].deadline_date);
-            console.log('deadline_date type 확인: ' + typeof(response_data[0].deadline_date));
+            // console.log('deadline: ' + response_data[0].deadline_date);
+            // console.log('deadline_date type 확인: ' + typeof(response_data[0].deadline_date));
             console.log(response_data.length);
             JSON.parse(res.body)
             for (let i = 0; i < response_data.length; i++) {

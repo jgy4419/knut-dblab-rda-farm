@@ -16,7 +16,7 @@
                     <div class="auctionBtns">
                         <button class="auctionBtn">경매종료</button>
                         <button class="auctionBtn">계산하기</button>
-                        <button class="auctionBtn">후기작성</button>
+                        <router-link :to="`/farm_mypage_auction/writeReview/${getData[i].auction_Id}`"><button class="reviewBtn">후기작성</button></router-link>
                     </div>
                 </div>
             </div>
@@ -118,7 +118,7 @@ export default {
             .auctionBtns{
                 display: flex;
                 justify-content: space-between;
-                .auctionBtn{
+                .auctionBtn, .reviewBtn{
                     width: 80px;
                     height: 40px;
                     border-radius: 5px;

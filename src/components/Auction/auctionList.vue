@@ -145,7 +145,7 @@ export default{
     send() { // 데이터 불러오는 부분
       if (this.stompClient && this.stompClient.connected) {
         this.stompClient.send("/receive_limit/"+this.$store.state.config.headers.TOKEN, this.$store.state.limit, {});
-        // this.$store.commit('UP_LIMIT', 4);
+        this.$store.commit('UP_LIMIT', 4);
       }
     },
     connect() {
