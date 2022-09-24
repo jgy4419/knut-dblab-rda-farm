@@ -1,6 +1,7 @@
 <template>
   <div class="auction-contain">
     <Header :headerProps="headerProps"/>
+    <!-- 사진 데이터 props로 넣어주기 :imgData = "imgData"명으로 넣어주기-->
     <Slide />
     <AuctionList/>
       <bottom-nav/>
@@ -10,13 +11,12 @@
 
 <script>
 // import axios from "axios"
-import Stomp from 'webstomp-client'
-import SockJS from 'sockjs-client'
+// import Stomp from 'webstomp-client'
+// import SockJS from 'sockjs-client'
 import Header from '../../components/Header/bellAndBackHeader.vue';
 import Slide from '../../components/slide';
 import AuctionList from '../../components/Auction/auctionList.vue';
 import bottomNav from '@/components/bottomNav.vue';
-import axios from "axios"
 // import { ref } from 'vue';
 
 
@@ -26,11 +26,12 @@ export default{
   data() {
       return {        
         headerProps: '경매 알림',
-        limit: 0,
-        infiniteId: +new Date(),
-        now: 0,
+        // limit: 0,
+        // infiniteId: +new Date(),
+        // now: 0,
       }
   },
+  /*
   mounted () {
     this.updateNow();
     
@@ -119,6 +120,7 @@ export default{
       );        
     }
   },
+  */
 }
 </script>
 

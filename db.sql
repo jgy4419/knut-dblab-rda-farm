@@ -238,6 +238,9 @@ ALTER TABLE alert add FOREIGN KEY(consumer_Id) REFERENCES consumer_member(consum
 -- ALTER TABLE search_word add FOREIGN KEY(farm_id) REFERENCES farm_member(farm_id);
 
 
+-- 경매횟수 컬럼 추가
+-- alter table `consumer_member` add `count_auction` INT(11) default 0;
+-- alter table `farm_member` add `count_auction` INT(11) default 0;
 
 --경매 소비자
 -- ?

@@ -13,28 +13,28 @@
             <div class="login_keep_wrap" id="login_keep_wrap">
                 <div class="keep_check">
                     <div>
-                        <input type="radio" id="consumer" value="consumer" v-model="checkUser">
+                        <input type="radio" id="consumer" value="consumer" v-model="info.checkUser">
                         <label id="consumer-text" for="consumer">소비자</label>
                     </div>
 
                     <br>
                     <div>
-                        <input type="radio" id="farm" value="farm" v-model="checkUser">
+                        <input type="radio" id="farm" value="farm" v-model="info.checkUser">
                         <label class="farm-text" for="farm">농가</label>  
                     </div>
                     <br>
                 </div>
             </div>
-            <v-text-field v-model="name" :rules="emailRules" label="이름" required ></v-text-field>
+            <v-text-field v-model="info.name" label="이름" required ></v-text-field>
             <v-text-field :style="[$route.path === '/login/searchId' ? {display: 'block'} : {display: 'none'}]"
-            v-model="phone" :rules="emailRules" label="핸드폰 번호" required ></v-text-field>
+            v-model="info.phonenum" label="핸드폰 번호" required ></v-text-field>
 
             <v-text-field :style="[$route.path === '/login/searchId' ? {display: 'none'} : {display: 'block'}]"
-            v-model="email" :rules="emailRules" label="E-mail" required ></v-text-field>
+            v-model="info.email" :rules="emailRules" label="E-mail" required ></v-text-field>
         </v-form>
         <button class="id-search-btn"
-         :style="[$route.path === '/login/searchId' ? {display: 'block'} : {display: 'none'}]">아이디 찾기</button>
-        <Auth :style="[$route.path === '/login/searchId' ? {display: 'none'} : {display: 'block'}]" @authRes="log"/>
+         :style="[$route.path === '/login/searchId' ? {display: 'block'} : {display: 'none'}]" @click="findId()">아이디 찾기</button>
+        <Auth :info="info" :style="[$route.path === '/login/searchId' ? {display: 'none'} : {display: 'block'}]" @authRes="log"/>
         <div :style="[authModal === true ? {display: 'block'} : {display: 'none'}]" class="search-pw-input-box">
             <div class="back"/>
             <div class="inner">
@@ -46,7 +46,7 @@
                     <v-text-field class="inutBox" v-model="passwd_chk" label="비밀번호 확인*" type="password" :rules="c_passwd_rule2">
                     </v-text-field>
                 </v-col>
-                <button class="pw-change-btn">비밀번호 변경 완료!</button>
+                <button class="pw-change-btn" @click="updatePassword()">비밀번호 변경 완료!</button>
             </div>
         </div>
     </div>
@@ -68,10 +68,12 @@ export default {
             passwd: null,
             passwd_chk: null,
             valid: false,
-            checkUser: 'consumer',
-            name: null,
-            email: null,
-            phone: null,
+            info: {
+                checkUser: 'consumer',
+                name: null,
+                email: null,
+                phonenum: null,
+            },
             token: null,
             show1: false,
             show2: true,
@@ -93,17 +95,46 @@ export default {
                 v => v === this.c_passwd || '패스워드가 일치하지 않습니다.'
             ],
             authModal: false,
+            phoneAuthNumber: null,
+            id: null,
         };
     },
     methods: { 
-        login() {
-            axios.post('/api/login',  { email: this.email, checkUser: this.checkUser, password: this.password})
+        findId(){
+            axios.post('/api/findEmail', { checkUser: this.info.checkUser, name: this.info.name, phonenum: this.info.phonenum})
             .then(res => {
-                console.log(res);
+                console.log(res.data);
                 if (res.data == "") {
-                    alert("아이디 또는 비밀번호가 틀렸습니다!")
-                    console.log("....");
-                } else if (res.data.consumer_id == 0){
+                    alert("이름 또는 핸드폰 번호가 틀렸습니다!");
+                } else {
+					alert(`회원님의 이메일은 ${res.data}입니다.`);
+				}
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        log(event){
+            // 인증번호 맞는지 검사하고 맞다면 비밀번호 변경창 띄우기
+            console.log('event: ', event);
+            if(event.authInput == event.phoneAuthNumber){
+                this.authModal = true;
+                this.id = event.id;
+            } else {
+                alert("인증번호가 맞지 않습니다!")
+            }
+            console.log('this.authModal: ', this.authModal);
+            console.log(authCounter);
+        },
+        updatePassword(){
+            console.log()
+            if(this.passwd != this.passwd_chk){
+                alert("비밀번호가 같지 않습니다!");
+                return;
+            }
+            axios.patch('/api/memberPassword',  { checkUser: this.info.checkUser, id: this.id, passwd: this.passwd})
+            .then(res => {
+                console.log(res.data);
+                if (res.data.consumer_id == 0){
 					alert("중복 로그인입니다! 다시 한번 로그인 해주세요!")
 					console.log("중복 로그인!");
 				} else {
@@ -120,11 +151,6 @@ export default {
                 console.log(err);
             });
         },
-        log(event){
-            console.log(event);
-            this.authModal = event;
-            console.log(this.authModal);
-        }
     },
 }
 </script>

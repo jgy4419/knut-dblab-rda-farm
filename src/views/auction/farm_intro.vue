@@ -7,11 +7,11 @@
         <div class="farm-name-tel">
             <div class="farm-userName">
                 <h3 class="userName">이름</h3>
-                <p>{{test.name}}</p>
+                <p>{{farmIntroData.f_name}}</p>
             </div>
             <div class="farm-tel">
                 <h3 class="tel">연락처</h3>
-                <p>{{test.tel}}</p>
+                <p>{{farmIntroData.f_phonenum}}</p>
             </div>
         </div>
         <div class="farm-description">
@@ -41,6 +41,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 /*global kakao*/
 import Header from '../../components/Header/bellAndBackHeader.vue';
 export default {
@@ -67,9 +68,19 @@ export default {
             addressState: false,
             f_location: '충북 충주시 대소원면 대학로 50',
             f_farm_name: '교통농가',
+            // 실제 들어올 데이터
+            // 프로필 사진, 농가설명, 주요농작물, 농가 주소 x, y 좌표(이건 나중에)
+            farmIntroData: {},
         }
     },
     mounted(){
+        console.log(this.$route.params.id);
+        axios.get(`/api/farmMember/${this.$route.params.id}`)
+        .then(res => {
+            this.farmIntroData = res.data;
+            console.log(this.farmIntroData);
+        }).catch(error => console.log(error));
+
         if (window.kakao && window.kakao.maps && !(new kakao.maps.services.Geocoder())) {
             this.initMap();     
         } else {

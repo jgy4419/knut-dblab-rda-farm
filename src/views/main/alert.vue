@@ -79,7 +79,7 @@ export default {
         }
         console.log(this.checkUser + '/' + this.id);
 
-        this.$sse.create(`http://118.67.134.38:8080/api/subscribeAlert/` + this.checkUser + '/' + this.id)
+        this.$sse.create(`http://118.67.134.38:80/api/subscribeAlert/` + this.checkUser + '/' + this.id)
         .on('init', (init_data) => {
 
             console.log('init: ');

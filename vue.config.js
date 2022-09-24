@@ -26,7 +26,7 @@ module.exports = defineConfig({
       },
     },
     // https: true,
-    port: 8082
+    port: 8082,
   },
   outputDir: '../auction_backend/src/main/resources/static',
 })

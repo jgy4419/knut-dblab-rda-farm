@@ -25,7 +25,8 @@ export default createStore({
       }
     },
     auctionList: [],
-    limit: 2,
+    limit: 0,
+    searchAuctionList: [],
     alertList: [],
     keywordList: [],
     popularKeywordList: [],
@@ -117,6 +118,30 @@ export default createStore({
     INIT_POPULAR_KEYWORD_LIST: (state, init_popularKeywordList) => {
       console.log(init_popularKeywordList);
       state.popularKeywordList = init_popularKeywordList;
+    },
+
+    INIT_SEARCH_AUCTION_LIST: (state, init_auctionList) => {
+      console.log(init_auctionList);
+      state.searchAuctionList = init_auctionList;
+      console.log(state.searchAuctionList);
+    },
+    PUSH_SEARCH_AUCTION: (state, auction) => {
+      console.log(auction);
+      state.searchAuctionList.push(auction);
+    },
+    RESET_SEARCH_AUCTION_LIST: (state) => {
+      state.searchAuctionList = [];
+    },
+    UPDATE_SEARCH_BID_PRICE: (state, response_bidding) => {
+      console.log("UPDATE_BID_PRICE");
+      console.log(response_bidding);
+
+      for (let i = 0; i < state.searchAuctionList.length; i++) {
+        if(response_bidding.auction_Id == state.searchAuctionList[i].auction_Id){
+          state.searchAuctionList[i].bid_price = response_bidding.bid_price
+          break;
+        }
+      }
     },
 
   },

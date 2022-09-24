@@ -1,7 +1,8 @@
 <template>
     <div>
         <Header :headerProps="headerProps"/>
-        <Slide/>
+        <!-- 슬라이드 이미지 props로 넘겨주시면 됩니다! -->
+        <Slide :imgData="imgData"/>
         <fieldset>
             <h2 class="profileh2">상세 정보</h2>
             <h2 class="profileh2">{{auction.auction_name}}</h2>
@@ -13,16 +14,21 @@
                             <th>{{auction.productDTO.product}}</th>
                             <td>{{auction.productDTO.product_kg}}kg</td>
                         </tr>
-                        <tr class="">
+                        <!-- <tr class="">
                             <th>consumer_id : {{testConsumerId}}</th>
-                        </tr>
+                        </tr> -->
                         <tr class="">
-                            <th>시작 가격</th>
+                            <th>시작가</th>
                             <td>{{auction.a_starting_price}}원</td>
                         </tr>
 
                         <tr class="">
-                            <th>현재 가격</th>
+                            <th>최대 입찰가</th>
+                            <td>{{auction.a_max_price}}원</td>
+                        </tr>
+
+                        <tr class="">
+                            <th>현재가</th>
                             <td>{{auction.bid_price}}원</td>
                         </tr>
 
@@ -65,33 +71,33 @@
                     <li id="_rowLi20220213173042CHK2022021381488661" class="goods_pay_item ">
                         <div class="goods_item">
                             <p class="goods_thumb">
-                                <img :src='`/product_images/${auction.productDTO.product_img_name}.png`'
+                                <img :src='`/product_images/${farmInformation.productDTO.product_img_name}.png`'
                                     alt="" width="90" height="90" /></p>
                                 <!-- <img src="https://suhofarm.com/_upload/mall/20220112173148_86227.jpg" alt="" width="90" height="90"> -->
                             <div class="goods_info">
 
                                 <p class="guide2">
-                                    농가명 : {{auction.f_farm_name}}
+                                    농가명 : {{farmInformation.f_farm_name}}
                                 </p>
                                 <p class="guide2">
-                                    대표자 : {{auction.f_name}}
+                                    대표자 : {{farmInformation.f_name}}
                                 </p>
                                 <p class="guide2">
-                                    사업자 등록번호 : {{auction.f_num}}
+                                    사업자 등록번호 : {{farmInformation.f_num}}
                                 </p>
                                 <p class="guide2">
-                                    농가 주소 : {{auction.f_location}}
+                                    농가 주소 : {{farmInformation.f_location}}
                                 </p>
                                 <p class="guide2">
-                                    연락처 : {{auction.f_phonenum}}
+                                    연락처 : {{farmInformation.f_phonenum}}
                                 </p>
                             </div>
                         </div>
                         <div class="seller_item">
                             <div class="inner">
 
-                                <span class="seller">{{auction.f_farm_name}}</span>
-                                <span class="tel">{{auction.f_phonenum}}</span>
+                                <span class="seller">{{farmInformation.f_farm_name}}</span>
+                                <span class="tel">{{farmInformation.f_phonenum}}</span>
                                 <p
                                     class="state_button qna _click(nmp.front.order.timeline.home.list.shoppingInquiry(/merchant/shoppingInquiry/2022021381488661)) _stopDefault">
                                     문의하기
@@ -102,7 +108,7 @@
                 </ul>
             </div>
         <form action="farm_intro" class="login-form">
-            <input class="login-form__btn" type="submit" value="농가 상세 소개">
+            <router-link :to="`/auction_detail/farm_intro/${farmInformation.farm_id}`"><input class="login-form__btn" type="submit" value="농가 상세 소개"></router-link>
         </form>
     </div>
 </template>
@@ -130,19 +136,24 @@ export default {
         user: JSON.parse(localStorage.getItem("user")),
         testConsumerId: 12,
         userState: false,
-        likeState: 0
+        likeState: 0,
+        isMaxPrice: 0,
+        bidAlertText: "입찰하시겠습니까?",
+        imgData: [],
+        farmInformation: {},
     }),
     mounted(){
-        this.$store.state.login.userInfo.consumer_id === this.testConsumerId 
+        this.$store.state.login.userInfo.farm_id === this.auction.farm_id || this.$store.state.login.userInfo.farm_id
         ? this.userState = true 
         : this.userState = false;
     },
     created() {
         this.connect()
-
-        console.log(this.$route.params.auction);
+        this.farmInformation = JSON.parse(this.$route.params.auction);
+        console.log('생산자 정보', this.farmInformation);
         this.auction = JSON.parse(this.$route.params.auction)
-        console.log(this.auction); 
+        this.imgData.push(this.auction.productDTO.product_img_name);
+        console.log('pushImg', this.imgData);
     },
     methods: {
         likeStateFunc(){
@@ -151,13 +162,8 @@ export default {
         bid(){
             console.log('datas', this.auction.consumer_id);
             console.log('user', this.$store.state.login.userInfo.consumer_id);
+            console.log(this.bid_price, this.auction.a_max_price);
 
-            // 이미 경매에 참여한 사람들 알아내기
-            if(this.auction.consumer_id === null || this.auction.comsumer_id.includes(this.$store.state.login.userInfo.consumer_id)){
-                alert('이미 경매에 참여하셨습니다!');
-                return;
-            }
-            
             console.log("auction.auction_Id:" + this.auction.auction_Id);
             console.log("auction.a_starting_price: " + this.auction.a_starting_price);
             console.log("bid_price:" + this.bid_price);
@@ -166,20 +172,35 @@ export default {
             console.log(this.stompClient);
             console.log(this.stompClient.connected);
 
-            if (this.bid_price < this.auction.a_starting_price) {
-                alert("시작가격보다 낮습니다!!")
-                return
+            // 이미 경매에 참여한 사람들 알아내기
+            if(this.auction.comsumer_id == this.$store.state.login.userInfo.consumer_id){
+                alert('이미 경매에 참여하셨습니다!');
+                return;
+            }
+            if(this.bid_price > this.auction.a_max_price){
+                alert('최대 입찰가를 초과했습니다!');
+                return;
+            }
+            if(this.bid_price == this.auction.a_max_price){
+                this.isMaxPrice = 1;
+                this.bidAlertText = "최고 입찰가로 " + this.bidAlertText;
             }
 
             if (this.bid_price > this.auction.bid_price && this.stompClient && this.stompClient.connected){
-                this.stompClient.send("/receive_bidding", JSON.stringify(
+                if(confirm(this.bidAlertText) == true){
+                    this.stompClient.send("/receive_bidding", JSON.stringify(
                     {
                         auction_Id: this.auction.auction_Id, 
                         bid_price: this.bid_price, 
+                        farm_id: this.auction.farm_id,
+                        auction_consumer_id: this.auction.consumer_id,
                         consumer_id: this.user.consumer_id, 
-                        auction_name: this.auction.auction_name}), {});
+                        auction_name: this.auction.auction_name, 
+                        isMaxPrice: this.isMaxPrice }), {});
+                    this.auction.comsumer_id = this.$store.state.login.userInfo.consumer_id
+                }
             } else {
-                alert("현재 경매가격보다 낮습니다!!")
+                alert("현재 경매가보다 낮습니다!!")
             }
         },
         connect() {

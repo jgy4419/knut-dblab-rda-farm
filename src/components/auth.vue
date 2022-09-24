@@ -9,17 +9,26 @@
                         {{String(Math.floor((auth.authCounter  / (1000 * 60 )) % 60 )).padStart(2, "0")}} :
                         {{String(Math.floor((auth.authCounter / 1000 ) % 60)).padStart(2, "0")}}
                     </p>
-                    <button class="auth-complete-btn" @click="$emit('authRes', auth.authRes)">확인</button>
+                    <button class="auth-complete-btn" @click="$emit('authRes', {authInput: this.auth.authInput, id: this.id, phoneAuthNumber: this.phoneAuthNumber})">확인</button>
                 </div>
             </div>
-            <v-text-field v-model="c_phonenum" label="핸드폰 번호" :rules="c_phonenum_rule"></v-text-field>
+            <v-text-field v-model="phonenum" label="핸드폰 번호" :rules="phonenum_rule"></v-text-field>
             <button class="auth-button" @click="authState()">인증 번호 받기</button>
         </v-col>
     </div>
 </template>
 
 <script>
+import axios from "axios"
+
 export default {
+    props: {
+        info: {
+            checkUser: String,
+            name: String,
+            email: String
+        }
+    },
     data(){
         return{
             auth: {
@@ -31,6 +40,8 @@ export default {
                 authRes: 0,
                 authRes: true // 임시로 true false로 바꿔놓기
             },
+            id: null,
+            phoneAuthNumber: null,
         }
     },
     unmounted(){
@@ -39,15 +50,20 @@ export default {
     methods: {
         // 인증 input창 생성
         authState(){
-            if(this.c_phonenum.length >= 8){
+            console.log(this.info);
+            console.log(this.phonenum);
+            if(this.phonenum.length >= 8){
                 this.auth.phoneAuthState = true;
                 
-                axios.post()
-                // axios.get('', params = {
-                //     phoneNumber: this.c_phonenum
-                // }).then(res => {
-                //     this.auth.authRes = res;
-                // }).catch(err => console.log(err))
+                axios.post('/api/findPassword',  { checkUser: this.info.checkUser, name: this.info.name, email: this.info.email, phonenum: this.phonenum})
+                .then(res => {
+                    console.log(res.data);
+                    this.id = res.data.id;
+                    this.phoneAuthNumber = res.data.phoneAuthNumber;
+                })
+                .catch(err => {
+                    console.log(err);
+                });
 
                 setInterval(() => {
                     this.auth.authCounter -= 1000;

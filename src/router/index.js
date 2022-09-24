@@ -145,7 +145,7 @@ const routes = [
     component: () => import('../views/auction/auction_detail.vue')
   },
   {
-    path: '/auction_detail/farm_intro',
+    path: '/auction_detail/farm_intro/:id',
     name: 'farm_intro',
     component: () => import('../views/auction/farm_intro')
   },

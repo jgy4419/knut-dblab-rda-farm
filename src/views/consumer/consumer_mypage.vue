@@ -28,9 +28,9 @@
         <fieldset>
             <ul class="check button1">
                 <li><button type="button" class="fpmgBt2" onclick="location.href='/#'">경매횟수</button></li>
-                <li><button type="button" class="fpmgBt2" onclick="location.href='/#'">적립금</button></li>
-                <li><button type="button" class="fpmgBt1" onclick="location.href='/#'">10</button></li>
-                <li><button type="button" class="fpmgBt1" onclick="location.href='/#'">50,000</button></li>
+                <li><button type="button" class="fpmgBt2" onclick="location.href='/#'">나의 파치포인트</button></li>
+                <li><button type="button" class="fpmgBt1" onclick="location.href='/#'">{{pachiCount}}</button></li>
+                <li><button type="button" class="fpmgBt1" onclick="location.href='/#'">{{pachiPoint.toLocaleString()}}원</button></li>
             </ul>
         </fieldset>
 
@@ -61,16 +61,24 @@ export default {
     data(){
         return{
             headerProps: '마이페이지',
-            userData: {}
+            userData: {},
+            pachiPoint: 0,
+            pachiCount: 0,
         }
     },
-    mounted(){
+    async mounted(){
         this.userData = this.$store.state.login.userInfo;
         console.log(this.userData.consumer_id);
-        axios.get(`/api/consumetPachiPoint/${this.userData.consumer_id}`)
+        await axios.get(`/api/consumerPachiPoint/${this.userData.consumer_id}`)
         .then(res => {
+            this.pachiPoint = res.data;
             console.log(res);
-        }).catch(err => console.log(err))
+        }).catch(error => console.log(error));
+        
+        axios.get(`/api/consumerCountAuction/${this.userData.consumer_id}`)
+        .then(res => {
+            this.pachiCount = res.data;
+        }).catch(error => console.log(error));
     }
 }
 </script>

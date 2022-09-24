@@ -64,7 +64,6 @@
 import Like from '../like.vue';
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
-import axios from "axios"
 // import { ref } from 'vue';
 
 
@@ -96,7 +95,9 @@ export default{
     },
     updateDeadlineDate(deadline){
       let date = new Date(); // 2022-07-25 00:00:00.0
-
+      console.log('date', date); // 현재시간 밀리초
+      console.log('auction', this.auction);
+      console.log('deadline', deadline)
       date.setFullYear(Number(deadline.substr(0, 4)))
       date.setMonth(Number(deadline.substr(5, 2))-1)  // 1월~12월 => 0~11
       date.setDate(Number(deadline.substr(8, 2)))
@@ -114,12 +115,9 @@ export default{
       let hours =  Math.floor(tmp_time / (60*60));
       let minutes = Math.floor(tmp_time % (60*60) / 60);
       let seconds = Math.floor(tmp_time % (60*60) % 60);
-      return `${day}일 ${hours}시 ${minutes}분 ${seconds}초 후`;
+      return `${day}일 ${hours}시간 ${minutes}분 ${seconds}초 후`;
     },
     navigateProduct (auction) {
-      console.log("navigateProduct");
-      console.log(auction);
-      console.log(auction.bid_num);
       // this.$router.push({path:`/user/${auction_id}`, params: { auction_id: 3}});
       this.$router.push({name:'auction_detail', params: { id: auction.auction_Id, auction: JSON.stringify(auction) }});
       
@@ -128,24 +126,25 @@ export default{
       console.log('!!');
         this.$router.go(-1);
     },
-    moreProduct($state) {
-      console.log('state', $state);
-      this.send(),
-      then(({ data }) => {
-        if (data.hits.length) {
-          this.page += 1;
-          this.list.push(...data.hits);
-          $state.loaded();
-        } else {
-          $state.complete();
-        }
-      });
+    moreProduct() {
+      this.send();
+      // then(({ data }) => {
+      //   console.log('-------------------------------');
+      //   console.log(134, 'data: ', data);
+      //   console.log(data.hits);
+      //   if (data.hits.length) {
+      //     this.page += 1;
+      //     this.list.push(...data.hits);
+      //     $state.loaded();
+      //   } else {
+      //     $state.complete();
+      //   }
+      // });
     },
     // 소켓 연결 -> 데이터 가져옴
     send() { // 데이터 불러오는 부분
       if (this.stompClient && this.stompClient.connected) {
         this.stompClient.send("/receive_limit/"+this.$store.state.config.headers.TOKEN, this.$store.state.limit, {});
-        this.$store.commit('UP_LIMIT', 4);
       }
     },
     connect() {
@@ -169,8 +168,10 @@ export default{
                 for (let i = 0; i < response_data.length; i++) {
                   this.$store.commit('PUSH_AUCTION', response_data[i]);
                 }
+                // 4로 바꿔주기..?
+                this.$store.commit('UP_LIMIT', 2);
             }
-            this.$store.commit('UP_LIMIT', 4);
+            
             console.log("2131231limit:" + this.$store.state.limit);
           });
           this.stompClient.subscribe("/send_bidding",  res => {

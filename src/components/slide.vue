@@ -13,9 +13,7 @@
     class="mySwiper"
   >
     <swiper-slide v-for="item, i in items.length" :key="i" class="slideList"
-    :style="{backgroundImage: `url(${items[i]})`}">
-      Slide 1
-    </swiper-slide >
+    :style="{backgroundImage: `url(${items[i]})`}"/>
     <!-- <swiper-slide class="slideList">Slide 3</swiper-slide >
     <swiper-slide class="slideList">Slide 5</swiper-slide >
     <swiper-slide class="slideList">Slide 7</swiper-slide >
@@ -42,13 +40,20 @@ export default {
     Swiper,
     SwiperSlide,
   },
+  props: {
+    imgData: Array
+  },
+  mounted(){
+    // /product_images/${resData[i].product_img_name}.png
+    console.log(this.$route);
+    // 나중에 도메인 주소로 변경하기
+    this.items.push(`"http://localhost:8086/product_images/${this.imgData}.png"`);
+  },
   data(){
     return {
       modules: [Autoplay, Pagination, Navigation],
       items: [
-        'https://cdn.011st.com/11dims/resize/600x600/quality/75/11src/pd/v2/9/4/9/6/5/4/cPJKf/4569949654_B.jpg',
-        'https://cdn.vuetifyjs.com/images/carousel/sky.jpg',
-        'https://cdn.vuetifyjs.com/images/carousel/bird.jpg',
+        // test 이미지
         'https://cdn.vuetifyjs.com/images/carousel/planet.jpg',
       ],
     }

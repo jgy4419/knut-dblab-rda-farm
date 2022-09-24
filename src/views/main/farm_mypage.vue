@@ -27,7 +27,7 @@
     <fieldset>
         <ul class="check button1">
             <li><button type="button" class="fpmgBt2" onclick="location.href='/#'">경매횟수</button></li>
-            <li><button type="button" class="fpmgBt2" onclick="location.href='/#'">적립금</button></li>
+            <li><button type="button" class="fpmgBt2" onclick="location.href='/#'">나의 파치포인트</button></li>
             <li><button type="button" class="fpmgBt1" onclick="location.href='/#'">10</button></li>
             <li><button type="button" class="fpmgBt1" onclick="location.href='/#'">50,000</button></li>
         </ul>
@@ -52,6 +52,7 @@
 <script>
 import Header from '@/components/Header/bellAndAddHeader';
 import bottomNav from '@/components/bottomNav.vue';
+import axios from 'axios';
 
 export default {
     components: {bottomNav, Header},
@@ -59,6 +60,13 @@ export default {
         return{
             headerProps: 'logo'
         }
+    },
+    mounted(){
+        // console.log(this.$store.state.login);
+        // // axios.get(`/consumerPachiPoint/${this.$store.state.login.userInfo.consumer_id}`)
+        // // .then(res => {
+        // //     console.log(res);
+        // // })
     }
 }
 </script>

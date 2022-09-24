@@ -7,6 +7,9 @@ input::-webkit-input-placeholder {
 input::-moz-placeholder {
     color:#a8a8a8;
 } 
+.search-contain{
+    /* height: 80vh; */
+}
 
 .div_search{
     height: 50px;

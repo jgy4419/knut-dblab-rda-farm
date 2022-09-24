@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="search-contain">
         <Header :headerProps="headerProps"/>
 
         <div class="div_search">
@@ -42,7 +42,7 @@
                 <div class="goods_pay_section ">
                     <div class="goods_group">
                         <ul class="goods_group_list">
-                            <li v-for="(auction, index) in this.$store.state.auctionList" :key="auction.auction_Id"
+                            <li v-for="(auction, index) in this.$store.state.searchAuctionList" :key="auction.auction_Id"
                                 id="_rowLi20220203162708CHK2022020394386781"
                                 class="goods_pay_item _interlockNo20220211200904406814">
                                 <div @click="navigateProduct(auction.auction_Id, index)" class="goods_item">
@@ -82,6 +82,7 @@
                     </div>
                 </div>
             </div>
+            <button class="more-button" @click="searchAuction(this.preKeyword)">더보기</button>
         </fieldset>
     <bottom-nav/>
     </div>
@@ -102,7 +103,10 @@ export default {
         headerProps: 'Search',
         checkUser: 'consumer',
         id: 1,
+        preKeyword: '',
         keyword: '',
+        startLimit: 0,
+        NUMBER_OF_AUCTION: 4,
     }
   },
   created(){
@@ -111,24 +115,34 @@ export default {
   },
   methods: {
     searchAuction(keyword) {
-      if (keyword !== ''){ //검색어를 입력한 경우
-        console.log('keyword: ' + keyword);
-        this.$store.commit('PUSH_KEYWORD_LIST', keyword);
-        
-        // 검색 데이터 받아오기!
-        axios.get(`/api/searchAuction/${this.checkUser}/${this.id}/${keyword}`)
-        .then(res => {
-            this.$store.commit('INIT_AUCTION_LIST', res.data);
-        })
-        .catch(err => {
-            console.log(err);
-        });
+        if (keyword !== ''){                        //검색어를 입력한 경우
+            console.log('keyword: ' + keyword);
 
-        // 검색어 초기화
-        this.keyword = ''
-      } else if(keyword === ''){
-        alert('검색어를 입력해주세요!')  //검색어를 입력하지 않은 경우
-      }
+            if(this.preKeyword != keyword) {
+                this.$store.commit('RESET_SEARCH_AUCTION_LIST');
+                this.startLimit = 0;
+            }
+            this.preKeyword = keyword;
+            this.$store.commit('PUSH_KEYWORD_LIST', keyword);
+
+            // 검색 데이터 받아오기!
+            axios.get(`/api/searchAuction/${this.checkUser}/${this.id}/${keyword}/${this.startLimit}`)
+            .then(res => {
+                console.log(res.data)
+                if(res.data.length){
+                    for (let auction of res.data) this.$store.commit('PUSH_SEARCH_AUCTION', auction);
+                }
+                this.startLimit += this.NUMBER_OF_AUCTION;
+            })
+            .catch(err => {
+                console.log(err);
+            });
+
+            // 검색어 초기화
+            this.keyword = ''
+        } else if(keyword === ''){
+            alert('검색어를 입력해주세요!')  //검색어를 입력하지 않은 경우
+        }
     },
     connect() {
         const serverURL = "/socket"
@@ -141,23 +155,19 @@ export default {
         frame => {
             this.connected = true;
             console.log('소켓 연결 성공', frame);
-
             this.stompClient.subscribe("/send_bidding",  res => {
-
                 const response_bidding = JSON.parse(res.body);
-
                 if (response_bidding.auction_Id != undefined)
-                    this.$store.commit('UPDATE_BID_PRICE', response_bidding);
+                    this.$store.commit('UPDATE_SEARCH_BID_PRICE', response_bidding);
             });
         },
         error => {
             // 소켓 연결 실패
             console.log('소켓 연결 실패', error);
             this.connected = false;
-        });        
+        });
     },
     initPopularKeyword(){
-
         // 검색 데이터 받아오기!
         axios.get('/api/popularKeyword')
         .then(res => {
@@ -170,11 +180,16 @@ export default {
     navigateProduct (auction_Id, index) {
 
       this.$router.push({name:'auction_detail', params: { id: auction_Id, index: index }});
-    },
-    liked(){
-
     }
   }
 };
 </script>
 
+<style lang="scss" scoped>
+.more-button{
+    width: 100%;
+    height: 50px;
+    font-weight: 700;
+    background-color: #FFC1AA;
+}
+</style>
