@@ -4,6 +4,7 @@
         @closeModal="reviewModalState = 0"
         :reviewModalState="reviewModalState"/>
         <infinite-loading @infinite="infineteHandler"></infinite-loading>
+        <!-- // -->
         <div class="reviews">
             <div class="review" @click="reviewModalState = 1" v-for="reviewCount, i in getData.flat(Infinity).length" :key="i">
                 <img :src="`/product_images/${getData[0][i].product_img_name}.png`" alt="상품 이미지" width="50" height="50"/>
