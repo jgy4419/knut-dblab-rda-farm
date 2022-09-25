@@ -14,9 +14,13 @@
                         <p class="current-auction">최종낙찰: {{getData[i].a_max_price.toLocaleString()}}원</p>
                     </div>
                     <div class="auctionBtns">
-                        <button class="auctionBtn">경매종료</button>
-                        <button class="auctionBtn">계산하기</button>
-                        <router-link :to="`/farm_mypage_auction/writeReview/${getData[i].auction_Id}`"><button class="reviewBtn">후기작성</button></router-link>
+                        <button  v-if="getData[i].bid_status === true" class="auctionBtn-ing">경매중</button>                        
+                        <button  v-if="getData[i].bid_status === false" class="auctionBtn">경매종료</button>
+                        <button v-if="getData[i].bid_status === false" class="auctionBtn">계산하기</button>
+                        <router-link v-if="getData[i].bid_status === false" :to="`/farm_mypage_auction/writeReview/${getData[i].auction_Id}`">
+                        <!-- <router-link v-if="getData[i].bid_status === false" :to="`#`"> -->
+                            <button @click="setReviewData(i)" class="reviewBtn">후기작성</button>
+                        </router-link>
                     </div>
                 </div>
             </div>
@@ -46,13 +50,7 @@ export default {
     data(){
         return{
             headerProps: '경매 내역',
-            test: {
-                img: [''],
-                name: ['못난이 복숭아', '못난이 사과'],
-                current: [10000, 20000],
-                res: [10000, 0],
-            },
-
+            buttonState: 1,
             getData: [],
             auctionState: true,
         }
@@ -60,18 +58,22 @@ export default {
     async mounted(){
         // string, int, int
         let userState = 'consumer';
-        if(!this.$store.state.login.userInfo.consumer_id){
-            userState = 'farm'
-        }
         console.log(userState);
-        console.log(this.$store.state.login.userInfo.consumer_id);
-        console.log(0);
-        await axios.get(`/api/mypageAuctionDetails/${userState}/${this.$store.state.login.userInfo.consumer_id}/${0}`)
+        // console.log(this.$store.state.login.userInfo.consumer_id);
+        console.log(this.$store.state.user.checkUser);
+        console.log(this.$store.state.user.id);
+        await axios.get(`/api/mypageAuctionDetails/${localStorage.getItem('checkUser')}/${localStorage.getItem('id')}/${0}`)
         .then(res => {
             this.getData.push(res.data);
             this.getData = this.getData.flat();
             console.log(this.getData);
         }).catch(err => console.log(err));
+    },
+    methods: {
+        setReviewData(index){
+            console.log(this.getData[index]);
+            this.$store.commit('GET_REVIEW_DATA', this.getData[index]);
+        }
     }
 }
 </script>
@@ -92,6 +94,7 @@ export default {
     .not-auction-title{
         font-size: 20px;
         margin-top: 50%;
+        background-color: #fff;
         font-weight: 700;
         text-align: center;
     }
@@ -118,12 +121,15 @@ export default {
             .auctionBtns{
                 display: flex;
                 justify-content: space-between;
-                .auctionBtn, .reviewBtn{
+                .auctionBtn, .reviewBtn, .auctionBtn-ing{
                     width: 80px;
                     height: 40px;
                     border-radius: 5px;
                     border: 1px solid rgb(187, 187, 187);
                     @include text-basic();
+                }
+                .auctionBtn-ing{
+                    background-color: #f5dad1;
                 }
                 .auctionBtn:nth-child(1){
                     background-color: rgb(237, 103, 103);

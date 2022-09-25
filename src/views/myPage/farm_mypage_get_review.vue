@@ -101,16 +101,35 @@
 import Header from '../../components/Header/backHeader.vue';
 import bottomNav from '@/components/bottomNav.vue';
 import axios from "axios";
-
+// 리뷰 썼는지 안썼는지 보고 -> 각 경매내역 데이터들을 가지고 와서 
+// checkUser,
+// auction_Id, 
+// grade_point, 
+// consumer_review,
+// farm_review,
+// auction_name // 
 export default {
     components: {Header, bottomNav},
     data(){
         return {
             headerProps: '이용후기',
+            getData: [],
+            userState: 'consumer',
         }
     },
+    async mounted(){
+        if(!JSON.parse(localStorage.getItem('user').consumer_id)){
+            this.userState = 'farm'
+        }
+        await axios.get(`/api/mypageAuctionDetails/${this.userState}/${JSON.parse(localStorage.getItem('user').consumer_id)}/${0}`)
+        .then(res => {
+            this.getData.push(res.data);
+            this.getData = this.getData.flat();
+            console.log(this.getData);
+        }).catch(err => console.log(err));
+    },
     methods() {
-      axios.get='/getAuctionReview/{checkUser}/id';  
+    //   axios.get='/getAuctionReview/{checkUser}/id';  
     },
 
 }

@@ -59,9 +59,10 @@ export default {
     width: 25%;
 }
 .bottom-contain{
-    position: absolute;
-    padding: 5px;
-    bottom: 0;
+    position : relative;
+    transform : translateY(-10%);
+    // padding: 5px;
+    // bottom: 0;
     width: 100%;
     display: flex;
     justify-content: space-between;

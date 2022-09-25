@@ -17,7 +17,7 @@
         <label id="login-form-label">주민등록번호</label>
         <input v-model="farm_member_info.f_RRN" class="login-form__input" type="text" required placeholder="주민등록번호">
 
-        <label id="login-form-label">사업장 소재지</label>
+        <label id="login-form-label">주소</label>
         <input v-model="farm_member_info.f_location" class="login-form__input" type="text" required placeholder="사업장 소재지">
 
         <label id="login-form-label">농가 전화번호</label>

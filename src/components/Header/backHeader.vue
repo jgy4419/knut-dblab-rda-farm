@@ -30,8 +30,12 @@ export default {
 *{
     list-style: none;
 }
+i{
+    font-size: 25px;
+}
 .header{
     position: relative;
+    z-index: 10;
     width: 100%;
     height: 60px;
     background-color: #FFC1AA;
@@ -40,7 +44,7 @@ export default {
         width: 100%;
         height: 100%;
         display: flex;
-        justify-content: space-between;
+        justify-content: space-around;
         align-items: center;
         .navLi{
             cursor: pointer;

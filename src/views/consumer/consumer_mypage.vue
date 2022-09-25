@@ -2,7 +2,7 @@
     <div class="mypage_contain">
         <Header :headerProps="headerProps"/>
 
-        <fieldset>
+        <fieldset class="fieldContain">
             <div class="goods_group">
                 <ul class="goods_group_list">
                     <li id="_rowLi20220213173042CHK2022021381488661" class="goods_pay_item ">
@@ -40,10 +40,10 @@
                 <li><button type="button" class="fpmgBt1" onclick="location.href='farm_mypage_auction'">
                     <router-link to='/farm_mypage_auction'>경매 내역</router-link></button></li>
                 <li><button type="button" class="fpmgBt1" onclick="location.href='farm_mypage_keep'">찜한목록</button></li>
-                <li><button type="button" class="fpmgBt1" onclick="location.href='farm_mypage_get_review'">이용후기</button></li>
-                <li><button type="button" class="fpmgBt1" onclick="location.href='ServiceCenter'">고객센터</button></li>
-                <li><button type="button" class="fpmgBt1" onclick="location.href='consumer_profile'">개인정보 수정</button></li>
-                <li><button type="button" class="fpmgBt1" onclick="location.href='/'">로그아웃</button></li>
+                <li><router-link to="/farm_mypage_get_review"><button type="button" class="fpmgBt1">이용후기</button></router-link></li>
+                <li><router-link to="/ServiceCenter"><button type="button" class="fpmgBt1">고객센터</button></router-link></li>
+                <li><router-link to="/consumer_profile"><button type="button" class="fpmgBt1">개인정보 수정</button></router-link></li>
+                <li><router-link to="/"><button type="button" class="fpmgBt1">로그아웃</button></router-link></li>
             </ul>
         </fieldset>
 
@@ -67,7 +67,9 @@ export default {
         }
     },
     async mounted(){
-        this.userData = this.$store.state.login.userInfo;
+        console.log(this.$store.state.user);
+        console.log(this.$store.state.user.id);
+        this.userData = JSON.parse(localStorage.getItem('user'));
         console.log(this.userData.consumer_id);
         await axios.get(`/api/consumerPachiPoint/${this.userData.consumer_id}`)
         .then(res => {
@@ -88,6 +90,9 @@ img{
 }
 .mypage_contain{
     height: 85vh;
+    .fieldContain{
+        margin-top: -50px;
+    }
     .goods_info{
         .guide2{
             font-size: 18px;
@@ -95,5 +100,13 @@ img{
             line-height: 1.4;
         }
     }
+}
+.fpmgBt1{
+    width: 100%;
+    height: 45px;
+    font-size: 17px;
+    text-align: center;
+    color: #333;
+    font-weight: 600;
 }
 </style>

@@ -2,7 +2,7 @@
     <div>
         <Header :headerProps="headerProps"/>
         <div>
-            <input multiple="multiple" @change="upload()" type="file" id="product_img_file" name="product_img_file"
+            <input multiple="multiple" @change="upload()" type="file" id="product_img_files" name="product_img_files"
                 accept="image/*"><br>
             <img src="image">
             <!-- <Slide/> -->
@@ -114,15 +114,14 @@
                 size: null,
                 p_status: null,
                 p_explanation: null,
-                product_img_file: null,
-                farm_id: 1,
-
+                product_img_files: [],
+                farm_id: JSON.parse(localStorage.getItem("user")).farm_id,
                 auctionId: 0,
             };
         },
         mounted(){
             // 실제 구현 시 !== -> === 로 바꿔주기
-            if(this.$store.state.login.userInfo.checkUser !== undefined){
+            if(JSON.parse(localStorage.getItem('user').checkUser) !== undefined){
                 alert('농가회원이 아닙니다!');
                 this.$router.go(-1);
             }
@@ -152,19 +151,17 @@
                 }).catch(err => console.log(err));
             },
             upload() {
-                this.product_img_file = document.getElementById("product_img_file");
-                console.log(this.product_img_file.files[0]);
+                this.product_img_files = document.getElementById("product_img_files");
+                console.log('test', this.product_img_files.files);
             },
             submitProduct() {
                 let frm = new FormData();
                 
                 console.log('p_drop_date : ' + this.p_drop_date);
                 console.log('deadline_date : ' + this.deadline_date);
+                console.log('deadline_date : ' + this.deadline_date);
 
-                frm.append("productDTO.product_img_file", 
-                    this.product_img_file !== null 
-                    ? this.product_img_file = this.product_img_file.files[0]
-                    : this.product_img_file = '');
+                for(let imageFile of this.product_img_files.files) frm.append("productDTO.product_img_files", imageFile);
                 frm.append('auction_name', this.p_name);
                 frm.append('productDTO.product', this.product);
                 frm.append('productDTO.product_kg', this.product_kg);
@@ -180,8 +177,9 @@
                 frm.append('farm_id', this.farm_id);
 
                 // 이미지 파일을 안 넣었으면 경고창.
-                if(this.product_img_file = ''){
+                if(this.product_img_files.length < 1){
                     alert('이미지 파일이 없습니다.');
+                    return;
                 }
                 // 글 수정
                 if(this.$route.path !== '/auction_reg'){

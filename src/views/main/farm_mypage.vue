@@ -37,11 +37,11 @@
         <ul class="button-100">
             
             <li><button type="button" class="fpmgBt1" onclick="location.href='farm_mypage_auction'"><router-link to='/farm_mypage_auction'>경매 내역</router-link></button></li>
-            <li><button type="button" class="fpmgBt1" onclick="location.href='farm_mypage_keep'">찜한목록</button></li>
+            <li v-if=" user.consumer_id != undefined"><button type="button" class="fpmgBt1" onclick="location.href='farm_mypage_keep'">찜한목록</button></li>
             <li><button type="button" class="fpmgBt1" onclick="location.href='farm_mypage_get_review'">이용후기</button></li>
             <li><button type="button" class="fpmgBt1" onclick="location.href='ServiceCenter'">고객센터</button></li>
             <li><button type="button" class="fpmgBt1" onclick="location.href='farm_profile'">개인정보 수정</button></li>
-            <li><button type="button" class="fpmgBt1" onclick="location.href='/'">로그아웃</button></li>
+            <li><button type="button" class="fpmgBt1" @click="logout()">로그아웃</button></li>
         </ul>
     </fieldset>
 
@@ -58,8 +58,14 @@ export default {
     components: {bottomNav, Header},
     data(){
         return{
-            headerProps: 'logo'
+            headerProps: 'logo',
+            user: JSON.parse(localStorage.getItem("user")),
         }
+    },
+    methods: {
+        logout(){
+            this.$store.commit('LOGOUT')
+        },
     },
     mounted(){
         // console.log(this.$store.state.login);

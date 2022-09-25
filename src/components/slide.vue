@@ -12,12 +12,9 @@
     :modules="modules"
     class="mySwiper"
   >
-    <swiper-slide v-for="item, i in items.length" :key="i" class="slideList"
-    :style="{backgroundImage: `url(${items[i]})`}"/>
-    <!-- <swiper-slide class="slideList">Slide 3</swiper-slide >
-    <swiper-slide class="slideList">Slide 5</swiper-slide >
-    <swiper-slide class="slideList">Slide 7</swiper-slide >
-    <swiper-slide class="slideList">Slide 9</swiper-slide > -->
+    <swiper-slide v-for="item, i in items.length" :key="i" class="slideList">
+      <img :src="items[i]" alt="슬라이드 이미지">
+    </swiper-slide>
   </swiper>
 </template>
 <script>
@@ -44,17 +41,25 @@ export default {
     imgData: Array
   },
   mounted(){
-    // /product_images/${resData[i].product_img_name}.png
-    console.log(this.$route);
-    // 나중에 도메인 주소로 변경하기
-    this.items.push(`"http://localhost:8086/product_images/${this.imgData}.png"`);
+    if(this.imgData.length > 0){
+      this.items = [];
+      for(let img of this.imgData){
+        this.items.push(`/product_images/${img}.png`);
+        console.log('이미지 url', this.items);
+      }
+    }
+    
   },
   data(){
     return {
       modules: [Autoplay, Pagination, Navigation],
       items: [
         // test 이미지
-        'https://cdn.vuetifyjs.com/images/carousel/planet.jpg',
+        '/auciton_slide_images/slide_1.jpg',
+        '/auciton_slide_images/slide_2.jpg',
+        '/auciton_slide_images/slide_3.jpg',
+        '/auciton_slide_images/slide_4.jpg',
+        // 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg',
       ],
     }
   }

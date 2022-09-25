@@ -32,11 +32,23 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+i{
+    font-size: 25px;
+}
+.main_nav_t_div{
+    position: relative;
+    z-index: 10;
+}
 .main_t_nav{
     width: 28vw;
+    .main_t_nav_list{
+        display: flex;
+        justify-content: space-between;
+    }
 }
 .nav_m_link{
-    margin-top: 3px;
+    margin-top: 5px;
+    font-size: 18px;
 }
 @media screen and (max-width: 500px){
     .main_t_nav{

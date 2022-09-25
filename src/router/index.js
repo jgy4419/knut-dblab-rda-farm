@@ -164,7 +164,8 @@ const routes = [
   {
     path: '/farm_mypage_get_review',
     name: 'farm_mypage_get_review',
-    component: () => import('../views/myPage/farm_mypage_get_review.vue')
+    // component: () => import('../views/myPage/farm_mypage_get_review.vue')
+    component: () => import('../views/review/review.vue')
   },
   {
     path: '/farm_mypage_post_review',

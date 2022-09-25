@@ -2,7 +2,7 @@
     <div class="farm-contain">
         <Header :headerProps="test.farmName"/>
         <div class="farm-information">
-            <img class="farm-image" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqVGCXTRUebkmD2Yi3Zd4sRGWCryxfM4wdI8jZuPBqqA&s" alt="농가 사진"/>
+            <img class="farm-image" :src='`/member_profile_images/${this.farmIntroData.f_profile_img}.png`' alt="농가 사진"/>
         </div>
         <div class="farm-name-tel">
             <div class="farm-userName">
@@ -16,7 +16,7 @@
         </div>
         <div class="farm-description">
             <h3 class="description">농가설명</h3>
-            <p>{{test.description}}</p>
+            <p>{{farmIntroData.f_explanation}}</p>
         </div>
         <div class="buttons">
             <div class="farm-best">
@@ -79,6 +79,7 @@ export default {
         .then(res => {
             this.farmIntroData = res.data;
             console.log(this.farmIntroData);
+            if(this.farmIntroData.f_explanation == undefined) this.farmIntroData.f_explanation = this.test.description;
         }).catch(error => console.log(error));
 
         if (window.kakao && window.kakao.maps && !(new kakao.maps.services.Geocoder())) {

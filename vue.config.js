@@ -12,7 +12,19 @@ module.exports = defineConfig({
         target: 'https://118.67.134.38:80',
         changeOrigin: true,
       },
+      '/auciton_slide_images': { 
+        target: 'https://118.67.134.38:80',
+        changeOrigin: true,
+      },
       '/member_profile': { 
+        target: 'https://118.67.134.38:80',
+        changeOrigin: true,
+      },
+      '/farm_images': { 
+        target: 'https://118.67.134.38:80',
+        changeOrigin: true,
+      },
+      '/bank_images': { 
         target: 'https://118.67.134.38:80',
         changeOrigin: true,
       },

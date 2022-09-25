@@ -34,7 +34,7 @@ export default {
 .reviewModalDetail{
     position: fixed;
     top: 0;
-    z-index: 10;
+    z-index: 100;
     width: 28vw;
     height: 100vh;
     .back{
@@ -49,7 +49,7 @@ export default {
         padding: 20px;
         position: absolute;
         text-align: center;
-        z-index: 10;
+        z-index: 100;
         width: 80%;
         height: 80%;
         left: 0; right: 0; top: -8%; bottom: 0;
@@ -88,13 +88,14 @@ export default {
         }
     }
 }
-// @media screen and (max-height: 400px){
-//     .reviewModalDetail{
-//         .inner{
-//             .reviewImg{
-//                 width: 30%;
-//             }
-//         }
-//     }
-// }
+@media screen and (max-width: 400px){
+    .reviewModalDetail{
+        width: 100vw;
+        .inner{
+            .reviewImg{
+                width: 30%;
+            }
+        }
+    }
+}
 </style>    

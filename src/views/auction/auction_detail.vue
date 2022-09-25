@@ -49,12 +49,14 @@
                     </tbody>
                 </table>
             </div>
-            <div>
-                <v-btn class="delete-button" v-if="userState === true" block @click="bid()">삭제하기</v-btn>
+            <div v-if="this.auction.farm_id == user.farm_id" >
+                <v-btn class="delete-button" block @click="bid()">삭제하기</v-btn>
                 <!-- /auction_reg/:id -->
-                <v-btn class="delete-button" v-if="userState === true" block @click="$router.push(`/auction_reg/${auction}`)">
+                <v-btn class="delete-button" block @click="$router.push(`/auction_reg/${auction}`)">
                     수정하기
                 </v-btn>
+            </div>
+            <div v-if=" user.consumer_id != undefined">
                 <v-text-field type="number" id=bid_price v-model="bid_price"></v-text-field>
                 <div class="stateBtn">
                     <Like class="like-button" :key="likeState" @click="likeStateFunc()"/>
@@ -71,7 +73,7 @@
                     <li id="_rowLi20220213173042CHK2022021381488661" class="goods_pay_item ">
                         <div class="goods_item">
                             <p class="goods_thumb">
-                                <img :src='`/product_images/${farmInformation.productDTO.product_img_name}.png`'
+                                <img :src='`/member_profile_images/${farmInformation.f_profile_img}.png`'
                                     alt="" width="90" height="90" /></p>
                                 <!-- <img src="https://suhofarm.com/_upload/mall/20220112173148_86227.jpg" alt="" width="90" height="90"> -->
                             <div class="goods_info">
@@ -83,17 +85,15 @@
                                     대표자 : {{farmInformation.f_name}}
                                 </p>
                                 <p class="guide2">
-                                    사업자 등록번호 : {{farmInformation.f_num}}
+                                    연락처 : {{farmInformation.f_phonenum}}
                                 </p>
                                 <p class="guide2">
                                     농가 주소 : {{farmInformation.f_location}}
                                 </p>
-                                <p class="guide2">
-                                    연락처 : {{farmInformation.f_phonenum}}
-                                </p>
+                                
                             </div>
                         </div>
-                        <div class="seller_item">
+                        <!-- <div class="seller_item">
                             <div class="inner">
 
                                 <span class="seller">{{farmInformation.f_farm_name}}</span>
@@ -103,7 +103,7 @@
                                     문의하기
                                 </p>
                             </div>
-                        </div>
+                        </div> -->
                     </li>                
                 </ul>
             </div>
@@ -129,6 +129,7 @@ export default {
     components: { Header, Slide, Like },
 
     data: () => ({
+        user: JSON.parse(localStorage.getItem("user")),
         headerProps: '경매 상세',
         auction: null,
         bid_price: null,
@@ -143,16 +144,23 @@ export default {
         farmInformation: {},
     }),
     mounted(){
-        this.$store.state.login.userInfo.farm_id === this.auction.farm_id || this.$store.state.login.userInfo.farm_id
-        ? this.userState = true 
-        : this.userState = false;
+        // JSON.parse(localStorage.getItem('user').farm_id) === this.auction.farm_id || JSON.parse(localStorage.getItem('user').farm_id)
+        // ? this.userState = true 
+        // : this.userState = false;
     },
     created() {
         this.connect()
         this.farmInformation = JSON.parse(this.$route.params.auction);
         console.log('생산자 정보', this.farmInformation);
         this.auction = JSON.parse(this.$route.params.auction)
-        this.imgData.push(this.auction.productDTO.product_img_name);
+
+        // 해당 경매 관련 이미지 여러 개 넣기
+        let auctionImagesLength = this.auction.productDTO.product_img_name[this.auction.productDTO.product_img_name.length-1];
+        console.log('img', auctionImagesLength)
+        for(let i=0; i<auctionImagesLength; i++){
+            this.imgData.push(this.auction.productDTO.product_img_name.replace('(0)', `(${i})`))
+        }
+        // this.imgData.push(this.auction.productDTO.product_img_name);
         console.log('pushImg', this.imgData);
     },
     methods: {
@@ -161,7 +169,7 @@ export default {
         },
         bid(){
             console.log('datas', this.auction.consumer_id);
-            console.log('user', this.$store.state.login.userInfo.consumer_id);
+            console.log('user', JSON.parse(localStorage.getItem('user').consumer_id));
             console.log(this.bid_price, this.auction.a_max_price);
 
             console.log("auction.auction_Id:" + this.auction.auction_Id);
@@ -173,7 +181,7 @@ export default {
             console.log(this.stompClient.connected);
 
             // 이미 경매에 참여한 사람들 알아내기
-            if(this.auction.comsumer_id == this.$store.state.login.userInfo.consumer_id){
+            if(this.auction.comsumer_id == JSON.parse(localStorage.getItem('user').consumer_id)){
                 alert('이미 경매에 참여하셨습니다!');
                 return;
             }
@@ -197,7 +205,7 @@ export default {
                         consumer_id: this.user.consumer_id, 
                         auction_name: this.auction.auction_name, 
                         isMaxPrice: this.isMaxPrice }), {});
-                    this.auction.comsumer_id = this.$store.state.login.userInfo.consumer_id
+                    this.auction.comsumer_id = JSON.parse(localStorage.getItem('user').consumer_id)
                 }
             } else {
                 alert("현재 경매가보다 낮습니다!!")

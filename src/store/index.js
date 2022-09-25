@@ -2,6 +2,7 @@ import { createStore } from "vuex";
 import { login } from "@/store/modules/login";
 import { test } from "@/store/modules/test";
 import { signup } from "@/store/modules/signup";
+import { writeReview } from "@/store/modules/writeReview";
 import axios from "axios"
 
 export default createStore({
@@ -9,20 +10,24 @@ export default createStore({
     signup: signup,
     login: login,
     test: test,
+    writeReview: writeReview
   },
   state: {
     existEmail: true,
     kindOfFarm: null,
     user: {
-        name: null,
-        email: null,
-        passwd: null,
-        phonenum: null,
+      name: null,
+      email: null,
+      passwd: null,
+      phonenum: null,
     },
     config: {
       headers: {
           TOKEN: null,
       }
+    },
+    review: {
+      getReviewData: {}
     },
     auctionList: [],
     limit: 0,
@@ -32,6 +37,18 @@ export default createStore({
     popularKeywordList: [],
   },
   mutations: {
+    CHECH_USER_STATE: (state, payload) => {
+      console.log(payload);
+      // 농가 회원이 아니면? 'farm'으로 변경
+      payload.state === false ? state.checkUser = 'farm' : state.checkUser = 'consumer'
+      state.id = payload.id;
+      console.log(state.id);
+      console.log(state.checkUser);
+    },
+    GET_REVIEW_DATA: (state, payload) => {
+      console.log(payload);
+      state.review.getReviewData = payload;
+    },
     // 농가 회원가입 시 개인회원과 사업자 회원을 구분하는 변수(개인회원: 1, 사업자 회원: 2)
     KIND_OF_FARM: (state, payload) => {
       console.log(payload);
@@ -55,6 +72,38 @@ export default createStore({
       console.log("TOKEN_SAVE: "+ token);
       state.config.headers.TOKEN = token;
       console.log(state.config);
+    },
+
+    LOGOUT: (state) => {
+      // 로컬스토리지에서 checkUser, email 가져오기
+      let user = JSON.parse(localStorage.getItem('user'))
+      state = null;
+      console.log(user);
+
+      let email = user.c_email;
+      let check_user = null;
+      if(email != undefined){
+          check_user = "consumer"
+      } else {
+          email = user.f_email;
+          check_user = "farm"
+      }
+
+      console.log(check_user + '   ' + email);
+
+      axios.get(`/api/logout/${check_user}/${email}`,  {})
+      .then(res => {
+          console.log('res: ' + res);
+          // 로컬스토리지 초기화
+          localStorage.removeItem('user');
+          localStorage.removeItem('checkUser');
+          localStorage.removeItem('id');
+
+          this.$router.push({name: 'login'});
+      })
+      .catch(err => {
+          console.log(err);
+      });
     },
 
     // Auction 관련 Mutation

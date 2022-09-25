@@ -24,9 +24,12 @@
                                               </li>
                                           </ul>
                                       </div>
-                                      <div 
-                                          class="state _statusName value_color_green _click(nmp.front.order.timeline.home.list.openDeliveryPopup(/o/orderStatus/deliveryTracking/2022020394386781/ORDER_DELIVERY/api)) _stopDefault">{{auction.bid_status}}
-                                          ({{updateDeadlineDate(auction.deadline_date)}} 경매 종료)</div>
+                                      <p class="state _statusName value_color_green _click(nmp.front.order.timeline.home.list.openDeliveryPopup(/o/orderStatus/deliveryTracking/2022020394386781/ORDER_DELIVERY/api)) _stopDefault"
+                                      v-if="auction.bid_status === 1">
+                                          ({{updateDeadlineDate(auction.deadline_date)}} 경매 종료)</p>
+                                      <p class="state _statusName value_color_green _click(nmp.front.order.timeline.home.list.openDeliveryPopup(/o/orderStatus/deliveryTracking/2022020394386781/ORDER_DELIVERY/api)) _stopDefault"
+                                        v-if="auction.bid_status === 0">
+                                          최종 낙찰가격 {{auction.a_max_price.toLocaleString()}}원</p>
                                       <p class="guide">
                                           {{auction.productDTO.p_explanation}}
                                       </p>

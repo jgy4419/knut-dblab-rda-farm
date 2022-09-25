@@ -2,6 +2,7 @@
     <div class="reviewContain">
         <header class="header">
             <v-icon class="backIcon"
+            @click="$router.go(-1)"
                 dark
                 left
             >mdi-arrow-left</v-icon>
@@ -23,6 +24,7 @@
 <script>
 import ReviewList from './reviewList.vue';
 import ReviewDetail from './reviewDetail.vue';
+import Header from '../../components/Header/bellAndBackHeader.vue';
 import Bottom from '../../components/bottomNav.vue';
 import _ from 'lodash';
 export default {
@@ -80,6 +82,7 @@ export default {
             align-items: center;
             border-bottom: 1px solid rgb(234, 234, 234);
             .backIcon{
+                cursor: pointer;
                 color: #333;
                 font-size: 30px;
                 font-weight: 900;
@@ -99,7 +102,7 @@ export default {
             .reviewBtn{
                 width: 50%;
                 font-weight: 700;
-                font-size: 20px;
+                font-size: 16px;
                 height: 45px;
                 border-bottom: 1px solid rgb(234, 234, 234);
             }

@@ -118,9 +118,11 @@
                             </div>
                         </div>
                     </td>
+                    <input multiple="multiple" @change="uploadFarmProfileImages()" type="file" id="farm_porfile_img_file" name="farm_porfile_img_file"
+                accept="image/*"><br>
                     <td class="va-b">
                         <button type="button" class="n-btn w100 btn-sm btn-default cert-hidden"
-                            id="change-profile-image-btn">사진 변경</button>
+                            id="change-profile-image-btn" @click="updateFarmProfileImages()">사진 변경</button>
                     </td>
                     <!-- update_Farm_member_f_profile_img -->
                 </tr>
@@ -350,10 +352,10 @@
                 </tr>
 
                 <tr v-if="isShow11">
-                    <td></td>
-                    <v-text-field v-model="f_img" label="" required></v-text-field>
+                    <input multiple="multiple" @change="uploadFarmImages()" type="file" id="farm_img_files" name="farm_img_files"
+                accept="image/*"><br>
                     <td>
-                        <button type="button" @click="update_Farm_member_f_img()"
+                        <button type="button" @click="updateFarmImage()"
                             class="n-btn w100 btn-sm btn-default">수정하기</button>
                     </td>
                 </tr>
@@ -397,8 +399,8 @@ export default {
             f_farm_name: this.f_farm_name,
             f_explanation: this.f_explanation,
             f_major_crop: this.f_major_crop,
-            f_img: this.f_img,
-            f_profile_img: this.f_profile_img
+            f_img: null,
+            f_profile_img: null,
         };
     },
 
@@ -407,6 +409,81 @@ export default {
     // },
 
     methods: {
+        uploadFarmProfileImages() {
+            this.f_profile_img = document.getElementById("farm_porfile_img_file");
+        },
+        updateFarmProfileImages() {
+            console.log(this.user);
+
+            let frm = new FormData();
+            for(let imageFile of this.f_profile_img.files) frm.append("new_profile_img", imageFile);
+            frm.append('checkUser', "farm");
+            frm.append('id', this.user.farm_id);
+            frm.append('new_profile_img', this.user.f_profile_img);
+
+            // 이미지 파일을 안 넣었으면 경고창.
+            if(this.f_profile_img.length < 1){
+                alert('이미지 파일이 없습니다.');
+                return;
+            }
+            if(this.f_profile_img.length > 1){
+                alert('이미지 파일은 1개만 넣어주세요!');
+                return;
+            }
+            if(this.$route.path == '/farm_profile'){
+                axios.patch('/api/memberProfileImage', frm, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }).then(res => {
+                    console.log('res.data', res.data);
+                    alert('등록 완료!');
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+                
+            }else{
+                alert('잘못된 접근입니다!');
+            }
+        },
+        uploadFarmImages() {
+            this.f_img = document.getElementById("farm_img_files");
+        },
+        updateFarmImage() {
+            console.log(this.user);
+
+            let frm = new FormData();
+            for(let imageFile of this.f_img.files) frm.append("new_farm_img", imageFile);
+            frm.append('farm_id', this.user.farm_id);
+            frm.append('f_img', this.user.f_img);
+
+            // 이미지 파일을 안 넣었으면 경고창.
+            if(this.f_img.length < 1){
+                alert('이미지 파일이 없습니다.');
+                return;
+            }
+            if(this.f_img.length > 1){
+                alert('이미지 파일은 1개만 넣어주세요!');
+                return;
+            }
+            if(this.$route.path == '/farm_profile'){
+                axios.patch('/api/farmImages', frm, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }).then(res => {
+                    console.log('res.data', res.data);
+                    alert('등록 완료!');
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+                
+            }else{
+                alert('잘못된 접근입니다!');
+            }
+        },
         f_passwd_show() {
             this.isShow1 = !this.isShow1;
             console.log("나 눌렸다고");
@@ -449,7 +526,9 @@ export default {
 
 
         update_consumer_member_f_passwd() {
-            axios.patch('api/updateFarmMember/passwd', { farm_id: this.farm_id, f_passwd: this.f_passwd })
+            axios.patch('api/memberPassword', { checkUser:this.checkUser, 
+            id: JSON.parse(localStorage.getItem('user').farm_id), 
+            passwd: this.f_passwd })
                 .then(res => {
                     console.log(res);
                 })
@@ -458,7 +537,9 @@ export default {
                 });
         },
         update_consumer_member_f_phonenum() {
-            axios.patch('api/updateFarmMember/phonenum', { farm_id: this.farm_id, f_phonenum: this.f_phonenum })
+            axios.patch('api/memberPhoneNumber', { checkUser:this.checkUser, 
+            id: JSON.parse(localStorage.getItem('user').farm_id), 
+            phonenum: this.f_phonenum })
                 .then(res => {
                     console.log(res);
                 })
@@ -467,7 +548,10 @@ export default {
                 });
         },
         update_consumer_member_f_name() {
-            axios.patch('api/updateFarmMember/name', { farm_id: this.farm_id, f_name: this.f_name })
+            axios.patch('api/memberName', { 
+                checkUser:this.checkUser, 
+                id: this.farm_id, 
+                name: this.f_name })
                 .then(res => {
                     console.log(res);
                 })
@@ -476,7 +560,7 @@ export default {
                 });
         },
         update_consumer_member_f_num() {
-            axios.patch('api/updateFarmMember/num', { farm_id: this.farm_id, f_num: this.f_num })
+            axios.patch('api/farmMemberNumber', { farm_id: this.farm_id, f_num: this.f_num })
                 .then(res => {
                     console.log(res);
                 })
@@ -485,7 +569,7 @@ export default {
                 });
         },
         update_consumer_member_f_zipcode() {
-            axios.patch('api/updateFarmMember/zipcode', { farm_id: this.farm_id, f_zipcode: this.f_zipcode })
+            axios.patch('api/memberAddress', { farm_id: this.farm_id, f_zipcode: this.location })
                 .then(res => {
                     console.log(res);
                 })
@@ -503,7 +587,7 @@ export default {
                 });
         },
         update_consumer_member_f_bank() {
-            axios.patch('api/updateFarmMember/bank', { farm_id: this.farm_id, f_bank: this.f_bank, f_bank_name: this.f_bank_name, f_bank_num: this.f_bank_num })
+            axios.patch('api/farmMemberBank', { farm_id: this.farm_id, f_bank: this.f_bank, f_bank_name: this.f_bank_name, f_bank_num: this.f_bank_num })
                 .then(res => {
                     console.log(res);
                 })
@@ -512,7 +596,7 @@ export default {
                 });
         },
         update_consumer_member_f_farm_name() {
-            axios.patch('api/updateFarmMember/farmName', { farm_id: this.farm_id, f_farm_name: this.f_farm_name })
+            axios.patch('api/farmMemberFarmName', { farm_id: this.farm_id, f_farm_name: this.f_farm_name })
                 .then(res => {
                     console.log(res);
                 })
@@ -521,7 +605,7 @@ export default {
                 });
         },
         update_consumer_member_f_explanation() {
-            axios.patch('api/updateFarmMember/explanation', { farm_id: this.farm_id, f_explanation: this.f_explanation })
+            axios.patch('api/farmMemberExplanation', { farm_id: this.farm_id, f_explanation: this.f_explanation })
                 .then(res => {
                     console.log(res);
                 })
@@ -530,7 +614,7 @@ export default {
                 });
         },
         update_consumer_member_f_major_crop() {
-            axios.patch('api/updateFarmMember/majorCrop', { farm_id: this.farm_id, f_major_crop: this.f_major_crop })
+            axios.patch('api/farmMemberMajorCrop', { farm_id: this.farm_id, f_major_crop: this.f_major_crop })
                 .then(res => {
                     console.log(res);
                 })
@@ -544,7 +628,7 @@ export default {
             frm.append('img', this.f_img);
             frm.append('new_img', this.new_img);
 
-            axios.patch('/api/updateFarmMember/img', frm, {
+            axios.patch('/api/farmImages', frm, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -562,7 +646,7 @@ export default {
             frm.append('profile_img', this.f_profile_img);
             frm.append('new_profile_img', this.new_profile_img);
 
-            axios.patch('/api/updateFarmMember/profileImg', frm, {
+            axios.patch('/api/memberProfileImage', frm, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

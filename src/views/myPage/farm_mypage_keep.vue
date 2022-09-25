@@ -83,7 +83,7 @@ export default {
     },
     methods: {
         async moreProduct(){
-            await axios.get(`/api/getWishList/${this.$store.state.login.userInfo.consumer_id}/${this.startLimit}`)
+            await axios.get(`/api/getWishList/${JSON.parse(localStorage.getItem('user').consumer_id)}/${this.startLimit}`)
             .then(res => {
                 this.resData.push(...res.data);
                 console.log(res.data);

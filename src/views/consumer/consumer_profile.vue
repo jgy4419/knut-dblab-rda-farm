@@ -185,13 +185,14 @@ export default {
             c_name: this.c_name,
             c_zipcode: this.c_zipcode,
             c_location: this.c_location,
-
+            checkUser: 'consumer'
         };
     },
-
-    // mounted() {
-    // this.value = this.userInfo.value || "";
-    // },
+    mounted(){
+        if(!JSON.parse(localStorage.getItem('user').consumer_id)){
+            this.checkUser = 'farm'
+        }
+    },
 
     methods: {
         c_passwd_show() {
@@ -223,9 +224,14 @@ export default {
             this.$router.push('../views/consumer/consumer_loc');
             
         },
-
+        // 비밀번호 405 에러 
         update_consumer_member_c_passwd() {
-            axios.patch('api/update_consumer_member_c_passwd', { consumer_id: this.consumer_id, c_passwd: this.c_passwd })
+            console.log(this.checkUser, JSON.parse(localStorage.getItem('user').consumer_id), this.c_passwd);
+            axios.patch('api/memberPassword', { 
+                    checkUser: this.checkUser, 
+                    id: JSON.parse(localStorage.getItem('user').consumer_id), 
+                    passwd: this.c_passwd 
+                })
                 .then(res => {
                     console.log(res);
                 })
@@ -233,28 +239,38 @@ export default {
                     console.log(err);
                 });
         },
-
+        // 405 에러
         update_consumer_member_c_phonenum() {
-            axios.patch('api/updateConsumerMember/phonenum', { consumer_id: this.consumer_id, c_phonenum: this.c_phonenum })
-            
-                .then(res => {
-                    console.log(res);
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+            console.log(this.checkUser, JSON.parse(localStorage.getItem('user').consumer_id), this.c_phonenum );
+            console.log(typeof this.c_phonenum );
+            axios.patch('api/memberPhoneNumber', { 
+                checkUser:this.checkUser, 
+                id: JSON.parse(localStorage.getItem('user').consumer_id), 
+                phonenum: this.c_phonenum
+            })
+            .then(res => {
+                console.log(res);
+            })
+            .catch(err => {
+                console.log(err);
+            });
         },
+        // 
         update_consumer_member_c_name() {
-            axios.patch('api/updateConsumerMember/name', { consumer_id: this.consumer_id, c_name: this.c_name })
-                .then(res => {
-                    console.log(res);
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+            axios.patch('api/memberName', {
+                checkUser: this.checkUser, 
+                id: JSON.parse(localStorage.getItem('user').consumer_id), 
+                name: this.c_name 
+            })
+            .then(res => {
+                console.log(res);
+            })
+            .catch(err => {
+                console.log(err);
+            });
         },
         update_consumer_member_c_zipcode() {
-            axios.patch('api/updateConsumerMember/zipcode', { consumer_id: this.consumer_id, c_zipcode: this.c_zipcode })
+            axios.patch('api/memberAddress', { consumer_id: this.consumer_id, c_zipcode: this.c_zipcode })
                 .then(res => {
                     console.log(res);
                 })
@@ -272,14 +288,18 @@ export default {
                 });
         },
         update_consumer_member_c_img() {
+            let frm = new FormData();
             this.product_img_file = document.getElementById("product_img_file");
             console.log(this.product_img_file.files[0]);
-            let frm = new FormData();
-            frm.append("id", this.consumer_id);
-            frm.append("profile_img", this.c_profile_img);
-            frm.append('new_profile_img', this.new_profile_img);
-
-            axios.patch('/api/updateConsumerMember/', frm, {
+        
+            frm.append("checkUser", "consumer");
+            frm.append("id", this.user.consumer_id);
+            frm.append("profile_img"," this.");
+            frm.append('new_profile_img', 'ase_img');
+            console.log(frm);
+            for(let a of frm) console.log(a);
+            //this.$store.state.login.userInfo.consumer_id
+            axios.patch('/api/memberProfileImage', frm, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

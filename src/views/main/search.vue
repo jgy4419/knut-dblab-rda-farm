@@ -1,5 +1,6 @@
 <template>
     <div class="search-contain">
+        <div class="inner">
         <Header :headerProps="headerProps"/>
 
         <div class="div_search">
@@ -84,6 +85,7 @@
             </div>
             <button class="more-button" @click="searchAuction(this.preKeyword)">더보기</button>
         </fieldset>
+        </div>
     <bottom-nav/>
     </div>
 </template>
@@ -186,6 +188,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.inner{
+    height: 93vh;
+}
 .more-button{
     width: 100%;
     height: 50px;

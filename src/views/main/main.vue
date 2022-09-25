@@ -1,6 +1,6 @@
 
 <template>
-<div>
+<div class="main-contain">
     <Header :headerProps="headerProps"/>
 
 	<fieldset>
@@ -49,34 +49,8 @@ export default{
     },
     methods: {
         logout(){
-            // 로컬스토리지에서 checkUser, email 가져오기
-            let user = JSON.parse(localStorage.getItem('user'))
-            localStorage.removeItem('user');
-            console.log(user);
-
-            let email = user.c_email;
-            let check_user = null;
-            if(email != undefined){
-                check_user = "consumer"
-            } else {
-                email = user.f_email;
-                check_user = "farm"
-            }
-
-            console.log(check_user + '   ' + email);
-
-            axios.get(`/api/logout/${check_user}/${email}`,  {})
-            .then(res => {
-                console.log('res: ' + res);
-                
-                // 로컬스토리지 초기화
-                // localStorage.setItem('user', '');
-                this.$router.push({name: 'login'});
-            })
-            .catch(err => {
-                console.log(err);
-            });
-
+            this.$store.commit('LOGOUT')
+            this.$router.push('/login');
         },
         testCheck(){
             console.log(name);
@@ -88,9 +62,6 @@ export default{
     
 
     created() {
-        console.log(localStorage.getItem("user"));
-        const user = JSON.parse(localStorage.getItem("user"))
-        console.log(user);
         
         this.$storage.setStorageSync("test-key", "5");
     },
@@ -115,7 +86,11 @@ export default{
 }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+.main-contain{
+    // height: 10vh;
+    fieldset{
+        margin-top: -50px;
+    }
+}
 </style>
-

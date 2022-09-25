@@ -23,7 +23,7 @@ export default {
     // checkWish -> get, 상품번호, auction_id, consumer_id
     async mounted(){
         this.like.auction_id = parseInt(this.$route.params.id)
-        this.like.consumer_id = this.$store.state.login.userInfo.consumer_id;
+        this.like.consumer_id = JSON.parse(localStorage.getItem('user').consumer_id);
            await axios.get(`/api/checkWish/${this.like.auction_id}/${this.like.consumer_id}`)
            .then(res => {
                 console.log(res.data);

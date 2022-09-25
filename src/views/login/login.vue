@@ -82,6 +82,7 @@ export default {
     },
     methods: { 
         login() {
+            let payload = {};
             axios.post('/api/login',  { email: this.email, checkUser: this.checkUser, password: this.password})
             .then(res => {
                 console.log(res);
@@ -97,6 +98,14 @@ export default {
                     localStorage.setItem("user", JSON.stringify(res.data));
 
 					this.$store.commit('login/TOKEN_SAVE', res.data.token);
+                    // console.log(res.data.consumer_id);
+                    if(res.data.consumer_id){
+                        localStorage.setItem('checkUser', 'consumer');
+                        localStorage.setItem('id', res.data.consumer_id);
+                    }else{
+                        localStorage.setItem('checkUser', 'farm')
+                        localStorage.setItem('id', res.data.farm_id);
+                    }
 					console.log(this.$store.state.config.headers.TOKEN);
 					this.$router.push({name: 'main'});
 				}

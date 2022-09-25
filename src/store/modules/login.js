@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 
 export const login = new Vuex.Store({
     state: {
-        userInfo: JSON.parse(localStorage.getItem('user')),
+        userInfo: null,
         isLogin: false,
         isLoginError: false
     },

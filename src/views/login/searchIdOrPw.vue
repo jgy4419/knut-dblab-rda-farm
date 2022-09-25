@@ -119,6 +119,7 @@ export default {
             if(event.authInput == event.phoneAuthNumber){
                 this.authModal = true;
                 this.id = event.id;
+                alert("인증 완료되었습니다.");
             } else {
                 alert("인증번호가 맞지 않습니다!")
             }

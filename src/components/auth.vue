@@ -9,7 +9,7 @@
                         {{String(Math.floor((auth.authCounter  / (1000 * 60 )) % 60 )).padStart(2, "0")}} :
                         {{String(Math.floor((auth.authCounter / 1000 ) % 60)).padStart(2, "0")}}
                     </p>
-                    <button class="auth-complete-btn" @click="$emit('authRes', {authInput: this.auth.authInput, id: this.id, phoneAuthNumber: this.phoneAuthNumber})">확인</button>
+                    <button class="auth-complete-btn" @click="$emit('authRes', {authInput: this.auth.authInput, id: this.id, phoneAuthNumber: this.phoneAuthNumber, phonenum: this.phonenum})">확인</button>
                 </div>
             </div>
             <v-text-field v-model="phonenum" label="핸드폰 번호" :rules="phonenum_rule"></v-text-field>
@@ -42,6 +42,7 @@ export default {
             },
             id: null,
             phoneAuthNumber: null,
+            phonenum: null,
         }
     },
     unmounted(){
