@@ -8,14 +8,14 @@
                 <li id="_rowLi20220213173042CHK2022021381488661" class="goods_pay_item ">
                     <div class="goods_item">
                         <a href="/orderStatus/2022021339733581" class="goods_thumb">
-                            <img class="circle_image" src="https://suhofarm.com/_upload/mall/20220112173148_86227.jpg" alt="" width="90"
+                            <img class="circle_image" :src="`/product_images/${user.f_profile_img}.png`" alt="" width="90"
                                 height="90"></a>
                         <div class="goods_info">
                             <p class="guide2">
-                                농가명 : 따과농과
+                                농가명 : {{user.f_name}}
                             </p>
                             <p class="guide2">
-                                대표자 : 김따과
+                                대표자 : {{user.username}}
                             </p>
                         </div>
                     </div>
@@ -28,8 +28,8 @@
         <ul class="check button1">
             <li><button type="button" class="fpmgBt2" onclick="location.href='/#'">경매횟수</button></li>
             <li><button type="button" class="fpmgBt2" onclick="location.href='/#'">나의 파치포인트</button></li>
-            <li><button type="button" class="fpmgBt1" onclick="location.href='/#'">10</button></li>
-            <li><button type="button" class="fpmgBt1" onclick="location.href='/#'">50,000</button></li>
+            <li><button type="button" class="fpmgBt1" onclick="location.href='/#'">{{pachiCount}}</button></li>
+            <li><button type="button" class="fpmgBt1" onclick="location.href='/#'">{{pachiPoint}}</button></li>
         </ul>
     </fieldset>
 
@@ -60,6 +60,8 @@ export default {
         return{
             headerProps: 'logo',
             user: JSON.parse(localStorage.getItem("user")),
+            pachiPoint: 0,
+            pachiCount: 0,
         }
     },
     methods: {
@@ -67,12 +69,21 @@ export default {
             this.$store.commit('LOGOUT')
         },
     },
-    mounted(){
-        // console.log(this.$store.state.login);
-        // // axios.get(`/consumerPachiPoint/${this.$store.state.login.userInfo.consumer_id}`)
-        // // .then(res => {
-        // //     console.log(res);
-        // // })
+    async mounted(){
+        console.log(this.$store.state.user);
+        console.log(this.$store.state.user.id);
+        this.userData = JSON.parse(localStorage.getItem('user'));
+        console.log(this.userData.farm_id);
+        await axios.get(`/api/farmPachiPoint/${this.userData.farm_id}`)
+        .then(res => {
+            this.pachiPoint = res.data;
+            console.log(res);
+        }).catch(error => console.log(error));
+        
+        axios.get(`/api/farmCountAuction/${this.userData.farm_id}`)
+        .then(res => {
+            this.pachiCount = res.data;
+        }).catch(error => console.log(error));
     }
 }
 </script>

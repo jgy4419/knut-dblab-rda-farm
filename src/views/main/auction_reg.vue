@@ -42,10 +42,6 @@
                         <td class="table-100-1pky" colspan="3"><input type="datetime-local" v-model="p_drop_date"></td>
                     </tr>
                     <tr>
-                        <td class="table-100-tyfk">시작일</td>
-                        <td class="table-100-1pky" colspan="3"><input type="datetime-local" v-model="start_date"></td>
-                    </tr>
-                    <tr>
                         <td class="table-100-tyfk">마감일</td>
                         <td class="table-100-1pky" colspan="3"><input type="datetime-local" v-model="deadline_date"></td>
                     </tr>
@@ -109,7 +105,6 @@
                 p_starting_price: null,
                 p_max_price: null,
                 p_drop_date: null,
-                start_date: null,
                 deadline_date: null,
                 size: null,
                 p_status: null,
@@ -121,7 +116,7 @@
         },
         mounted(){
             // 실제 구현 시 !== -> === 로 바꿔주기
-            if(JSON.parse(localStorage.getItem('user').checkUser) !== undefined){
+            if(this.farm_id == null){
                 alert('농가회원이 아닙니다!');
                 this.$router.go(-1);
             }
@@ -139,15 +134,9 @@
                     console.log(res.data[0]);
                     const data = res.data[0];
                     this.p_name = data.auction_name;
-                    // this.product = data.
-                    // this.product_kg = 
                     this.p_starting_price = data.a_starting_price;
                     this.p_max_price = data.a_max_price; 
-                    // this.p_drop_date = 
-                    this.start_date = data.start_date;
                     this.deadline_date = data.deadline_date;
-                    // this.p_status = 
-                    // this.p_explanation = 
                 }).catch(err => console.log(err));
             },
             upload() {
@@ -172,7 +161,6 @@
                 frm.append('a_starting_price', this.p_starting_price);
                 frm.append('bid_price', this.p_starting_price);
                 frm.append('a_max_price', this.p_max_price);
-                frm.append('start_date', this.start_date);
                 frm.append('deadline_date', this.deadline_date);
                 frm.append('farm_id', this.farm_id);
 

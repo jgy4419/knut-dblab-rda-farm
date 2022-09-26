@@ -18,7 +18,8 @@
         <input v-model="farm_member_info.f_RRN" class="login-form__input" type="text" required placeholder="주민등록번호">
 
         <label id="login-form-label">주소</label>
-        <input v-model="farm_member_info.f_location" class="login-form__input" type="text" required placeholder="사업장 소재지">
+		<SearchAddress @searchAddressRes="searchAddressResult"/>
+        <!-- <input v-model="farm_member_info.f_location" class="login-form__input" type="text" required placeholder="사업장 소재지"> -->
 
         <label id="login-form-label">농가 전화번호</label>
         <input v-model="farm_member_info.f_num" class="login-form__input" type="text" required placeholder="농가 전화번호">
@@ -30,9 +31,13 @@
 
 <script>
 import axios from "axios"
+import SearchAddress from '../../components/search_address.vue';
 
 export default {
 	name: 'submitBizForm',
+	components: {
+        SearchAddress,
+    },
 	data() {
 		return {
 			farm_member_info: {
@@ -44,6 +49,7 @@ export default {
 				f_farm_name: null,
 				f_representative: null,
 				f_RRN: null,
+				f_zipcode: null,
 				f_location: null,
 				f_num: null
 				
@@ -53,6 +59,14 @@ export default {
 		};
 	},
 	methods:{
+		searchAddressResult(event){
+            // 인증번호 맞는지 검사하고 맞다면 비밀번호 변경창 띄우기
+            console.log('event: ', event);
+            this.farm_member_info.f_zipcode = event.zipcode;
+            this.farm_member_info.f_location = event.address;
+            this.addressCheck = true;
+			alert("주소 입력이 완료되었습니다!");
+        },
 		submitFuserSignUp() {
 			console.log(this.farm_member_info);
 			axios.post('/api/signupFarmMember', this.farm_member_info)

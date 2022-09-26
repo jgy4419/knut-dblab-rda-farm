@@ -150,6 +150,7 @@ export default {
     },
     created() {
         this.connect()
+        console.log('arr', this.$route.params.auction);
         this.farmInformation = JSON.parse(this.$route.params.auction);
         console.log('생산자 정보', this.farmInformation);
         this.auction = JSON.parse(this.$route.params.auction)
@@ -169,7 +170,7 @@ export default {
         },
         bid(){
             console.log('datas', this.auction.consumer_id);
-            console.log('user', JSON.parse(localStorage.getItem('user').consumer_id));
+            // console.log('user', JSON.parse(localStorage.getItem('user').consumer_id));
             console.log(this.bid_price, this.auction.a_max_price);
 
             console.log("auction.auction_Id:" + this.auction.auction_Id);
@@ -181,7 +182,7 @@ export default {
             console.log(this.stompClient.connected);
 
             // 이미 경매에 참여한 사람들 알아내기
-            if(this.auction.comsumer_id == JSON.parse(localStorage.getItem('user').consumer_id)){
+            if(this.auction.comsumer_id == JSON.parse(localStorage.getItem('id'))){
                 alert('이미 경매에 참여하셨습니다!');
                 return;
             }
@@ -204,8 +205,13 @@ export default {
                         auction_consumer_id: this.auction.consumer_id,
                         consumer_id: this.user.consumer_id, 
                         auction_name: this.auction.auction_name, 
-                        isMaxPrice: this.isMaxPrice }), {});
-                    this.auction.comsumer_id = JSON.parse(localStorage.getItem('user').consumer_id)
+                        isMaxPrice: this.isMaxPrice, 
+                        product_img_name: this.auction.productDTO.product_img_name,
+                        f_farm_name: this.auction.f_farm_name,
+                        c_name: this.user.c_name,
+                        // product_img_name, farm_name, c_name 추가하기
+                        }), {});
+                    this.auction.comsumer_id = JSON.parse(localStorage.getItem('user')).consumer_id
                 }
             } else {
                 alert("현재 경매가보다 낮습니다!!")

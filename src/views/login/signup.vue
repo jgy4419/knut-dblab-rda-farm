@@ -22,6 +22,7 @@
                 <v-text-field class="inutBox" v-model="passwd_chk" label="비밀번호 확인*" type="password" :rules="passwd_rule2">
                 </v-text-field>
             </v-col>
+            <SearchAddress @searchAddressRes="searchAddressResult" v-if="this.urlState == 0"/>
             <Auth :info="info" @authRes="phonenumAuthResult"/>
         </v-row>
         <br/><br/>
@@ -36,10 +37,12 @@
 <script>
 import axios from "axios"
 import Auth from '../../components/auth.vue';
+import SearchAddress from '../../components/search_address.vue';
 export default {
     name: 'SignupForm',
     components: {
-        Auth
+        Auth,
+        SearchAddress,
     },
     data() {
         return {
@@ -49,10 +52,13 @@ export default {
                 email: null,
             },
             phonenumAuth: false,
+            addressCheck: false,
             name: null,
             email: null,
             passwd: null,
             phonenum: null,
+            zipcode: null,
+            location: null,
             dialog: false,
             state: 'ins',
             authList: [
@@ -115,6 +121,14 @@ export default {
             if(email == email){
             }
         },
+        searchAddressResult(event){
+            // 인증번호 맞는지 검사하고 맞다면 비밀번호 변경창 띄우기
+            console.log('event: ', event);
+            this.zipcode = event.zipcode;
+            this.location = event.address;
+            this.addressCheck = true;
+            alert("주소 입력이 완료되었습니다!");
+        },
         phonenumAuthResult(event){
             // 인증번호 맞는지 검사하고 맞다면 비밀번호 변경창 띄우기
             console.log('event: ', event);
@@ -141,6 +155,8 @@ export default {
                 console.log("다른 거 확인하길 바람");
             } else if (this.$store.state.existEmail) {
                 alert('이메일 중복 확인을 완료해주세요!')
+            } else if(!this.addressCheck){
+                alert('주소 입력을 완료해주세요!')
             } else if(!this.phonenumAuth){
                 alert('핸드폰 번호 인증을 완료해주세요!')
             } else if(this.urlState == 1){
@@ -153,7 +169,9 @@ export default {
                 this.$store.state.kindOfFarm == 1 ? this.$router.push({ name: 'farm_user_info' }) : this.$router.push({ name: 'farm_biz_info' });
             } else {
                 console.log();
-                axios.post('/api/signupConsumer', { c_name: this.name, c_email: this.email, c_passwd: this.passwd, c_phonenum: this.phonenum})
+                axios.post('/api/signupConsumer', { c_name: this.name, c_email: this.email, 
+                                                    c_passwd: this.passwd, c_phonenum: this.phonenum, 
+                                                    c_zipcode: this.zipcode, c_location: this.location})
                     .then(res => {
                         console.log(res);
                         if (res.data == 0) {

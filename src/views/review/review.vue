@@ -10,18 +10,17 @@
             <span/>
         </header>
         <div class="inner">
-            <div class="reviewBtns">
-                <button class="reviewBtn" @click="reviewBtnActivate" v-for="review, i in reviewButton" :key="i">
-                    {{review}}
-                </button>
-            </div>
-            <ReviewList class="reviewList" v-for="infinite, i in infiniteScrollValue" :key="i" />
+            <Spinner v-if="spinnerState === true"/>
+            <ReviewList v-for="data, i in infiniteScrollValue" :key="i" class="reviewList"
+            :getData="getData"/>
         </div>
         <Bottom/>
     </div>
 </template>
 
 <script>
+import Spinner from '../../components/spinner.vue';
+import axios from 'axios';
 import ReviewList from './reviewList.vue';
 import ReviewDetail from './reviewDetail.vue';
 import Header from '../../components/Header/bellAndBackHeader.vue';
@@ -31,36 +30,42 @@ export default {
     components: {
         ReviewList,
         ReviewDetail,
-        Bottom
+        Bottom,
+        Spinner
     },
     data(){
         return {
+            spinnerState: true,
             reviewButton: ['내가 쓴 리뷰', '내가 받은 리뷰'],
             reviewState: '내가 쓴 리뷰',
             infiniteScrollValue: 1,
+            getData: [],
         }
     },
     mounted(){
+        this.getReviewData();
+
         window.addEventListener('scroll', _.throttle(() => {
             this.infiniteScroll()
         }, 300));
-        document.querySelectorAll('.reviewBtn')[0].classList.add('active');
     },
     methods: {
-        reviewBtnActivate({target}){
-            this.reviewState = target.innerHTML;
-            let noticeItem = document.querySelector('.reviewBtns');
-            [...noticeItem.children].forEach(info => {
-                info.classList.toggle('active', info === target);
-            })
+        getReviewData(){
+            axios.get(`/api/AuctionReview/${localStorage.getItem('checkUser')}/${localStorage.getItem('id')}`)
+            .then(res => {  
+                this.getData.push(res.data);
+                this.spinnerState = false;
+                console.log(this.getData.flat(Infinity));
+            }).catch(err => console.log(err));
         },
-        infiniteScroll() {
+        async infiniteScroll() {
             // 스크롤 최적화 시키기
             const {innerHeight} = window;
             const {scrollHeight} = document.body;
             const {scrollTop} = document.documentElement;
             if(Math.round(scrollTop + innerHeight) >= scrollHeight){
                 this.infiniteScrollValue += 1;
+                // await this.getReviewData();
             }
             console.log(innerHeight);
         },

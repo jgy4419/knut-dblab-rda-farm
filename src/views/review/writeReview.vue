@@ -2,7 +2,7 @@
     <div class="contain">
         <BackHeader :headerProps="headerProps"/>
         <div class="reviewInformation">
-            <img :src="`/product_images/${getData.product_img_name}.png`" alt="리뷰할 사진">
+            <img class="review-image" :src="`/product_images/${getData.product_img_name}.png`" alt="리뷰할 사진">
             <div class="information">
                 <p>상품명 : {{getData.auction_name}}</p>
                 <p>최종낙찰 : {{parseInt(getData.a_max_price).toLocaleString()}}원</p>
@@ -13,7 +13,7 @@
             <h2>별점 선택</h2>
             <i v-for="star in reqData.starState" :key="star" class="fa fa-star review-star"/>
             <div class="starState">
-                <button class="star-choice-button" v-for="state in starState" :key="state">
+                <button @click="reviewBtnActivate" class="star-choice-button" v-for="state in starState" :key="state">
                     {{state}}
                 </button>
             </div>
@@ -32,7 +32,7 @@
             <div id="image_container" class="image_container"></div>
         </div>
         <div class="final-buttons">
-            <button class="final-button">취소</button>
+            <button class="final-button" @click="$router.go(-1)">취소</button>
             <button class="final-button" @click="reqDatas()">등록</button>
         </div>
     </div>    
@@ -65,7 +65,14 @@ export default {
             imgData: []
         }
     },
+            //     <!-- <div class="reviewBtns">
+            //     <button class="reviewBtn" @click="reviewBtnActivate" v-for="review, i in reviewButton" :key="i">
+            //         {{review}}
+            //     </button>
+            // </div> -->
     mounted(){
+        // 별점 처음에 선택되어져 있는 부분
+        document.querySelectorAll('.star-choice-button')[4].classList.add('active');
         // 후기 작성할 유저 게시글 불러오기 (vuex로 받은 데이터)
         this.getData = this.$store.state.review.getReviewData;
         // 별점 선택
@@ -77,6 +84,13 @@ export default {
         })
     },
     methods: {
+        reviewBtnActivate({target}){
+            this.reviewState = target.innerHTML;
+            let noticeItem = document.querySelector('.starState');
+            [...noticeItem.children].forEach(info => {
+                info.classList.toggle('active', info === target);
+            })
+        },
         imgPreview(event){
             var reader = new FileReader();
             reader.onload = function(event) {
@@ -147,6 +161,7 @@ h2{
         align-items: center;
         img{
             width: 75px;
+            border-radius: 5px;
         }
         .information{
             margin-left: 20px;
@@ -174,7 +189,7 @@ h2{
             padding: 10px;
             margin-top: 10px;
             .star-choice-button{
-                border: 1px solid rgb(187, 187, 187);
+                // border: 1px solid rgb(187, 187, 187);
                 margin-left: 5px;
                 color: #333;
                 border-radius: 3px;
@@ -182,6 +197,10 @@ h2{
                 height: 30px;
                 font-size: 12px;
                 font-weight: 700;
+            }
+            .star-choice-button.active{
+                background-color: #FFC1AA;
+                color: #fff;
             }
             .star-choice-button:nth-child(1){
                 margin-left: 0px;

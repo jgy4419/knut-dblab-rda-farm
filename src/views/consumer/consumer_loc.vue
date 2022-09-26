@@ -1,11 +1,11 @@
 <template>
     <div>
-        <header class="welcome-header1">
+        <!-- <header class="welcome-header1">
             <h1 class="welcome-header__title1">맵 테스트</h1>
-        </header>
+        </header> -->
         <div id="map" style="width:500px;height:400px;"></div>
         <v-form ref="form" v-model="valid" lazy-validation @submit.prevent="submit_address">
-            <input type="text" id="postcode" placeholder="우편번호" v-model="f_zipcode">
+            <input type="text" id="postcode" placeholder="우편번호" v-model="zipcode">
             <v-vtn @click="search()">우편번호 찾기</v-vtn><br>
             <!--onclick이 아니라 @click으로 바꿔야한다. -->
             <input type="text" id="roadAddress" placeholder="도로명주소" v-model="r_Addr">
@@ -27,7 +27,7 @@ export default {
             postcode: "",
             address: "",
             extraAddress: "",
-            f_zipcode: "",
+            zipcode: "",
             r_Addr: "",
             j_Addr: "",
             d_Addr: "",

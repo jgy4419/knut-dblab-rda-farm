@@ -142,11 +142,12 @@ export default createStore({
     
     // Alert 관련 Mutation
     INIT_ALERT_LIST: (state, init_alertList) => {
-      console.log(init_alertList);
+      console.log('!!', init_alertList);
       state.alertList = init_alertList;
     },
     PUSH_ALERT_LIST: (state, alert) => {
-      console.log(alert);
+      // alert('데이터 받기');
+      // console.log('받은 데이터', alert);
       state.alertList.push(alert);
     },
     CHECKED_ALERT: (state, alertList_index) => {

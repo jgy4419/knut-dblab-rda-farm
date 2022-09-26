@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Spinner v-if="spinnerState === true"/>
       <fieldset>
           <div class="white_div">
               <div class="goods_pay_section ">
@@ -64,6 +65,7 @@
 
 <script>
 // import axios from "axios"
+import Spinner from '../../components/spinner.vue';
 import Like from '../like.vue';
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
@@ -73,9 +75,11 @@ import SockJS from 'sockjs-client'
 export default{
   components: {
     Like,
+    Spinner,
   },
   data() {
-      return {        
+      return {     
+        spinnerState: false,   
         limit: 0,
         infiniteId: +new Date(),
         now: 0,
@@ -130,19 +134,8 @@ export default{
         this.$router.go(-1);
     },
     moreProduct() {
+      this.spinnerState = true;
       this.send();
-      // then(({ data }) => {
-      //   console.log('-------------------------------');
-      //   console.log(134, 'data: ', data);
-      //   console.log(data.hits);
-      //   if (data.hits.length) {
-      //     this.page += 1;
-      //     this.list.push(...data.hits);
-      //     $state.loaded();
-      //   } else {
-      //     $state.complete();
-      //   }
-      // });
     },
     // 소켓 연결 -> 데이터 가져옴
     send() { // 데이터 불러오는 부분
@@ -163,6 +156,7 @@ export default{
           console.log('소켓 연결 성공', frame);
 
           this.stompClient.subscribe("/send_auction_data/"+this.$store.state.config.headers.TOKEN,  res => {
+            this.spinnerState = false;
 
             const response_data = JSON.parse(res.body);
             console.log("response_data.length: " + response_data.length);

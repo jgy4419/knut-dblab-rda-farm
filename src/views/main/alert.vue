@@ -1,56 +1,60 @@
 <template>
 <div>
     <Header :headerProps="headerProps"/>
-
-    <div class="main-screen">
-        <fieldset>
-            <ul class="goods_group">
-                <li v-for="(alert, index) in this.$store.state.alertList" :key="alert.alert_id">
-                    <div class="user-component">
-                        <div class="user-component__column">
-                            <img src="https://static.smalljoys.me/2020/08/2898992_mfwfp-ch_400x400_1597309435.jpg"
-                                class="user-component__avatar user-component__avatar">
+    <div class="inner">
+        <div class="main-screen">
+            <fieldset>
+                <ul class="goods_group">
+                    <li v-for="alert, i in $store.state.alertList" :key="i">
+                        <div class="user-component">
+                            <div class="user-component__column">
+                                <img :src="`/product_images/${$store.state.alertList[i].product_img_name}.png`"
+                                    class="user-component__avatar" width="50" height="50">
+                            </div>
                             <div class="user-component__text">
-                                <h4 class="user-component__title">{{alert.d_status}}</h4>
-                                <h6 class="user-component__subtitle">내용    {{alert.auction_name}}</h6>
+                                <h4 class="user-component__title">{{$store.state.alertList[i].auction_name}}</h4>
+                                <h5 class="user-component__subtitle">{{$store.state.alertList[i].f_farm_name}}</h5>
+                                <!-- <h4 class="user-component__title">농가이름</h4>
+                                <h5 class="user-component__subtitle">제목</h5> -->
+                            </div>
+
+                            <div class="user-component__column">
+                                <p class="user-component__time">{{alert.time.slice(0, 10)}}</p>
+                                <button class="check-button" @click="checked(alert.alert_id, i)">확인여부  {{alert.checked}}</button>
                             </div>
                         </div>
-                        <button @click="checked(alert.alert_id, index)">확인여부  {{alert.checked}}</button>
+                    </li>
+                </ul>
+            </fieldset>
+        </div>
 
-                        <div class="user-component__column">
-                        <span class="user-component__time">{{alert.time}}</span>
+        <div id="imageDownloaderSidebarContainer">
+            <div class="image-downloader-ext-container">
+                <div tabindex="-1" class="b-sidebar-outer">
+                    <div id="image-downloader-sidebar" tabindex="-1" role="dialog" aria-modal="false" aria-hidden="true"
+                        class="b-sidebar shadow b-sidebar-right bg-light text-dark" style="width: 500px; display: none;">
+                        <div class="b-sidebar-body">
+                            <div></div>
                         </div>
-                    </div>
-                </li>
-            </ul>
-        </fieldset>
-    </div>
-
-    <div id="imageDownloaderSidebarContainer">
-        <div class="image-downloader-ext-container">
-            <div tabindex="-1" class="b-sidebar-outer">
-                <div id="image-downloader-sidebar" tabindex="-1" role="dialog" aria-modal="false" aria-hidden="true"
-                    class="b-sidebar shadow b-sidebar-right bg-light text-dark" style="width: 500px; display: none;">
-                    <div class="b-sidebar-body">
-                        <div></div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="main_nav_b_div">
-        <nav class="main_b_nav">
-            <ul class="main_m_ui_list">
-                <li class="nav__btn">
-                    <a class="nav__link" href="auction"><h4 class="user-component__title">경매장으로 가기</h4>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </div>
+        <div class="main_nav_b_div">
+            <nav class="main_b_nav">
+                <ul class="main_m_ui_list">
+                    <li class="nav__btn">
+                        <router-link class="nav__link" to="/auction">
+                            <button class="aution_button">경매장으로 가기</button>
+                        </router-link>
+                    </li>
+                </ul>
+            </nav>
+        </div>
 
-</div>
+    </div>
+    </div>
 </template>
 
 <script>
@@ -67,9 +71,12 @@ export default {
             checkUser: null,
             id: null,
             user: JSON.parse(localStorage.getItem("user")),
+            getData: [],
         }
     },
     mounted() {
+        // console.log('집어넣을 데이터', this.$store.state.alertList[69].f_farm_name);
+        // 로그인 했을 때 실행되도록 하기
         if (this.user.farm_id == undefined) {
             this.checkUser = 'consumer'
             this.id = this.user.consumer_id
@@ -79,15 +86,16 @@ export default {
         }
         console.log(this.checkUser + '/' + this.id);
 
-        this.$sse.create(`http://118.67.134.38:80/api/subscribeAlert/` + this.checkUser + '/' + this.id)
+        this.$sse.create(`https://118.67.134.38:80/api/subscribeAlert/` + this.checkUser + '/' + this.id)
         .on('init', (init_data) => {
-
-            console.log('init: ');
+            console.log('initssss', init_data);
             this.$store.commit('INIT_ALERT_LIST', JSON.parse(init_data));
         })
         .on('alert', (alert_data) => {
+            let data = JSON.parse(alert_data);
+            // 페이지에 보여줄 코드 작성 
+            this.$store.commit('PUSH_ALERT_LIST', data);
 
-            this.$store.commit('PUSH_ALERT_LIST', JSON.parse(alert_data));
         })
         .on('error', (err) => console.error('Failed to parse or lost connection:', err))
         .connect()
@@ -120,7 +128,3 @@ export default {
 
 }
 </script>
-
-<style>
-
-</style>

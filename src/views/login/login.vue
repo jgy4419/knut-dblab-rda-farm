@@ -85,7 +85,6 @@ export default {
             let payload = {};
             axios.post('/api/login',  { email: this.email, checkUser: this.checkUser, password: this.password})
             .then(res => {
-                console.log(res);
                 if (res.data == "") {
                     alert("아이디 또는 비밀번호가 틀렸습니다!")
                     console.log("....");
@@ -93,6 +92,8 @@ export default {
 					alert("중복 로그인입니다! 다시 한번 로그인 해주세요!")
 					console.log("중복 로그인!");
 				} else {
+                    let expire = Date.now() + 86400000;
+                    localStorage.setItem('expire', JSON.stringify(expire));
 					// main으로 넘기기
 					console.log(res.data);
                     localStorage.setItem("user", JSON.stringify(res.data));

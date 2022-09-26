@@ -92,7 +92,9 @@
                     </tr>
                 </tbody>
             </table>
+            <SearchAddress :addressInfo="addressInfo" @searchAddressRes="searchAddressResult"/>
         </v-form>
+
         <!-- 농가 프로필 -->
         <header class="n-section-title first info_views-area">
             <h1 class="tit">농가 회원정보</h1>
@@ -195,6 +197,8 @@
                             수정</button>
                     </td>
                 </tr>
+
+                
 
                 <tr v-if="isShow5">
                     <td></td>
@@ -367,14 +371,23 @@
 
 <script>
 import bottomNav from '@/components/bottomNav.vue';
+import SearchAddress from '../../components/search_address.vue';
 import axios from 'axios';
 
 export default {
-    components: { bottomNav },
+    components: { 
+        bottomNav, 
+        SearchAddress 
+    },
     data() {
         return {
             pro_test: JSON.parse(localStorage.getItem("pro_test")) || "",
             user: JSON.parse(localStorage.getItem("user")) || "",
+            addressInfo: {
+                zipcode: JSON.parse(localStorage.getItem("user")).f_zipcode, 
+                address: JSON.parse(localStorage.getItem("user")).f_location
+            },
+            checkUser: "farm",
             isShow1: false,
             isShow2: false,
             isShow3: false,
@@ -409,6 +422,25 @@ export default {
     // },
 
     methods: {
+        searchAddressResult(event){
+            // 인증번호 맞는지 검사하고 맞다면 비밀번호 변경창 띄우기
+            console.log('event: ', event);
+            this.addressInfo.zipcode = event.zipcode;
+            this.addressInfo.location = event.address;
+
+            // 서버에 변경된 데이터 보내기
+            axios.patch('api/memberAddress', { 
+                checkUser: "farm", 
+                id: this.user.farm_id, 
+                zipcode: event.zipcode,
+                location: event.address
+                }).then(res => {
+                    console.log(res.data);
+                    alert("주소 변경이 완료되었습니다!");
+                }).catch(err => {
+                    console.log(err);
+            });
+        },
         uploadFarmProfileImages() {
             this.f_profile_img = document.getElementById("farm_porfile_img_file");
         },
@@ -526,9 +558,11 @@ export default {
 
 
         update_consumer_member_f_passwd() {
-            axios.patch('api/memberPassword', { checkUser:this.checkUser, 
-            id: JSON.parse(localStorage.getItem('user').farm_id), 
-            passwd: this.f_passwd })
+            console.log(this.checkUser);
+            axios.patch('api/memberPassword', { 
+                    checkUser: this.checkUser, 
+                    id: JSON.parse(localStorage.getItem('user')).farm_id, 
+                    passwd: this.f_passwd })
                 .then(res => {
                     console.log(res);
                 })
@@ -537,8 +571,9 @@ export default {
                 });
         },
         update_consumer_member_f_phonenum() {
-            axios.patch('api/memberPhoneNumber', { checkUser:this.checkUser, 
-            id: JSON.parse(localStorage.getItem('user').farm_id), 
+            axios.patch('api/memberPhoneNumber', { 
+                checkUser:this.checkUser, 
+            id: JSON.parse(localStorage.getItem('user')).farm_id, 
             phonenum: this.f_phonenum })
                 .then(res => {
                     console.log(res);
@@ -550,7 +585,7 @@ export default {
         update_consumer_member_f_name() {
             axios.patch('api/memberName', { 
                 checkUser:this.checkUser, 
-                id: this.farm_id, 
+                id: JSON.parse(localStorage.getItem('user')).farm_id, 
                 name: this.f_name })
                 .then(res => {
                     console.log(res);
@@ -560,7 +595,8 @@ export default {
                 });
         },
         update_consumer_member_f_num() {
-            axios.patch('api/farmMemberNumber', { farm_id: this.farm_id, f_num: this.f_num })
+            axios.patch('api/farmMemberNumber', { checkUser: this.checkUser, 
+                id: JSON.parse(localStorage.getItem('user')).farm_id, f_num: this.f_num })
                 .then(res => {
                     console.log(res);
                 })
@@ -569,7 +605,8 @@ export default {
                 });
         },
         update_consumer_member_f_zipcode() {
-            axios.patch('api/memberAddress', { farm_id: this.farm_id, f_zipcode: this.location })
+            axios.patch('api/memberAddress', { 
+                checkUser: this.checkUser, id: JSON.parse(localStorage.getItem('user')).farm_id, f_zipcode: this.location })
                 .then(res => {
                     console.log(res);
                 })
@@ -578,7 +615,8 @@ export default {
                 });
         },
         update_consumer_member_f_location() {
-            axios.patch('api/updateFarmMember/location', { farm_id: this.farm_id, f_location: this.f_location })
+            axios.patch('api/updateFarmMember/location', { 
+                checkUser: this.checkUser, farm_id: this.farm_id, f_location: this.f_location })
                 .then(res => {
                     console.log(res);
                 })
@@ -587,7 +625,8 @@ export default {
                 });
         },
         update_consumer_member_f_bank() {
-            axios.patch('api/farmMemberBank', { farm_id: this.farm_id, f_bank: this.f_bank, f_bank_name: this.f_bank_name, f_bank_num: this.f_bank_num })
+            axios.patch('api/farmMemberBank', { 
+                checkUser: this.checkUser, id:JSON.parse(localStorage.getItem('user')).farm_id, f_bank: this.f_bank, f_bank_name: this.f_bank_name, f_bank_num: this.f_bank_num })
                 .then(res => {
                     console.log(res);
                 })
@@ -596,7 +635,7 @@ export default {
                 });
         },
         update_consumer_member_f_farm_name() {
-            axios.patch('api/farmMemberFarmName', { farm_id: this.farm_id, f_farm_name: this.f_farm_name })
+            axios.patch('api/farmMemberFarmName', { checkUser: this.checkUser, id: JSON.parse(localStorage.getItem('user')).farm_id, f_farm_name: this.f_farm_name })
                 .then(res => {
                     console.log(res);
                 })
@@ -605,7 +644,7 @@ export default {
                 });
         },
         update_consumer_member_f_explanation() {
-            axios.patch('api/farmMemberExplanation', { farm_id: this.farm_id, f_explanation: this.f_explanation })
+            axios.patch('api/farmMemberExplanation', { checkUser: this.checkUser, id: JSON.parse(localStorage.getItem('user')).farm_id, f_explanation: this.f_explanation })
                 .then(res => {
                     console.log(res);
                 })
@@ -614,7 +653,7 @@ export default {
                 });
         },
         update_consumer_member_f_major_crop() {
-            axios.patch('api/farmMemberMajorCrop', { farm_id: this.farm_id, f_major_crop: this.f_major_crop })
+            axios.patch('api/farmMemberMajorCrop', { checkUser: this.checkUser, id: JSON.parse(localStorage.getItem('user')).farm_id, f_major_crop: this.f_major_crop })
                 .then(res => {
                     console.log(res);
                 })
@@ -624,7 +663,8 @@ export default {
         },
         update_Farm_member_f_img() {
             let frm = new FormData();
-            frm.append("id", this.farm_id);
+            frm.append("checkUser", this.checkUser), 
+            frm.append("id", JSON.parse(localStorage.getItem('user')).farm_id);
             frm.append('img', this.f_img);
             frm.append('new_img', this.new_img);
 
@@ -642,8 +682,8 @@ export default {
         },
         update_Farm_member_f_profile_img() {
             let frm = new FormData();
-            frm.append("id", this.farm_id);
-            frm.append('profile_img', this.f_profile_img);
+            frm.append("id", JSON.parse(localStorage.getItem('user')).farm_id);
+            frm.append('profile_img', );
             frm.append('new_profile_img', this.new_profile_img);
 
             axios.patch('/api/memberProfileImage', frm, {

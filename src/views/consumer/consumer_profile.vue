@@ -114,48 +114,9 @@
                                 class="n-btn w100 btn-sm btn-default">수정하기</button>
                         </td>
                     </tr>
-                    <tr>
-                        <th scope="row"><strong>우편번호</strong></th>
-                        <td>
-                            {{c_zipcode}}
-                        </td>
-                        <td>
-                            <button type="button" @click="c_zipcode_show" class="n-btn w100 btn-sm btn-default">우편번호
-                                수정</button>
-                        </td>
-                    </tr>
-
-                    <tr v-if="isShow5">
-                        <td></td>
-                        <v-text-field v-model="c_zipcode" label="" required></v-text-field>
-                        <td>
-                            <button type="button" @click="navigatecheck_consumer_loc()"
-                                class="n-btn w100 btn-sm btn-default">수정하기</button>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <th scope="row"><strong>주소</strong></th>
-                        <td>
-                            {{c_location}}
-                        </td>
-                        <td>
-                            <button type="button" v-on:click="navigatecheck_consumer_loc()"
-                                class="n-btn w100 btn-sm btn-default">주소
-                                수정</button>
-                        </td>
-                    </tr>
-
-                    <tr v-if="isShow6">
-                        <td></td>
-                        <v-text-field v-model="c_location" label="" required></v-text-field>
-                        <td>
-                            <button type="button" @click="update_consumer_member_c_location()"
-                                class="n-btn w100 btn-sm btn-default">수정하기</button>
-                        </td>
-                    </tr>
                 </tbody>
             </table>
+            <SearchAddress :addressInfo="addressInfo" @searchAddressRes="searchAddressResult"/>
         </v-form>
     </div>
 <bottomNav/>
@@ -165,14 +126,19 @@
 import Header from '../../components/Header/backHeader.vue';
 import bottomNav from '@/components/bottomNav.vue';
 import axios from 'axios';
+import SearchAddress from '../../components/search_address.vue';
 
 export default {
-    components: { Header, bottomNav },
+    components: { Header, bottomNav, SearchAddress },
     data() {
         var consumer_id = localStorage.getItem("user.consumer_id") || "";
         return {
             pro_test: JSON.parse(localStorage.getItem("pro_test")) || "",
             user: JSON.parse(localStorage.getItem("user")) || "",
+            addressInfo: {
+                zipcode: JSON.parse(localStorage.getItem("user")).f_zipcode, 
+                address: JSON.parse(localStorage.getItem("user")).f_location
+            },
             isShow1: false,
             isShow2: false,
             isShow3: false,
@@ -189,12 +155,31 @@ export default {
         };
     },
     mounted(){
-        if(!JSON.parse(localStorage.getItem('user').consumer_id)){
+        if(!JSON.parse(localStorage.getItem('user')).consumer_id){
             this.checkUser = 'farm'
         }
     },
 
     methods: {
+        searchAddressResult(event){
+            // 인증번호 맞는지 검사하고 맞다면 비밀번호 변경창 띄우기
+            console.log('event: ', event);
+            this.addressInfo.zipcode = event.zipcode;
+            this.addressInfo.location = event.address;
+
+            // 서버에 변경된 데이터 보내기
+            axios.patch('api/memberAddress', { 
+                checkUser: "consumer", 
+                id: this.user.consumer_id, 
+                zipcode: event.zipcode,
+                location: event.address
+                }).then(res => {
+                    console.log(res.data);
+                    alert("주소 변경이 완료되었습니다!");
+                }).catch(err => {
+                    console.log(err);
+            });
+        },
         c_passwd_show() {
             this.isShow1 = !this.isShow1;
             console.log("passwd");
@@ -219,17 +204,12 @@ export default {
             this.isShow6 = !this.isShow6;
             console.log("loc");
         },
-
-        navigatecheck_consumer_loc() {
-            this.$router.push('../views/consumer/consumer_loc');
-            
-        },
         // 비밀번호 405 에러 
         update_consumer_member_c_passwd() {
-            console.log(this.checkUser, JSON.parse(localStorage.getItem('user').consumer_id), this.c_passwd);
+            console.log(this.checkUser, JSON.parse(localStorage.getItem('user')).consumer_id, this.c_passwd);
             axios.patch('api/memberPassword', { 
                     checkUser: this.checkUser, 
-                    id: JSON.parse(localStorage.getItem('user').consumer_id), 
+                    id: JSON.parse(localStorage.getItem('user')).consumer_id, 
                     passwd: this.c_passwd 
                 })
                 .then(res => {
@@ -241,11 +221,11 @@ export default {
         },
         // 405 에러
         update_consumer_member_c_phonenum() {
-            console.log(this.checkUser, JSON.parse(localStorage.getItem('user').consumer_id), this.c_phonenum );
+            console.log(this.checkUser, JSON.parse(localStorage.getItem('user')).consumer_id, this.c_phonenum );
             console.log(typeof this.c_phonenum );
             axios.patch('api/memberPhoneNumber', { 
                 checkUser:this.checkUser, 
-                id: JSON.parse(localStorage.getItem('user').consumer_id), 
+                id: JSON.parse(localStorage.getItem('user')).consumer_id, 
                 phonenum: this.c_phonenum
             })
             .then(res => {
@@ -259,7 +239,7 @@ export default {
         update_consumer_member_c_name() {
             axios.patch('api/memberName', {
                 checkUser: this.checkUser, 
-                id: JSON.parse(localStorage.getItem('user').consumer_id), 
+                id: JSON.parse(localStorage.getItem('user')).consumer_id, 
                 name: this.c_name 
             })
             .then(res => {
@@ -293,9 +273,9 @@ export default {
             console.log(this.product_img_file.files[0]);
         
             frm.append("checkUser", "consumer");
-            frm.append("id", this.user.consumer_id);
-            frm.append("profile_img"," this.");
-            frm.append('new_profile_img', 'ase_img');
+            frm.append("id", JSON.parse(localStorage.getItem('user')).consumer_id);
+            frm.append("profile_img",this.c_profile_img);
+            frm.append('new_profile_img', this.new_profile_img);
             console.log(frm);
             for(let a of frm) console.log(a);
             //this.$store.state.login.userInfo.consumer_id
