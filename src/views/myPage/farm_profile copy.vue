@@ -454,10 +454,6 @@ export default {
         };
     },
 
-    // mounted() {
-    // this.value = this.userInfo.value || "";
-    // },
-
     methods: {
         searchAddressResult(event){
             // 인증번호 맞는지 검사하고 맞다면 비밀번호 변경창 띄우기
@@ -480,55 +476,14 @@ export default {
                     console.log(res.data);
                     alert("주소 변경이 완료되었습니다!");
             }).catch(err => {
-                console.log(err);      
-                alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-                this.$store.commit('LOGOUT');
-                this.$router.push('/login');
+                console.log(err); 
+                // if(res.headers.token != "token"){     
+                //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                //     this.$store.commit('LOGOUT');
+                //     this.$router.push('/login');
+                // }
             });
         },
-        // uploadFarmProfileImages() {
-        //     this.f_profile_img = document.getElementById("farm_porfile_img_file");
-        // },
-        // updateFarmProfileImages() {
-        //     console.log(this.user);
-
-        //     let frm = new FormData();
-        //     for(let imageFile of this.f_profile_img.files) frm.append("new_profile_img", imageFile);
-        //     frm.append('checkUser', "farm");
-        //     frm.append('id', this.user.farm_id);
-        //     frm.append('new_profile_img', this.user.f_profile_img);
-
-        //     // 이미지 파일을 안 넣었으면 경고창.
-        //     if(this.f_profile_img.length < 1){
-        //         alert('이미지 파일이 없습니다.');
-        //         return;
-        //     }
-        //     if(this.f_profile_img.length > 1){
-        //         alert('이미지 파일은 1개만 넣어주세요!');
-        //         return;
-        //     }
-        //     if(this.$route.path == '/farm_profile'){
-        //         axios.patch('/api/memberProfileImage', frm, {
-        //             headers: {
-        //                 TOKEN: this.user.token,
-        //                 'Content-Type': 'multipart/form-data'
-        //             }
-        //         }).then(res => {
-        //             if(res.headers.token != "token"){
-        //                 this.$store.commit('LOGOUT');
-        //                 this.$router.push('/login');
-        //             }            
-        //             console.log('res.data', res.data);
-        //             alert('등록 완료!');
-        //         })
-        //         .catch(err => {
-        //             console.log(err);
-        //         });
-                
-        //     }else{
-        //         alert('잘못된 접근입니다!');
-        //     }
-        // },
         uploadFarmImages() {
             this.f_img = document.getElementById("farm_img_files");
         },
@@ -561,10 +516,12 @@ export default {
                     alert('등록 완료!');
                 })
                 .catch(err => {
-                    console.log(err);      
-                    alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-                    this.$store.commit('LOGOUT');
-                    this.$router.push('/login');
+                    console.log(err); 
+                    // if(res.headers.token != "token"){     
+                    //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                    //     this.$store.commit('LOGOUT');
+                    //     this.$router.push('/login');
+                    // }
                 });
                 
             }else{
@@ -631,10 +588,8 @@ export default {
                 console.log(res);
             })
             .catch(err => {
-                console.log(err);      
-                alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-                this.$store.commit('LOGOUT');
-                this.$router.push('/login');
+                console.log(err); 
+
             });
         },
         update_consumer_member_f_phonenum() {
@@ -649,10 +604,12 @@ export default {
              
                 console.log(res);
             }).catch(err => {
-                console.log(err);      
-                alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-                this.$store.commit('LOGOUT');
-                this.$router.push('/login');
+                console.log(err); 
+                // if(res.headers.token != "token"){     
+                //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                //     this.$store.commit('LOGOUT');
+                //     this.$router.push('/login');
+                // }
             });
         },
         update_consumer_member_f_name() {
@@ -668,10 +625,12 @@ export default {
                     console.log(res);
             })
             .catch(err => {
-                console.log(err);      
-                alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-                this.$store.commit('LOGOUT');
-                this.$router.push('/login');
+                console.log(err); 
+                // if(res.headers.token != "token"){     
+                //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                //     this.$store.commit('LOGOUT');
+                //     this.$router.push('/login');
+                // }
             });
         },
         update_consumer_member_f_num() {
@@ -686,10 +645,12 @@ export default {
                     console.log(res);
                 })
                 .catch(err => {
-                    console.log(err);      
-                    alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-                    this.$store.commit('LOGOUT');
-                    this.$router.push('/login');
+                    console.log(err); 
+                    // if(res.headers.token != "token"){     
+                    //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                    //     this.$store.commit('LOGOUT');
+                    //     this.$router.push('/login');
+                    // }
                 });
         },
         update_consumer_member_f_zipcode() {
@@ -706,10 +667,12 @@ export default {
                     console.log(res);
                 })
                 .catch(err => {
-                    console.log(err);      
-                    alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-                    this.$store.commit('LOGOUT');
-                    this.$router.push('/login');
+                    console.log(err); 
+                    // if(res.headers.token != "token"){     
+                    //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                    //     this.$store.commit('LOGOUT');
+                    //     this.$router.push('/login');
+                    // }
                 });
         },
         update_consumer_member_f_location() {
@@ -723,10 +686,12 @@ export default {
                     console.log(res);
                 })
                 .catch(err => {
-                    console.log(err);      
-                    alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-                    this.$store.commit('LOGOUT');
-                    this.$router.push('/login');
+                    console.log(err); 
+                    // if(res.headers.token != "token"){     
+                    //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                    //     this.$store.commit('LOGOUT');
+                    //     this.$router.push('/login');
+                    // }
                 });
         },
         update_consumer_member_f_bank() {
@@ -747,10 +712,12 @@ export default {
                     console.log(res);
                 })
                 .catch(err => {
-                    console.log(err);      
-                    alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-                    this.$store.commit('LOGOUT');
-                    this.$router.push('/login');
+                    console.log(err); 
+                    // if(res.headers.token != "token"){     
+                    //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                    //     this.$store.commit('LOGOUT');
+                    //     this.$router.push('/login');
+                    // }
                 });
         },
         update_consumer_member_f_farm_name() {
@@ -764,10 +731,12 @@ export default {
                     console.log(res);
                 })
                 .catch(err => {
-                    console.log(err);      
-                    alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-                    this.$store.commit('LOGOUT');
-                    this.$router.push('/login');
+                    console.log(err); 
+                    // if(res.headers.token != "token"){     
+                    //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                    //     this.$store.commit('LOGOUT');
+                    //     this.$router.push('/login');
+                    // }
                 });
         },
         update_consumer_member_f_explanation() {
@@ -780,10 +749,12 @@ export default {
                     console.log(res);
                 })
                 .catch(err => {
-                    console.log(err);      
-                    alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-                    this.$store.commit('LOGOUT');
-                    this.$router.push('/login');
+                    console.log(err); 
+                    // if(res.headers.token != "token"){     
+                    //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                    //     this.$store.commit('LOGOUT');
+                    //     this.$router.push('/login');
+                    // }
                 });
         },
         update_consumer_member_f_major_crop() {
@@ -799,10 +770,12 @@ export default {
                     console.log(res);
                 })
                 .catch(err => {
-                    console.log(err);      
-                    alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-                    this.$store.commit('LOGOUT');
-                    this.$router.push('/login');
+                    // console.log(err); 
+                    // if(res.headers.token != "token"){     
+                    //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                    //     this.$store.commit('LOGOUT');
+                    //     this.$router.push('/login');
+                    // }
                 });
         },
         update_Farm_member_f_img() {
@@ -823,10 +796,12 @@ export default {
                     console.log(res);
                 })
                 .catch(err => {
-                    console.log(err);      
-                    alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-                    this.$store.commit('LOGOUT');
-                    this.$router.push('/login');
+    			    console.log(err); 
+                    // if(res.headers.token != "token"){     
+                    //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                    //     this.$store.commit('LOGOUT');
+                    //     this.$router.push('/login');
+                    // }
                 });
         },
         update_Farm_member_f_profile_img() {
@@ -846,10 +821,12 @@ export default {
                     console.log(res);
                 })
                 .catch(err => {
-                    console.log(err);      
-                    alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-                    this.$store.commit('LOGOUT');
-                    this.$router.push('/login');
+                    console.log(err); 
+                    // if(res.headers.token != "token"){     
+                    //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                    //     this.$store.commit('LOGOUT');
+                    //     this.$router.push('/login');
+                    // }
                 });
         },
         updateFarmProfileImage() {
@@ -882,10 +859,12 @@ export default {
                 alert(this.profileImageChangeSuccess);
             })
             .catch(err => {
-                console.log(err);      
-                alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-                this.$store.commit('LOGOUT');
-                this.$router.push('/login');
+                console.log(err); 
+                // if(res.headers.token != "token"){     
+                //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                //     this.$store.commit('LOGOUT');
+                //     this.$router.push('/login');
+                // }
             });
         },
         // 바꿀 이지 미리 띄워주기

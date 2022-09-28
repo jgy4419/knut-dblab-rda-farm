@@ -14,7 +14,6 @@
             </v-col>
 
             <button class="login-form__btn_right" @click="existEmail(email)">이메일 중복 검사</button>
-
             <v-col cols="12">
                 <v-text-field class="inutBox" v-model="passwd" label="비밀번호*" type="password" :rules="passwd_rule"></v-text-field>
             </v-col>
@@ -237,7 +236,21 @@ button{
         }
     }
 }
+.login-form__btn_right{
+    width: 95%;
+    margin-left: 10px;    
+    margin-bottom: 20px;
+}
+.login-form__btn_right:nth-child(3){
+    width: 90%;
+    margin: auto;
+}
 .inutBox{
     background-color: #fff;
+    width: 90%;
+    margin: auto;
 }
+// .inutBox:nth-child(2){
+//     margin-top: 20px;
+// }
 </style>

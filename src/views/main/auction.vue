@@ -33,6 +33,7 @@ export default{
 <style lang="scss" scoped>
 .inner{
   position: relative;
+  min-height: 95vh;
 }
 </style>
 

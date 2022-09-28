@@ -6,7 +6,8 @@ input::-webkit-input-placeholder {
 } 
 input::-moz-placeholder {
     color:#a8a8a8;
-} 
+}
+
 .search-contain{
     /* height: 80vh; */
 }
@@ -94,3 +95,11 @@ input::-moz-placeholder {
     font-size: 12px;
     font-weight: 500;
  }
+
+
+.goods_item{
+    text-align: center;
+}
+.tel{
+    margin-top: 10px;
+}

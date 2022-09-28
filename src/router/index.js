@@ -37,11 +37,6 @@ const routes = [
     name: 'searchPw',
     component: () => import('../views/login/searchIdOrPw.vue')
   },
-  // {
-  //   path: '/login',
-  //   name: 'login',
-  //   component: () => import('../views/login/login.vue')
-  // },
   {
     path: '/clause',
     name: 'clause',

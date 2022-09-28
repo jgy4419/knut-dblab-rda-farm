@@ -4,7 +4,7 @@
         <div class="reviewInformation">
             <img class="review-image" :src="`/product_images/${getData.product_img_name}.png`" alt="리뷰할 사진">
             <div class="information">
-                <p>상품명 : {{getData.auction_name}}</p>
+                <p>{{getData.auction_name}}</p>
             </div>
         </div>  
         <hr class="line"/>
@@ -20,7 +20,7 @@
         <hr class="line"/>
         <div class="review-comment">
             <h2>내용</h2>
-            <textarea placeholder="상품에 대한 평가를 20자 이상 작성해주세요!" name="" id="product-contents" cols="40" rows="5"/>
+            <textarea placeholder="상품에 대한 평가를 20자 이상 작성해주세요!" name="" id="product-contents" cols="35" rows="5"/>
         </div>
         <hr class="line"/>
         <h2 class="title">사진 등록</h2>
@@ -136,21 +136,46 @@ export default {
             frm.append('grade_point', this.reqData.starState);
             frm.append('consumer_review', document.getElementById('product-contents').value);
             frm.append('auction_name', this.getData.auction_name);
-            frm.append('review_img_file', this.imgData[0])
+            if(this.imgData[0] !== undefined){
+                frm.append('review_img_file', this.imgData[0])
+            }
             for(let i of frm) console.log(i);
-            axios.post('/api/AuctionReview', frm, {
-                headers: {
-                    TOKEN: this.user.token,
-                    'Content-Type': 'multipart/form-data'
-            }})
-            .then(res => {
-             
-                this.$router.push('/farm_mypage_auction');
-            }).catch(err => {
-                alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-                this.$store.commit('LOGOUT');
-                this.$router.push('/login');
-            })
+            if(!this.$route.fullPath.includes('edit')){
+                axios.post('/api/AuctionReview', frm, {
+                    headers: {
+                        TOKEN: this.user.token,
+                        'Content-Type': 'multipart/form-data'
+                }})
+                .then(res => {                
+                    this.$router.push('/farm_mypage_auction');
+                }).catch(err => {
+                    console.log(err); 
+                    // if(res.headers.token != "token"){     
+                    //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                    //     this.$store.commit('LOGOUT');
+                    //     this.$router.push('/login');
+                    // }       
+                })
+            }else{
+                console.log(this.getData);
+                for(let i of frm) console.log(i);
+                axios.patch('/api/AuctionReview', frm, {
+                    headers: {
+                        TOKEN: this.user.token,
+                        'Content-Type': 'multipart/form-data'
+                }})
+                .then(res => {
+                    alert('수정이 완료되었습니다.');
+                    this.$router.push('/farm_mypage_auction');
+                }).catch(err => {
+                    console.log(err);
+                    // if(res.headers.token != "token"){     
+                    //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                    //     this.$store.commit('LOGOUT');
+                    //     this.$router.push('/login');
+                    // }
+                })
+            }
         }
     }
 }
@@ -167,7 +192,7 @@ h2{
 }
 .contain{
     position: relative;
-    width: 100vw;
+    width: 100%;
     height: 100vh;
     .reviewInformation{
         width: 100%;
@@ -232,7 +257,7 @@ h2{
         }
         textarea{
             margin-top: 20px;
-            margin-left: -8px;
+            margin-left: 20px;
             padding: 10px;
             box-sizing: content-box;
             border: 1px solid rgb(187, 187, 187);

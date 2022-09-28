@@ -34,6 +34,13 @@ export default {
             }, 3000);
         },
         checkAlert(){
+            if (this.user.farm_id == undefined) {
+            this.checkUser = 'consumer'
+            this.id = this.user.consumer_id
+            } else {
+                this.checkUser = 'farm'
+                this.id = this.user.farm_id
+            }
             if(localStorage.getItem('user')){
                 this.$sse.create(`https://118.67.134.38:80/api/subscribeAlert/` + this.checkUser + '/' + this.id)
                 .on('init', (init_data) => {

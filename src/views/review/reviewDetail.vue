@@ -4,7 +4,8 @@
         <div class="inner">
             <p class="close" @click="$emit('closeModal', '모달 닫기')">X</p>
             <h2 class="title">{{clickedData.auction_name}}</h2>
-            <img class="reviewImg" :src="`/product_images/${clickedData.product_img_name}.png`" 
+            <!-- 이미지..불러오기,, -->
+            <img class="reviewImg" :src="`/auciton_review_images/${clickedData.review_img_name}.png`" 
             alt="auction 이미지" width="200" height="200">
             <p class="reviewContent">{{clickedData.consumer_review}}</p>
             <Comment :auction_id="clickedData.auction_Id"/>
@@ -21,7 +22,8 @@ export default {
         clickedData: Object
     },
     mounted(){
-        console.log(this.clickedData.auction_Id);
+        console.log(`/auciton_review_images/${this.clickedData.review_img_name}.png`);
+        console.log(this.clickedData);
     },
     components: {
         Comment,

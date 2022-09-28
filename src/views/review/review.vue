@@ -52,7 +52,8 @@ export default {
     },
     methods: {
         getReviewData(){
-            axios.get(`/api/AuctionReview/${localStorage.getItem('checkUser')}/${JSON.parse(localStorage.getItem('id'))}`, {
+            let id =  this.user.consumer_id != undefined ? this.user.consumer_id : this.user.farm_id;
+            axios.get(`/api/AuctionReview/${localStorage.getItem('checkUser')}/${id}`, {
             headers: {
                 TOKEN: this.user.token
             }
@@ -65,9 +66,11 @@ export default {
                 console.log(this.getData.flat(Infinity));
             }).catch(err => {
                 console.log(err);      
-                alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-                this.$store.commit('LOGOUT');
-                this.$router.push('/login');
+                // if(res.headers.token != "token"){     
+                //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                //     this.$store.commit('LOGOUT');
+                //     this.$router.push('/login');
+                // }
             });
         },
         async infiniteScroll() {

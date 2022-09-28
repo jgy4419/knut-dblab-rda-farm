@@ -8,7 +8,7 @@
                 <button class="commentButton" @click="inputState = 1">답글 달기</button>
                 <div class="comment">
                     <h3 class="userName">{{"농가이름 넣어주기"}}</h3>
-                    <p class="userComment">{{"아직 답글이 없습니다."}}</p>
+                    <p class="userComment">{{!getData.farm_review ? "아직 답글이 없습니다." : getData.farm_review}}</p>
                 </div>
                 <!-- <div class="comment" v-for="comment, i in testData.user.length" :key="i">
                     <h3 class="userName">{{testData.user[i]}}</h3>
@@ -46,32 +46,57 @@ export default {
             userState: 0,
             inputState: 0,
             user: JSON.parse(localStorage.getItem("user")),
+            getData: {},
         }
     },
+    // farm_review
     mounted(){
         if(localStorage.getItem('checkUser') === 'farm') this.userState = 1;
         else this.userState = 0;
         console.log(JSON.parse(localStorage.getItem('id')));
-                axios.get(`/api/AuctionReview/farm/${localStorage.getItem('id')}`, {
+        let check = localStorage.getItem('checkUser');
+        console.log(check);
+        axios.get(`/api/AuctionReview/${check}/${parseInt(localStorage.getItem('id'))}`, {
             headers: {
                 TOKEN: this.user.token
             }
         })
-        .then(res => console.log(res))
+        .then(res => {
+            this.getData = res.data[0];
+            console.log(this.getData);
+        })
         .catch(err => console.log(err));
     },
     methods: {
         commentPush(){
-            // axios.post('/api/AuctionReview', {
-            //     checkUser: localStorage.getItem('checkUser'),
-            //     auction_Id: localStorage.getItem('id'),
-            //     grade_point: 0,
-                
-            // })
-            const req = {
-                nickName: '',
-                comment: this.reqData.comment
-            }
+            let check = localStorage.getItem('checkUser');
+            let id = localStorage.getItem('id');
+            let frm = new FormData();
+            frm.append('checkUser', localStorage.getItem('checkUser'));
+            frm.append('auction_Id', localStorage.getItem('id'));
+            frm.append('grade_point', this.getData.grade_point);
+            frm.append('consumer_review', this.getData.auction_name);
+            frm.append('review_img_name', this.getData.review_img_name);
+            frm.append('product_img_name', this.getData.product_img_name);
+            frm.append('farm_review', this.reqData.comment);
+            frm.append('consumer_id', 12);
+            frm.append('auction_name', this.getData.auction_name);
+            frm.append('f_farm_name', JSON.parse(localStorage.getItem('user')).f_farm_name);
+            frm.append('c_name', this.getData.c_name);
+            for(let i of frm) console.log(i);
+            axios.patch('/api/AuctionReview', frm, {
+                headers: {
+                    TOKEN: this.user.token,
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            .then(res => {
+                console.log(res);
+                // location.reload();
+            }).catch(err => {
+                console.log(err);
+            })
+            
         }
     }
 }
@@ -82,9 +107,9 @@ export default {
     .inner{
         position: relative;
         .commentButton{
-            position: absolute;
+            position: relative;
             right: 0;
-            // z-index:
+            z-index: 100;
             font-size: 10px;
             border: .5px solid #333;
             padding: 10px;

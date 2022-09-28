@@ -38,7 +38,7 @@ i{
 }
 .main_t_nav{
     // width: 25vw;
-    width: 28vw;
+    width: 400px;
     .main_t_nav_list{
         display: flex;
         justify-content: space-between;

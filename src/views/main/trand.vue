@@ -1,6 +1,7 @@
 <template>
 <div>
-    <div class="main_nav_t_div">
+    <Header :headerProps="headerPropas"/>
+    <!-- <div class="main_nav_t_div">
         <nav class="main_t_nav">
             <ul class="main_t_nav_list">
                 <li class="nav__btn">
@@ -21,7 +22,7 @@
                 </li>
             </ul>
         </nav>
-    </div>
+    </div> -->
 
     <fieldset>
         <h4 class="h4_middle_20">9월은 추석으로 과일 소비량 증가</h4>
@@ -63,10 +64,16 @@
 
 
 <script>
+import Header from '../../components/Header/bellAndBackHeader.vue';
 import bottomNav from '@/components/bottomNav.vue';
 
 export default{
-    components: {bottomNav},
+    components: {bottomNav, Header},
+    data(){
+        return {
+            headerPropas: '인기상품'
+        }
+    }
 }
 </script>
 

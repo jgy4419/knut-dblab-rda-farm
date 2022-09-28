@@ -110,10 +110,7 @@ export default {
                     TOKEN: this.user.token
                 }
             }).then(res => {
-                if(res.headers.token != "token"){
-                    this.$store.commit('LOGOUT');
-                    this.$router.push('/login');
-                }
+
 				console.log(res.data);
                 if (res.data == 1){
                     this.$store.commit('CHECKED_ALERT', alertList_index);
@@ -121,7 +118,10 @@ export default {
                     alert("읽음 표시 서버 에러!")
                 }
 			}).catch(err => {
-				console.log(err);
+                // if(res.headers.token != "token"){
+                //     this.$store.commit('LOGOUT');
+                //     this.$router.push('/login');
+                // }
 			});
 
             

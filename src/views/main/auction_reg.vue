@@ -1,15 +1,20 @@
 <template>
     <div>
         <Header :headerProps="headerProps"/>
-        <div>
-            <input multiple="multiple" @change="upload()" type="file" id="product_img_files" name="product_img_files"
-                accept="image/*"><br>
+        <div class="image-box">
+            <!-- <input multiple="multiple" @change="upload()" type="file" id="product_img_files" name="product_img_files"
+                accept="image/*"><br> -->
             <img src="image">
+            <!-- 테스트 해보기 -->
+            <input multiple="multiple" style="display: 'none'" @change="imgPreview($event)" class="select-img-hidden" type="file" id="product_img_file" name="product_img_file" accept="image/*"><br>                        
+            <input type="button" value="이미지 파일 올리기"/>
+            <div id="image_container" class="image_container">
+            </div>
             <!-- <Slide/> -->
         </div>
 
-        <fieldset>
-            <table class="table-100">
+        <fieldset class="reg-contain">
+            <table class="table-100 table-contain">
 
                 <tbody>
                     <tr>
@@ -75,7 +80,7 @@
                 <ul class="main_m_ui_list">
                     <li class="nav__btn">
                         <a class="nav__link" href="#">
-                            <h4 class="user-component__title" @click="submitAuction()">{{auctionSubmit}}</h4>
+                            <button class="user-component__title" @click="submitAuction()">{{auctionSubmit}}</button>
                         </a>
                     </li>
                 </ul>
@@ -135,6 +140,19 @@
             }
         },
         methods: {
+            imgPreview(event){
+                let reader = new FileReader();
+                reader.onload = function(event){
+                    let img = document.createElement('img');
+                    img.setAttribute('src', event.target.result);
+                    img.setAttribute('width', '100px');
+                    img.setAttribute('height', '100px');
+                    document.getElementById('image_container').appendChild(img);
+                }
+                reader.readAsDataURL(event.target.files[0]);
+                console.log(event.target.files[0]);
+                this.upload();
+            },
             writeState(){
                 let auction_id = this.$route.params.id;
                 // 글 수정 페이지면 ex) /auction_reg/33 => input창의 value에 값을 가각 넣어주기
@@ -151,10 +169,12 @@
                     this.p_max_price = data.a_max_price; 
                     this.deadline_date = data.deadline_date;
                 }).catch(err => {
-                    console.log(err);      
-                    alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-                    this.$store.commit('LOGOUT');
-                    this.$router.push('/login');
+                    console.log(err); 
+                    // if(res.headers.token != "token"){     
+                    //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                    //     this.$store.commit('LOGOUT');
+                    //     this.$router.push('/login');
+                    // }
                 });
             },
             upload() {
@@ -223,10 +243,12 @@
                         this.$router.push('/auction');
                     })
                     .catch(err => {
-                        console.log(err);      
-                        alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-                        this.$store.commit('LOGOUT');
-                        this.$router.push('/login');
+                        console.log(err); 
+                        // if(res.headers.token != "token"){     
+                        //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                        //     this.$store.commit('LOGOUT');
+                        //     this.$router.push('/login');
+                        // }
                     });
                 }else{
                     // 글 등록
@@ -235,16 +257,16 @@
                             TOKEN: this.user.token,
                             'Content-Type': 'multipart/form-data'
                         }
-                    }).then(() => {
-
+                    }).then(res => {
+                        // if(res.headers.token != "token"){           
+                        //     this.$store.commit('LOGOUT');
+                        //     this.$router.push('/login');
+                        // }
                         alert('등록 완료!');
                         this.$router.push('/auction');
                     })
                     .catch(err => {
-                        console.log(err);      
-                        alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-                        this.$store.commit('LOGOUT');
-                        this.$router.push('/login');
+                        console.log(err);  
                     });
                 }
             },
@@ -257,6 +279,22 @@
     };
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+.reg-contain{
+    padding: 10px;
+}
+td{
+    padding: 10px;
+}
+.image-box{
+    padding: 10px;
+}
+.user-component__title{
+    width: 95%;
+    height: 50px;
+    border-radius: 10px;
+    margin-left: 10px;
+    background-color: #FFC1AA;
+    color: #333;
+}
 </style>

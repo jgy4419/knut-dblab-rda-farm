@@ -40,7 +40,7 @@ i{
     z-index: 10;
 }
 .main_t_nav{
-    width: 28vw;
+    width: 400px;
     .main_t_nav_list{
         display: flex;
         justify-content: space-between;
@@ -52,7 +52,7 @@ i{
 }
 @media screen and (max-width: 500px){
     .main_t_nav{
-        width: 100vw;
+        width: 100%;
     } 
 }
 </style>

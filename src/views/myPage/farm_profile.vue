@@ -1,15 +1,122 @@
 <template>
     <div>
         <Header :headerProps="headerProps"/>
-        <!-- 기본 회원정보 -->
-        <header class="n-section-title first info_views-area">
-            <h1 class="tit">기본 회원정보</h1>
-            <!-- <button class="n-btn btn-sm btn-default" onclick="openGatePassword('001');">가려진정보 보기</button> -->
-        </header>
+        <div class="inner">
+            <!-- 기본 회원정보 -->
+            <header class="n-section-title first info_views-area">
+                <h1 class="tit" style="a">기본 회원정보</h1>
+                <!-- <button class="n-btn btn-sm btn-default" onclick="openGatePassword('001');">가려진정보 보기</button> -->
+            </header>
 
 
-        <!-- 프로필 -->
-        <v-form ref="form" v-model="profile" lazy-validation @submit.prevent="">
+            <!-- 프로필 -->
+            <v-form ref="form" v-model="profile" lazy-validation @submit.prevent="">
+                <table class="n-table table-row my-info-modify">
+                    <colgroup>
+                        <col style="width:25%">
+                        <col style="width:40%">
+                        <col style="width:35%">
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th scope="row"><strong>이메일</strong></th>
+                            <td>
+                                {{user.f_email}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><strong>비밀번호</strong></th>
+                            <td >
+                                ********
+                            </td>
+                            <td>
+                                <button type="button" @click="f_passwd_show" class="n-btn w100 btn-sm btn-default" style="float: right;">비밀번호
+                                    수정</button>
+                            </td>
+                        </tr>
+                        <tr v-if="isShow1">
+                            <td></td>
+                            <v-text-field v-model="f_passwd" type='password' label="" required></v-text-field>
+                            <td>
+                                <button type="button" @click="updateMemberPassword()"
+                                    class="n-btn w100 btn-sm btn-default" style="float: right;">수정하기</button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row"><strong>휴대폰 번호</strong></th>
+                            <td>
+                                {{user.f_phonenum}}
+                            </td>
+                            <td>
+                                <button type="button" @click="f_phonenum_show" class="n-btn w100 btn-sm btn-default" style="float: right;">휴대폰 번호 수정</button>
+                            </td>
+                        </tr>
+                        <tr v-if="isShow2">
+                            <td></td>
+                            <v-text-field v-model="f_phonenum" label="" required></v-text-field>
+                            <td class="a">
+                                <button type="button" @click="updateMemberPhoneNumber()"
+                                    class="n-btn w100 btn-sm btn-default" style="float: right;">수정하기</button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row"><strong>회원명</strong></th>
+                            <td>
+                                {{user.f_name}}
+                            </td>
+                            <td>
+                                <button type="button" @click="f_name_show" class="n-btn w100 btn-sm btn-default" style="float: right;">회원명 수정</button>
+                            </td>
+                        </tr>
+                        <tr v-if="isShow3">
+                            <td></td>
+                            <v-text-field v-model="f_name" label="" required></v-text-field>
+                            <td>
+                                <button type="button" @click="updateMemberName()"
+                                    class="n-btn w100 btn-sm btn-default" style="float: right;">수정하기</button>
+                            </td>
+                        </tr>
+
+                        <tr class="my-info-img" id="profile-image-area">
+                            <th scope="row"><strong>프로필 사진</strong></th>
+                            <td >
+                                <div>
+                                    <img class="img" :src="this.user.f_profile_img === '' ? '/member_profile_images/base_image.png' : `/member_profile_images/${this.user.f_profile_img}.png`" alt="프로필 이미지">
+                                </div>
+                            </td>
+                            <td width="65%">
+                                <button type="button" @click="profile_img_show" class="n-btn w100 btn-sm btn-default" style="float: right;">사진 수정</button>
+                            </td>
+                        </tr>
+                        <tr v-if="isShow4">
+                            <td>
+                                <input multiple="multiple" @change="imgPreview($event)" class="select-img-hidden" type="file" id="product_img_file" name="product_img_file" accept="image/*"><br>                        
+                                <div id="image_container" class="image_container">
+                                    <p class="change_img_title">바뀔 이미지</p>
+                                </div>
+                            </td>
+                            <td>
+                                <button type="button" @click="updateFarmProfileImage()"
+                                    class="n-btn w100 btn-sm btn-default" style="float: right;">기본 이미지로 변경</button>
+                                <button type="button" @click="updateFarmProfileImage()"
+                                    class="n-btn w100 btn-sm btn-default" style="float: right;">수정 하기</button>                                
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <SearchAddress :addressInfo="addressInfo" @searchAddressRes="searchAddressResult"/>
+            </v-form>
+
+            <!-- 농가 프로필 -->
+            <header class="n-section-title first info_views-area">
+                <h1 class="tit">농가 회원정보</h1>
+                <!-- <button class="n-btn btn-sm btn-default" onclick="openGatePassword('001');">가려진정보 보기</button> -->
+            </header>
+
+
+
             <table class="n-table table-row my-info-modify">
                 <colgroup>
                     <col style="width:25%">
@@ -18,293 +125,187 @@
                 </colgroup>
                 <tbody>
                     <tr>
-                        <th scope="row"><strong>이메일</strong></th>
-                        <td>
-                            {{user.f_email}}
-                        </td>
                     </tr>
+
                     <tr>
-                        <th scope="row"><strong>비밀번호</strong></th>
+                        <th scope="row"><strong>농가명</strong></th>
                         <td>
-                            ********
+                            {{user.f_farm_name}}
                         </td>
-                        <td>
-                            <button type="button" @click="f_passwd_show" class="n-btn w100 btn-sm btn-default">비밀번호
+                        <td align="right">
+                            <button type="button" @click="f_farm_name_show" class="n-btn w100 btn-sm btn-default" style="float: right;">농가명
                                 수정</button>
                         </td>
                     </tr>
-                    <tr v-if="isShow1">
+                    <tr v-if="isShow5">
                         <td></td>
-                        <v-text-field v-model="f_passwd" type='password' label="" required></v-text-field>
-                        <td>
-                            <button type="button" @click="updateMemberPassword()"
-                                class="n-btn w100 btn-sm btn-default">수정하기</button>
+                        <v-text-field v-model="f_farm_name" label="" required></v-text-field>
+                        <td >
+                            <button type="button" @click="updateFarmMemberFarmName()"
+                                class="n-btn w100 btn-sm btn-default" style="float: right;">수정하기</button>
                         </td>
                     </tr>
 
                     <tr>
-                        <th scope="row"><strong>휴대폰 번호</strong></th>
+                        <th scope="row"><strong>농가 전화번호</strong></th>
                         <td>
-                            {{user.f_phonenum}}
+                            {{user.f_num}}
                         </td>
                         <td>
-                            <button type="button" @click="f_phonenum_show" class="n-btn w100 btn-sm btn-default">휴대폰 번호 수정</button>
+                            <button type="button" @click="f_num_show" class="n-btn w100 btn-sm btn-default" style="float: right;">농가 전화번호
+                                수정</button>
                         </td>
                     </tr>
-                    <tr v-if="isShow2">
+                    <tr v-if="isShow6">
                         <td></td>
-                        <v-text-field v-model="f_phonenum" label="" required></v-text-field>
+                        <v-text-field v-model="f_num" label="" required></v-text-field>
                         <td>
-                            <button type="button" @click="updateMemberPhoneNumber()"
-                                class="n-btn w100 btn-sm btn-default">수정하기</button>
+                            <button type="button" @click="updateFarmMemberFarmNumber()"
+                                class="n-btn w100 btn-sm btn-default" style="float: right;">수정하기</button>
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <th scope="row"><strong>사업자 등록번호</strong></th>
+                        <td>
+                            {{user.f_BRN}}
+                        </td>
+                        <td>
+                            <button type="button" @click="f_brn_show" class="n-btn w100 btn-sm btn-default" style="float: right;">사업자 번호 수정</button>
+                        </td>
+                    </tr>
+
+                    <tr v-if="isShow7">
+                        <td></td>
+                        <v-text-field v-model="f_BRN" label="" required></v-text-field>
+                        <td>
+                            <button type="button" @click="updateFarmMemberBRN()"
+                                class="n-btn w100 btn-sm btn-default" style="float: right;">수정하기</button>
                         </td>
                     </tr>
 
                     <tr>
-                        <th scope="row"><strong>회원명</strong></th>
+                        <th scope="row"><strong>은행</strong></th>
                         <td>
-                            {{user.f_name}}
+                            {{user.f_bank}}
                         </td>
                         <td>
-                            <button type="button" @click="f_name_show" class="n-btn w100 btn-sm btn-default">회원명 수정</button>
-                        </td>
-                    </tr>
-                    <tr v-if="isShow3">
-                        <td></td>
-                        <v-text-field v-model="f_name" label="" required></v-text-field>
-                        <td>
-                            <button type="button" @click="updateMemberName()"
-                                class="n-btn w100 btn-sm btn-default">수정하기</button>
+                            <button type="button" @click="f_bank_show" class="n-btn w100 btn-sm btn-default" style="float: right;">계좌 수정</button>
                         </td>
                     </tr>
-
-                    <tr class="my-info-img" id="profile-image-area">
-                        <th scope="row"><strong>프로필 사진</strong></th>
+                    <tr v-if="isShow8">
+                        <td><strong>은행명</strong></td>
+                        <v-text-field v-model="user.f_bank" label="" required></v-text-field>
+                    </tr>
+                    <tr v-if="isShow8">
+                        <td><strong>예금자명</strong></td>
+                        <v-text-field v-model="user.f_bank_name" label="" required></v-text-field>
+                    </tr>
+                    <tr v-if="isShow8">
+                        <td><strong>계좌 번호</strong></td>
+                        <v-text-field v-model="user.f_bank_num" label="" required></v-text-field>
+                        <td>
+                            <button type="button" @click="updateFarmMemberBank()"
+                                class="n-btn w100 btn-sm btn-default" style="float: right;">수정하기</button>
+                        </td>
+                    </tr>
+                    <tr class="my-info-img" id="profile-image-area" v-if="isShow8">
+                        <th scope="row"><strong>통장 사본 사진</strong></th>
                         <td>
                             <div>
-                                <img class="img" :src="this.user.f_profile_img === '' ? '/member_profile_images/base_image.png' : `/member_profile_images/${this.user.f_profile_img}.png`" alt="프로필 이미지">
+                                <img class="img" :src="this.user.f_bank_img == null || this.user.f_bank_img == '' ? '/bank_images/x_image.png' : `/bank_images/${this.user.f_bank_img}.png`" alt="통장 사본 이미지">
                             </div>
                         </td>
-                        <td width="65%">
-                            <button type="button" @click="profile_img_show" class="n-btn w100 btn-sm btn-default">사진 수정</button>
-                        </td>
                     </tr>
-                    <tr v-if="isShow4">
+                    <tr v-if="isShow8">
                         <td>
-                            <input multiple="multiple" @change="imgPreview($event)" class="select-img-hidden" type="file" id="product_img_file" name="product_img_file" accept="image/*"><br>                        
+                            <input multiple="multiple" @change="imgPreview($event)" class="select-img-hidden" type="file" id="bank_img_file" name="bank_img_file" accept="image/*"><br>                        
                             <div id="image_container" class="image_container">
                                 <p class="change_img_title">바뀔 이미지</p>
                             </div>
                         </td>
                         <td>
-                            <button type="button" @click="updateFarmProfileImage()"
-                                class="n-btn w100 btn-sm btn-default">기본 이미지로 변경</button>
-                            <button type="button" @click="updateFarmProfileImage()"
-                                class="n-btn w100 btn-sm btn-default">수정 하기</button>                                
+                            <button type="button" @click="updateFarmMemberBank()"
+                                class="n-btn w100 btn-sm btn-default" style="float: right;">수정 하기</button>                                
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <SearchAddress :addressInfo="addressInfo" @searchAddressRes="searchAddressResult"/>
-        </v-form>
 
-        <!-- 농가 프로필 -->
-        <header class="n-section-title first info_views-area">
-            <h1 class="tit">농가 회원정보</h1>
-            <!-- <button class="n-btn btn-sm btn-default" onclick="openGatePassword('001');">가려진정보 보기</button> -->
-        </header>
+            <!-- 농가 소개 -->
+            <header class="n-section-title first info_views-area">
+                <h1 class="tit">{{user.f_farm_name}}</h1>
+            </header>
 
+            <table class="n-table table-row my-info-modify">
+                <colgroup>
+                    <col style="width:25%">
+                    <col style="width:40%">
+                    <col style="width:35%">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th scope="row"><strong>농가 설명</strong></th>
+                        <td>
+                            {{user.f_explanation}}
+                        </td>
+                        <td>
+                            <button type="button" @click="f_explanation_show" class="n-btn w100 btn-sm btn-default" style="float: right;">농가 설명 수정</button>
+                        </td>
+                    </tr>
+                    <tr v-if="isShow9">
+                        <td></td>
+                        <v-text-field v-model="f_explanation" label="" required></v-text-field>
+                        <td>
+                            <button type="button" @click="updateFarmExplanation()"
+                                class="n-btn w100 btn-sm btn-default" style="float: right;">수정하기</button>
+                        </td>
+                    </tr>
 
+                    <tr>
+                        <th scope="row"><strong>주요 농작물</strong></th>
+                        <td>
+                            {{user.f_major_crop}}
+                        </td>
+                        <td>
+                            <button type="button" @click="f_major_crop_show" class="n-btn w100 btn-sm btn-default" style="float: right;" >주요 농작물
+                                수정</button>
+                        </td>
+                    </tr>
+                    <tr v-if="isShow10">
+                        <td></td>
+                        <v-text-field v-model="f_major_crop" label="" required></v-text-field>
+                        <td>
+                            <button type="button" @click="updateFarmMajorCrop()"
+                                class="n-btn w100 btn-sm btn-default" style="float: right;">수정하기</button>
+                        </td>
+                    </tr>
 
-        <table class="n-table table-row my-info-modify">
-            <colgroup>
-                <col style="width:25%">
-                <col style="width:40%">
-                <col style="width:35%">
-            </colgroup>
-            <tbody>
-                <tr>
-                </tr>
+                    <tr class="my-info-img" id="profile-image-area">
+                        <th scope="row"><strong>농가 사진</strong></th>
+                        <td>
+                            <div>
+                                <img class="img" :src="this.user.f_img == null || this.user.f_img == '' ? '/farm_images/base_farm_image.png' : `/farm_images/${this.user.f_img}.png`" alt="통장 사본 이미지">
+                            </div>
+                        </td>
+                        <td>
+                            <button type="button" @click="f_img_show" class="n-btn w100 btn-sm btn-default" style="float: right;">농가 사진
+                                수정</button>
+                        </td>
+                    </tr>
 
-                <tr>
-                    <th scope="row"><strong>농가명</strong></th>
-                    <td>
-                        {{user.f_farm_name}}
-                    </td>
-                    <td>
-                        <button type="button" @click="f_farm_name_show" class="n-btn w100 btn-sm btn-default">농가명
-                            수정</button>
-                    </td>
-                </tr>
-                <tr v-if="isShow5">
-                    <td></td>
-                    <v-text-field v-model="f_farm_name" label="" required></v-text-field>
-                    <td>
-                        <button type="button" @click="updateFarmMemberFarmName()"
-                            class="n-btn w100 btn-sm btn-default">수정하기</button>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th scope="row"><strong>농가 전화번호</strong></th>
-                    <td>
-                        {{user.f_num}}
-                    </td>
-                    <td>
-                        <button type="button" @click="f_num_show" class="n-btn w100 btn-sm btn-default">농가 전화번호
-                            수정</button>
-                    </td>
-                </tr>
-                <tr v-if="isShow6">
-                    <td></td>
-                    <v-text-field v-model="f_num" label="" required></v-text-field>
-                    <td>
-                        <button type="button" @click="updateFarmMemberFarmNumber()"
-                            class="n-btn w100 btn-sm btn-default">수정하기</button>
-                    </td>
-                </tr>
-
-
-                <tr>
-                    <th scope="row"><strong>사업자 등록번호</strong></th>
-                    <td>
-                        {{user.f_BRN}}
-                    </td>
-                    <td>
-                        <button type="button" @click="f_brn_show" class="n-btn w100 btn-sm btn-default">사업자 등록번호 수정</button>
-                    </td>
-                </tr>
-
-                <tr v-if="isShow7">
-                    <td></td>
-                    <v-text-field v-model="f_BRN" label="" required></v-text-field>
-                    <td>
-                        <button type="button" @click="updateFarmMemberBRN()"
-                            class="n-btn w100 btn-sm btn-default">수정하기</button>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th scope="row"><strong>은행</strong></th>
-                    <td>
-                        {{user.f_bank}}
-                    </td>
-                    <td>
-                        <button type="button" @click="f_bank_show" class="n-btn w100 btn-sm btn-default">계좌 수정</button>
-                    </td>
-                </tr>
-                <tr v-if="isShow8">
-                    <td><strong>은행명</strong></td>
-                    <v-text-field v-model="user.f_bank" label="" required></v-text-field>
-                </tr>
-                <tr v-if="isShow8">
-                    <td><strong>예금자명</strong></td>
-                    <v-text-field v-model="user.f_bank_name" label="" required></v-text-field>
-                </tr>
-                <tr v-if="isShow8">
-                    <td><strong>계좌 번호</strong></td>
-                    <v-text-field v-model="user.f_bank_num" label="" required></v-text-field>
-                    <td>
-                        <button type="button" @click="updateFarmMemberBank()"
-                            class="n-btn w100 btn-sm btn-default">수정하기</button>
-                    </td>
-                </tr>
-                <tr class="my-info-img" id="profile-image-area" v-if="isShow8">
-                    <th scope="row"><strong>통장 사본 사진</strong></th>
-                    <td>
-                        <div>
-                            <img class="img" :src="this.user.f_bank_img == null || this.user.f_bank_img == '' ? '/bank_images/x_image.png' : `/bank_images/${this.user.f_bank_img}.png`" alt="통장 사본 이미지">
-                        </div>
-                    </td>
-                </tr>
-                <tr v-if="isShow8">
-                    <td>
-                        <input multiple="multiple" @change="imgPreview($event)" class="select-img-hidden" type="file" id="bank_img_file" name="bank_img_file" accept="image/*"><br>                        
-                        <div id="image_container" class="image_container">
-                            <p class="change_img_title">바뀔 이미지</p>
-                        </div>
-                    </td>
-                    <td>
-                        <button type="button" @click="updateFarmMemberBank()"
-                            class="n-btn w100 btn-sm btn-default">수정 하기</button>                                
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <!-- 농가 소개 -->
-        <header class="n-section-title first info_views-area">
-            <h1 class="tit">{{user.f_farm_name}}</h1>
-        </header>
-
-        <table class="n-table table-row my-info-modify">
-            <colgroup>
-                <col style="width:25%">
-                <col style="width:40%">
-                <col style="width:35%">
-            </colgroup>
-            <tbody>
-                <tr>
-                    <th scope="row"><strong>농가 설명</strong></th>
-                    <td>
-                        {{user.f_explanation}}
-                    </td>
-                    <td>
-                        <button type="button" @click="f_explanation_show" class="n-btn w100 btn-sm btn-default">농가 설명
-                            수정</button>
-                    </td>
-                </tr>
-                <tr v-if="isShow9">
-                    <td></td>
-                    <v-text-field v-model="f_explanation" label="" required></v-text-field>
-                    <td>
-                        <button type="button" @click="updateFarmExplanation()"
-                            class="n-btn w100 btn-sm btn-default">수정하기</button>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th scope="row"><strong>주요 농작물</strong></th>
-                    <td>
-                        {{user.f_major_crop}}
-                    </td>
-                    <td>
-                        <button type="button" @click="f_major_crop_show" class="n-btn w100 btn-sm btn-default">주요 농작물
-                            수정</button>
-                    </td>
-                </tr>
-                <tr v-if="isShow10">
-                    <td></td>
-                    <v-text-field v-model="f_major_crop" label="" required></v-text-field>
-                    <td>
-                        <button type="button" @click="updateFarmMajorCrop()"
-                            class="n-btn w100 btn-sm btn-default">수정하기</button>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th scope="row"><strong>농가 사진</strong></th>
-                    <td>
-                        <div>
-                            <img class="img" :src="this.user.f_img == null || this.user.f_img == '' ? '/farm_images/base_farm_image.png' : `/farm_images/${this.user.f_img}.png`" alt="통장 사본 이미지">
-                        </div>
-                    </td>
-                    <td>
-                        <button type="button" @click="f_img_show" class="n-btn w100 btn-sm btn-default">농가 사진
-                            수정</button>
-                    </td>
-                </tr>
-
-                <tr v-if="isShow11">
-                    <input multiple="multiple" @change="uploadFarmImages()" type="file" id="farm_img_files" name="farm_img_files"
-                accept="image/*"><br>
-                    <td>
-                        <button type="button" @click="updateFarmImage()"
-                            class="n-btn w100 btn-sm btn-default">수정하기</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                    <tr v-if="isShow11">
+                        <input multiple="multiple" @change="uploadFarmImages()" type="file" id="farm_img_files" name="farm_img_files"
+                    accept="image/*"><br>
+                        <td>
+                            <button type="button" @click="updateFarmImage()"
+                                class="n-btn w100 btn-sm btn-default" style="float: right;">수정하기</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
     <bottom-nav />
 </template>
@@ -394,10 +395,6 @@ export default {
         };
     },
 
-    // mounted() {
-    // this.value = this.userInfo.value || "";
-    // },
-
     methods: {
         f_passwd_show() {
             this.isShow1 = !this.isShow1;
@@ -460,15 +457,17 @@ export default {
                         'Content-Type': 'multipart/form-data'
                     }
                 }).then(res => {
-                    if(res.headers.token != "token"){
-                        this.$store.commit('LOGOUT');
-                        this.$router.push('/login');
-                    }                    
+                
                     console.log('res.data', res.data);
                     alert('등록 완료!');
                 })
                 .catch(err => {
-                    console.log(err);
+                    console.log(err); 
+                    // if(res.headers.token != "token"){     
+                    //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                    //     this.$store.commit('LOGOUT');
+                    //     this.$router.push('/login');
+                    // }
                 });
                 
             }else{
@@ -487,15 +486,17 @@ export default {
                 }
             })
             .then(res => {
-                if(res.headers.token != "token"){
-                    this.$store.commit('LOGOUT');
-                    this.$router.push('/login');
-                }                
+             
                 console.log(res);
                 alert(this.passwordChangeSuccess);
             })
             .catch(err => {
-                console.log(err);
+                console.log(err); 
+                // if(res.headers.token != "token"){     
+                //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                //     this.$store.commit('LOGOUT');
+                //     this.$router.push('/login');
+                // }
             });
         },
         isNotPhonenumber(){
@@ -516,15 +517,17 @@ export default {
                     TOKEN: this.user.token
                 }
             }).then(res => {
-                if(res.headers.token != "token"){
-                    this.$store.commit('LOGOUT');
-                    this.$router.push('/login');
-                }                
+             
                 this.user.f_phonenum = this.f_phonenum;
                 localStorage.setItem("user", JSON.stringify(this.user));
                 alert(this.phonenumberChangeSuccess);
             }).catch(err => {
-                console.log(err);
+                // console.log(err); 
+                // if(res.headers.token != "token"){     
+                //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                //     this.$store.commit('LOGOUT');
+                //     this.$router.push('/login');
+                // }
             });
         },
         updateMemberName() {
@@ -538,16 +541,18 @@ export default {
                     TOKEN: this.user.token
                 }
             }).then(res => {
-                if(res.headers.token != "token"){
-                    this.$store.commit('LOGOUT');
-                    this.$router.push('/login');
-                }      
+   
                 this.user.f_name = this.f_name;
                 localStorage.setItem("user", JSON.stringify(this.user));                
                 alert(this.nameChangeSuccess);
             })
             .catch(err => {
-                console.log(err);
+                console.log(err); 
+                // if(res.headers.token != "token"){     
+                //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                //     this.$store.commit('LOGOUT');
+                //     this.$router.push('/login');
+                // }
             });
         },
         updateFarmProfileImage() {
@@ -566,10 +571,7 @@ export default {
                 }
             })
             .then(res => {
-                if(res.headers.token != "token"){
-                    this.$store.commit('LOGOUT');
-                    this.$router.push('/login');
-                }
+
                 console.log(res);
                 console.log(res.data);
                 this.user.f_profile_img = res.data;
@@ -578,7 +580,12 @@ export default {
                 alert(this.profileImageChangeSuccess);
             })
             .catch(err => {
-                console.log(err);
+                console.log(err); 
+                // if(res.headers.token != "token"){     
+                //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                //     this.$store.commit('LOGOUT');
+                //     this.$router.push('/login');
+                // }
             });
         },
         // 바꿀 이지 미리 띄워주기
@@ -612,14 +619,16 @@ export default {
                     TOKEN: this.user.token
                 }
             }).then(res => {
-                if(res.headers.token != "token"){
-                    this.$store.commit('LOGOUT');
-                    this.$router.push('/login');
-                }            
+
                 console.log(res.data);
                 alert(this.addressChangeSuccess);
             }).catch(err => {
-                console.log(err);
+                console.log(err); 
+                // if(res.headers.token != "token"){     
+                //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                //     this.$store.commit('LOGOUT');
+                //     this.$router.push('/login');
+                // }
             });
         },
         updateFarmMemberFarmName(){
@@ -635,15 +644,17 @@ export default {
                     TOKEN: this.user.token
                 }
             }).then(res => {
-                if(res.headers.token != "token"){
-                    this.$store.commit('LOGOUT');
-                    this.$router.push('/login');
-                }            
+         
                 this.user.f_farm_name = this.f_farm_name;
                 localStorage.setItem("user", JSON.stringify(this.user));
                 alert(this.farmNameChangeSuccess);
             }).catch(err => {
-                console.log(err);
+                console.log(err); 
+                // if(res.headers.token != "token"){     
+                //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                //     this.$store.commit('LOGOUT');
+                //     this.$router.push('/login');
+                // }
             });
         },
         isNotFarmNumber(){
@@ -666,15 +677,17 @@ export default {
                     TOKEN: this.user.token
                 }
             }).then(res => {
-                if(res.headers.token != "token"){
-                    this.$store.commit('LOGOUT');
-                    this.$router.push('/login');
-                }            
+         
                 this.user.f_num = this.f_num;
                 localStorage.setItem("user", JSON.stringify(this.user));
                 alert(this.farmNumberChangeSuccess);
             }).catch(err => {
-                console.log(err);
+                console.log(err); 
+                // if(res.headers.token != "token"){     
+                //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                //     this.$store.commit('LOGOUT');
+                //     this.$router.push('/login');
+                // }          
             });
         },
         isNotBrn(){
@@ -698,15 +711,17 @@ export default {
                     TOKEN: this.user.token
                 }
             }).then(res => {
-                if(res.headers.token != "token"){
-                    this.$store.commit('LOGOUT');
-                    this.$router.push('/login');
-                }            
+        
                 this.user.f_BRN = this.f_BRN;
                 localStorage.setItem("user", JSON.stringify(this.user));
                 alert(this.farmNumberChangeSuccess);
             }).catch(err => {
-                console.log(err);
+                console.log(err); 
+                // if(res.headers.token != "token"){     
+                //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                //     this.$store.commit('LOGOUT');
+                //     this.$router.push('/login');
+                // }       
             });
         },
 
@@ -728,10 +743,7 @@ export default {
                 }
             })
             .then(res => {
-                if(res.headers.token != "token"){
-                    this.$store.commit('LOGOUT');
-                    this.$router.push('/login');
-                }
+
                 console.log(res);
                 console.log(res.data);
                 this.user.f_bank = this.f_bank;
@@ -743,7 +755,12 @@ export default {
                 alert(this.bankInfoChangeSuccess);
             })
             .catch(err => {
-                console.log(err);
+                console.log(err); 
+                // if(res.headers.token != "token"){     
+                //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                //     this.$store.commit('LOGOUT');
+                //     this.$router.push('/login');
+                // }       
             });
         },
         updateFarmExplanation() {
@@ -753,17 +770,19 @@ export default {
                     TOKEN: this.user.token
                 }
             }).then(res => {
-                    if(res.headers.token != "token"){
-                        this.$store.commit('LOGOUT');
-                        this.$router.push('/login');
-                    }            
+        
                     console.log(res);
                     this.user.f_explanation = this.f_explanation;
                     localStorage.setItem("user", JSON.stringify(this.user));
                     alert(this.farmExplanationChangeSuccess);
                 })
                 .catch(err => {
-                    console.log(err);
+                    console.log(err); 
+                    // if(res.headers.token != "token"){     
+                    //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                    //     this.$store.commit('LOGOUT');
+                    //     this.$router.push('/login');
+                    // }       
                 });
         },
         updateFarmMajorCrop() {
@@ -773,17 +792,19 @@ export default {
                         TOKEN: this.user.token
                 }
             }).then(res => {
-                if(res.headers.token != "token"){
-                    this.$store.commit('LOGOUT');
-                    this.$router.push('/login');
-                }            
+       
                 console.log(res);
                 this.user.f_major_crop = this.f_major_crop;
                 localStorage.setItem("user", JSON.stringify(this.user));
                 alert(this.majorCropChangeSuccess);
             })
             .catch(err => {
-                console.log(err);
+                console.log(err); 
+                // if(res.headers.token != "token"){     
+                //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                //     this.$store.commit('LOGOUT');
+                //     this.$router.push('/login');
+                // }        
             });
         },
         uploadFarmImages() {
@@ -810,17 +831,19 @@ export default {
                 }
             })
             .then(res => {
-                if(res.headers.token != "token"){
-                    this.$store.commit('LOGOUT');
-                    this.$router.push('/login');
-                }                
+          
                 console.log(res);
                 this.user.f_img = res.data;
                 localStorage.setItem("user", JSON.stringify(this.user));
                 alert(this.farmImageChangeSuccess);
             })
             .catch(err => {
-                console.log(err);
+                console.log(err); 
+                // if(res.headers.token != "token"){     
+                //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                //     this.$store.commit('LOGOUT');
+                //     this.$router.push('/login');
+                // }         
             });
         },
     },
@@ -828,6 +851,15 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+.a{
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.inner{
+    padding: 10px;
+}
 
 </style>

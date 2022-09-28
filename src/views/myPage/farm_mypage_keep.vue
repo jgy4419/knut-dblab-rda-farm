@@ -101,10 +101,12 @@ export default {
                 this.limit += 4;
                 console.log(this.limit);
             }).catch(err => {
-                console.log(err);      
-                alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-                this.$store.commit('LOGOUT');
-                this.$router.push('/login');                
+                console.log(err); 
+                // if(res.headers.token != "token"){     
+                //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                //     this.$store.commit('LOGOUT');
+                //     this.$router.push('/login');
+                // }           
             });
         }
     }

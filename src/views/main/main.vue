@@ -1,29 +1,28 @@
-
 <template>
-<div class="main-contain">
-    <Header :headerProps="headerProps"/>
+    <div class="main-contain">
+        <Header :headerProps="headerProps"/>
 
-	<fieldset>
-        <div class="sh_group">
-            <img class="profile_photo3" id="profile_photo" src="https://static.nid.naver.com/images/web/user/default.png?type=s160">
+        <fieldset>
+            <div class="sh_group">
+                <img class="profile_photo3" id="profile_photo" src="https://static.nid.naver.com/images/web/user/default.png?type=s160">
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <div class="sh_group">
+                <!-- <img class="main_logo" src="../images/logo.jpg"> -->
+                    <text class="main_text"><br>'파치' 의 사전적 의미는 깨어지거나 흠이 나서 못 쓰게 된 물건을 말하는데 농산물이 떨어져서 깨지거나 흠이 나 있지만 일반 농산물보다 맛있고, 신선함을 표현하기 위해 애벌레가 사과를 베어먹었다는 것을 표현하였다.
+                    </text>
+            </div>
+            
+        </fieldset>
+
+        <div>
+            <button class="login-form__btn" type="submit" @click="logout()">로그아웃</button>
         </div>
-    </fieldset>
 
-	<fieldset>
-        <div class="sh_group">
-            <!-- <img class="main_logo" src="../images/logo.jpg"> -->
-                <text class="main_text"><br>'파치' 의 사전적 의미는 깨어지거나 흠이 나서 못 쓰게 된 물건을 말하는데 농산물이 떨어져서 깨지거나 흠이 나 있지만 일반 농산물보다 맛있고, 신선함을 표현하기 위해 애벌레가 사과를 베어먹었다는 것을 표현하였다.
-				</text>
-        </div>
-        
-    </fieldset>
-
-    <div>
-        <button class="login-form__btn" type="submit" @click="logout()">로그아웃</button>
     </div>
-
-</div>
-<bottom-nav></bottom-nav>
+    <bottom-nav/>
 </template>
 
 
@@ -90,10 +89,9 @@ export default{
 
 }
 </script>
-
 <style lang="scss" scoped>
 .main-contain{
-    // height: 10vh;
+    min-height: 95vh;
     fieldset{
         margin-top: -50px;
     }

@@ -95,6 +95,9 @@ export default {
 
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+.information-form__input, .login-form__input{
+	margin-top: 10px;
+	padding: 20px;
+}
 </style>

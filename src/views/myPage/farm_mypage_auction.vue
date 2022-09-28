@@ -15,11 +15,11 @@
                     </div>
                     <div class="auctionBtns">
                         <button  v-if="getData[i].bid_status === true" class="auctionBtn-ing">경매중</button>                        
-                        <button  v-if="getData[i].bid_status === false" class="auctionBtn">경매종료</button>
-                        <button v-if="getData[i].bid_status === false" class="auctionBtn">계산하기</button>
+                        <button  v-if="getData[i].bid_status === false && buttonState === 1" class="auctionBtn">경매종료</button>
+                        <button v-if="getData[i].bid_status === false && buttonState === 1" class="auctionBtn">계산하기</button>
                         <router-link v-if="getData[i].bid_status === false" :to="`/farm_mypage_auction/writeReview/${getData[i].auction_Id}`">
                         <!-- <router-link v-if="getData[i].bid_status === false" :to="`#`"> -->
-                            <button @click="setReviewData(i)" class="reviewBtn">후기작성</button>
+                            <button @click="setReviewData(i)" v-if="buttonState === 0" class="reviewBtn">후기작성</button>
                         </router-link>
                     </div>
                 </div>
@@ -30,8 +30,7 @@
             <nav class="main_b_nav">
                 <ul class="main_m_ui_list">
                     <li class="nav__btn">
-                        <a class="nav__link" href="#"><h4 class="user-component__title">등록하기</h4>
-                        </a>
+                        <button class="user-component__title">등록하기</button>
                     </li>
                 </ul>
             </nav>
@@ -57,9 +56,9 @@ export default {
         }
     },
     async mounted(){
-        // string, int, int
-        let userState = 'consumer';
-        console.log(userState);
+        if(localStorage.getItem('checkUser') === 'consumer'){
+            this.buttonState = 0;
+        }
         // console.log(this.$store.state.login.userInfo.consumer_id);
         console.log(this.$store.state.user.checkUser);
         console.log(this.$store.state.user.id);
@@ -68,14 +67,18 @@ export default {
                 TOKEN: this.user.token
             }
         }).then(res => {
-            if(res.headers.token != "token"){
-                this.$store.commit('LOGOUT');
-                this.$router.push('/login');
-            }
+
             this.getData.push(res.data);
             this.getData = this.getData.flat();
             console.log(this.getData);
-        }).catch(err => console.log(err));
+        }).catch(err => {
+			console.log(err); 
+			// if(res.headers.token != "token"){     
+			// 	alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+			// 	this.$store.commit('LOGOUT');
+			// 	this.$router.push('/login');
+			// }
+        });
     },
     methods: {
         setReviewData(index){
@@ -93,16 +96,23 @@ export default {
     font-size: 15px;
     font-weight: 700;
 }
+.user-component__title{
+    width: 95%;
+    height: 50px;
+    margin: auto;
+    border-radius: 20px;
+    margin-left: 10px;
+    background-color: #FFC1AA;
+}
 .contain{
     // margin-top: -50px; // 임시로 넣은 ui
     position: relative;
-    background-color: rgb(244, 242, 242);
+    // background-color: rgb(245, 245, 245);
     width: 100%;
-    height: 80vh;
+    height: 30vh;
     .not-auction-title{
         font-size: 20px;
         margin-top: 50%;
-        background-color: #fff;
         font-weight: 700;
         text-align: center;
     }
@@ -115,6 +125,7 @@ export default {
         align-items: center;
         img{
             width: 70px;
+            margin-left: 20px;
         }
         .content{
             .name{

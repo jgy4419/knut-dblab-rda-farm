@@ -39,9 +39,8 @@ i{
     width: 100%;
     height: 60px;
     background-color: #FFC1AA;
-    padding: 10px;
     nav{
-        width: 100%;
+        width: 400px;
         height: 100%;
         display: flex;
         justify-content: space-around;
@@ -53,6 +52,10 @@ i{
         }
         .navLi:nth-child(1){
             font-size: 23px;
+            margin-right: 30px;
+        }
+        .navLi:nth-child(2){
+            margin-right: 50px;
         }
     }
 }

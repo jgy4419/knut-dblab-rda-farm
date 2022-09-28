@@ -9,7 +9,7 @@
 		이때 페이지가 새로고침되므로 .prevent를 통해 새로고침을 막고 methods의 함수롤 호출하게 한다. -->
 
 
-        <v-form ref="form" v-model="valid" lazy-validation @submit.prevent="submitForm">
+        <v-form ref="form" v-model="valid" lazy-validation @submit.prevent="submitForm" class="loginContain">
             <v-text-field v-model="email" :rules="emailRules" label="E-mail" required ></v-text-field>
 
             <v-text-field v-model="password" :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
@@ -143,6 +143,7 @@ label{
   display: flex;
   justify-content: space-around;
     .login-button{
+        font-size: 14px;
         background-color: transparent;
         font-weight: 500;
         color: rgb(129, 129, 129);

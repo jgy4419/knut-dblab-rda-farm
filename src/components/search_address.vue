@@ -4,7 +4,7 @@
             <div class="auth-box">
                 <button class="auth-complete-btn" @click="search()">주소 검색</button>
                 <input type="text" id="postcode" class="information-form__input" placeholder="우편번호">
-                <input type="text" id="roadAddress" class="information-form__input2" placeholder="도로명 주소"><br>
+                <input type="text" id="roadAddress" class="information-form__input" placeholder="도로명 주소"><br>
                 
             </div>
             <button class="auth-button" @click="$emit('searchAddressRes', {zipcode: this.zipcode, address: this.address})">주소 확인</button>
@@ -91,5 +91,14 @@ button{
             margin-bottom: 10px;
         }
     }
+}
+.auth-complete-btn, .information-form__input, .auth-button{
+    width: 95%;
+    margin: 10px 10px;
+    border-radius: 10px;
+    font-weight: 700;
+}
+.information-form__input{
+    width: 90%;
 }
 </style>

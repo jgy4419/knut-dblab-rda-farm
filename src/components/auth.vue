@@ -12,7 +12,7 @@
                     <button class="auth-complete-btn" @click="$emit('authRes', {authInput: this.auth.authInput, id: this.id, phoneAuthNumber: this.phoneAuthNumber, phonenum: this.phonenum})">확인</button>
                 </div>
             </div>
-            <v-text-field v-model="phonenum" label="핸드폰 번호" :rules="phonenum_rule"></v-text-field>
+            <v-text-field class="inputBox" v-model="phonenum" label="핸드폰 번호" :rules="phonenum_rule"></v-text-field>
             <button class="auth-button" @click="authState()">인증 번호 받기</button>
         </v-col>
     </div>
@@ -132,5 +132,12 @@ button{
             }
         }
     }
+}
+.inputBox, .auth-button{
+    width: 95%;
+    margin: auto;
+}
+.auth-button{
+    margin-left: 10px;
 }
 </style>

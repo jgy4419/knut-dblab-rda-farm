@@ -37,10 +37,12 @@ export default {
                 this.like.state = res.data;
                 
             }).catch(err => {    
-                console.log(err);      
-                alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-                this.$store.commit('LOGOUT');
-                this.$router.push('/login');       
+                console.log(err); 
+                // if(res.headers.token != "token"){     
+                //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                //     this.$store.commit('LOGOUT');
+                //     this.$router.push('/login');
+                // }  
             });
     },
     methods: {
@@ -60,10 +62,12 @@ export default {
 
                     alert('좋아요를 클릭했습니다!');
                 }).catch(err => {                
-                    console.log(err);      
-                    alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-                    this.$store.commit('LOGOUT');
-                    this.$router.push('/login');   
+                    console.log(err); 
+                    // if(res.headers.token != "token"){     
+                    //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                    //     this.$store.commit('LOGOUT');
+                    //     this.$router.push('/login');
+                    // }
                 });
             }else if(this.like.state === 1){
                 axios.delete(`/api/deleteWish/${this.like.auction_id}/${this.user.consumer_id}`, {
@@ -76,11 +80,13 @@ export default {
 
                     alert('좋아요를 취소하였습니다!')
                 }).catch(err => {
-                        console.log(err);      
-                        alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-                        this.$store.commit('LOGOUT');
-                        this.$router.push('/login');   
-                        console.log(err)});
+                    console.log(err); 
+                    // if(res.headers.token != "token"){     
+                    //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                    //     this.$store.commit('LOGOUT');
+                    //     this.$router.push('/login');
+                    // }
+                })
             }
         }
     }

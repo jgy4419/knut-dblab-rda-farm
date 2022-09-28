@@ -25,11 +25,11 @@
                     <br>
                 </div>
             </div>
-            <v-text-field v-model="info.name" label="이름" required ></v-text-field>
-            <v-text-field :style="[$route.path === '/login/searchId' ? {display: 'block'} : {display: 'none'}]"
+            <v-text-field class="inputBox" v-model="info.name" label="이름" required ></v-text-field>
+            <v-text-field class="inputBox" :style="[$route.path === '/login/searchId' ? {display: 'block'} : {display: 'none'}]"
             v-model="info.phonenum" label="핸드폰 번호" required ></v-text-field>
 
-            <v-text-field :style="[$route.path === '/login/searchId' ? {display: 'none'} : {display: 'block'}]"
+            <v-text-field class="inputBox" :style="[$route.path === '/login/searchId' ? {display: 'none'} : {display: 'block'}]"
             v-model="info.email" :rules="emailRules" label="E-mail" required ></v-text-field>
         </v-form>
         <button class="id-search-btn"
@@ -40,10 +40,10 @@
             <div class="inner">
                 <h2 class="title">비밀번호 변경</h2>
                 <v-col cols="12">
-                    <v-text-field class="inutBox" v-model="passwd" label="비밀번호*" type="password" :rules="c_passwd_rule"></v-text-field>
+                    <v-text-field class="inputBox" v-model="passwd" label="비밀번호*" type="password" :rules="c_passwd_rule"></v-text-field>
                 </v-col>
                 <v-col cols="12">
-                    <v-text-field class="inutBox" v-model="passwd_chk" label="비밀번호 확인*" type="password" :rules="c_passwd_rule2">
+                    <v-text-field class="inputBox" v-model="passwd_chk" label="비밀번호 확인*" type="password" :rules="c_passwd_rule2">
                     </v-text-field>
                 </v-col>
                 <button class="pw-change-btn" @click="updatePassword()">비밀번호 변경 완료!</button>
@@ -165,8 +165,13 @@ export default {
 </style>
 
 <style lang="scss" scoped>
+.inputBox{
+    margin: auto;
+    width: 90%;
+}
 .pw-change-btn, .id-search-btn{
-    width: 100%;
+    margin: auto;
+    width: 90%;
     height: 60px;
     font-weight: 700;
     font-size: 16px;

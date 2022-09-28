@@ -23,19 +23,19 @@
             <fieldset class="popularityBox">
                 <h2 class="profileh2">인기 검색어</h2>
                 <div class="main_div-2">
-                <div class="aside_area aside_popular">
-                    <h3 class="h_popular"><span></span></h3>
-                    <table class="tbl_home">
-                        <tbody  v-for="(keyword, index) in this.$store.state.popularKeywordList" :key="index">
-                            <tr class="up">
-                                <th class="upRow" scope="row"><em>{{index + 1}}.</em>
-                                <span @click="searchAuction(keyword)">{{keyword}}</span>
-                                </th>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="aside_area aside_popular">
+                        <h3 class="h_popular"><span></span></h3>
+                        <table class="tbl_home">
+                            <tbody  v-for="(keyword, index) in this.$store.state.popularKeywordList" :key="index">
+                                <tr class="up">
+                                    <th class="upRow" scope="row"><em>{{index + 1}}.</em>
+                                    <span @click="searchAuction(keyword)">{{keyword}}</span>
+                                    </th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
             </fieldset>
 
             <fieldset>
@@ -86,7 +86,7 @@
                 <button class="more-button" @click="searchAuction(this.preKeyword)">더보기</button>
             </fieldset>
         </div>
-    <bottom-nav/>
+    <!-- <bottom-nav/> -->
     </div>
 </template>
 
@@ -134,7 +134,10 @@ export default {
                     TOKEN: this.user.token
                 }
             }).then(res => {
-
+                if(res.headers.token != "token"){
+                    this.$store.commit('LOGOUT');
+                    this.$router.push('/login');
+                }
                 console.log(res.data)
                 if(res.data.length){
                     for (let auction of res.data) this.$store.commit('PUSH_SEARCH_AUCTION', auction);
@@ -142,10 +145,7 @@ export default {
                 this.startLimit += this.NUMBER_OF_AUCTION;
             })
             .catch(err => {
-                console.log(err);      
-                alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-                this.$store.commit('LOGOUT');
-                this.$router.push('/login');
+                console.log(err);
             });
 
             // 검색어 초기화
@@ -184,13 +184,16 @@ export default {
                 TOKEN: this.user.token
             }
         }).then(res => {
-        
+            if(res.headers.token != "token"){
+                this.$store.commit('LOGOUT');
+                this.$router.push('/login');
+            }            
             this.$store.commit('INIT_POPULAR_KEYWORD_LIST', res.data);
         }).catch(err => {
-            console.log(err);      
-            alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-            this.$store.commit('LOGOUT');
-            this.$router.push('/login');
+            console.log(err);
+            // alert('')
+            //     this.$store.commit('LOGOUT');
+            //     this.$router.push('/login');
         })
     },
     navigateProduct (auction_Id, index) {
@@ -202,8 +205,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.inner{
-    height: 93vh;
+.popularityBox{
+    min-height: 20vh;
 }
 .more-button{
     width: 100%;

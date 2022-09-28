@@ -12,6 +12,10 @@ module.exports = defineConfig({
         target: 'https://118.67.134.38:80',
         changeOrigin: true,
       },
+      'auciton_review_images': {
+        target: 'https://118.67.134.38:80',
+        changeOrigin: true,
+      },
       '/auciton_slide_images': { 
         target: 'https://118.67.134.38:80',
         changeOrigin: true,

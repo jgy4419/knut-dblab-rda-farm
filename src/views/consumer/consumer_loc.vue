@@ -141,13 +141,11 @@ export default {
             })
                 .then(res => {
                     console.log(res);
-                    if(res.headers.token != "token"){
-                        this.$store.commit('LOGOUT');
-                        this.$router.push('/login');
-                    }
+
                 })
                 .catch(err => {
-                    console.log(err);
+                    console.log(err);   
+                     
                 });
         },
 
