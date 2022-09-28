@@ -8,15 +8,12 @@
                     <li id="_rowLi20220213173042CHK2022021381488661" class="goods_pay_item ">
                         <div class="goods_item">
                             <a href="/orderStatus/2022021339733581" class="goods_thumb">
-                                <img class="circle_image" :src="userData.c_profile_img === null ? 'https://image.msscdn.net/mfile_s01/_simbols/_basic/d.png' :  userData.c_profile_img"
+                                <img class="circle_image" :src="user.c_profile_img == null || user.c_profile_img == '' ? '/member_profile_images/base_image.png' : `/member_profile_images/${user.c_profile_img}.png`"
                                 alt="" width="90"
                                     height="90"></a>
                             <div class="goods_info">
                                 <p class="guide2">
                                     사용자명 : {{userData.c_name}}
-                                </p>
-                                <p class="guide2">
-                                    대표자 : {{userData.username}}
                                 </p>
                             </div>
                         </div>
@@ -43,7 +40,7 @@
                 <li><router-link to="/farm_mypage_get_review"><button type="button" class="fpmgBt1">이용후기</button></router-link></li>
                 <li><router-link to="/ServiceCenter"><button type="button" class="fpmgBt1">고객센터</button></router-link></li>
                 <li><router-link to="/consumer_profile"><button type="button" class="fpmgBt1">개인정보 수정</button></router-link></li>
-                <li><router-link to="/"><button type="button" class="fpmgBt1">로그아웃</button></router-link></li>
+                <li><router-link to="/"><button type="button" class="fpmgBt1" @click="logout()">로그아웃</button></router-link></li>
             </ul>
         </fieldset>
 
@@ -64,23 +61,53 @@ export default {
             userData: {},
             pachiPoint: 0,
             pachiCount: 0,
+            user: JSON.parse(localStorage.getItem("user")),
         }
+    },
+    methods: {
+        logout(){
+            this.$store.commit('LOGOUT');
+            this.$router.push('/login');
+        },
     },
     async mounted(){
         console.log(this.$store.state.user);
         console.log(this.$store.state.user.id);
         this.userData = JSON.parse(localStorage.getItem('user'));
         console.log(this.userData.consumer_id);
-        await axios.get(`/api/consumerPachiPoint/${this.userData.consumer_id}`)
-        .then(res => {
+        await axios.get(`/api/consumerPachiPoint/${this.userData.consumer_id}`, {
+            headers: {
+                TOKEN: this.user.token
+            }
+        }).then(res => {
+            console.log("1111" +res);
+            console.log("1111" +res.headers);
+         
             this.pachiPoint = res.data;
             console.log(res);
-        }).catch(error => console.log(error));
+        }).catch(error => {
+            console.log(err);      
+            alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+            this.$store.commit('LOGOUT');
+            this.$router.push('/login');   
+        });
         
-        axios.get(`/api/consumerCountAuction/${this.userData.consumer_id}`)
-        .then(res => {
+        axios.get(`/api/consumerCountAuction/${this.userData.consumer_id}`, {
+            headers: {
+                TOKEN: this.user.token
+            }
+        }).then(res => {
+            console.log("1111" +res);
+            console.log("1111" +res.headers);
+            console.log("1111" +res.headers);
             this.pachiCount = res.data;
-        }).catch(error => console.log(error));
+
+        }).catch(error => {
+            console.log(err);      
+            alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+            this.$store.commit('LOGOUT');
+            this.$router.push('/login');               
+        });
     }
 }
 </script>

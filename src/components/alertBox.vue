@@ -3,7 +3,7 @@
     <div class="alert-box-contain">
         <div class="alert-box">
             <img :src=" `/product_images/${alertData.product_img_name}.png`" alt="알림 이미지"
-            width="30" height="30">
+            width="50" height="50">
             <div class="alert-information">
                 <p></p>
                 <p class="alert-user">{{alertData.f_farm_name}}</p>
@@ -60,14 +60,16 @@ export default {
     },
     mounted(){
         // 로그인 했을 때 실행되도록 하기
-        if (this.user.farm_id == undefined) {
-            this.checkUser = 'consumer'
-            this.id = this.user.consumer_id
-        } else {
-            this.checkUser = 'farm'
-            this.id = this.user.farm_id
+        // if (this.user.farm_id == undefined) {
+        //     this.checkUser = 'consumer'
+        //     this.id = this.user.consumer_id
+        // } else {
+        //     this.checkUser = 'farm'
+        //     this.id = this.user.farm_id
+        // }
+        if(localStorage.getItem('checkUser')){
+            this.checkAlert();
         }
-        this.checkAlert();
     },
 }
 </script>
@@ -75,6 +77,7 @@ export default {
 <style lang="scss" scoped>
 .alert-box-contain{
     position: fixed;
+    width: 100%;
     right: 0;
     z-index: 100;
     top: 20%;
@@ -91,24 +94,26 @@ export default {
         border-bottom-left-radius: 10px;
         right: 0;
         width: 150px;
-        height: 50px;
+        height: 80px;
         img{
+            margin-top: 10px;
             margin-right: 10px;
         }
         p{
             margin-top: 5px;
-            font-size: 10px;
+            font-size: 12px;
             width: 70px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
         .alert-user{
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 700;
             color: rgb(124, 122, 122);
         }
         .alert-title{
+            margin-top: 10px;
             font-weight: 500;
         }
     }

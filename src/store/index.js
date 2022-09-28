@@ -77,11 +77,13 @@ export default createStore({
     LOGOUT: (state) => {
       // 로컬스토리지에서 checkUser, email 가져오기
       let user = JSON.parse(localStorage.getItem('user'))
+      console.log("logout: " + user);
       state = null;
       console.log(user);
 
       let email = user.c_email;
       let check_user = null;
+      
       if(email != undefined){
           check_user = "consumer"
       } else {
@@ -98,8 +100,7 @@ export default createStore({
           localStorage.removeItem('user');
           localStorage.removeItem('checkUser');
           localStorage.removeItem('id');
-
-          this.$router.push({name: 'login'});
+          localStorage.removeItem('auction');
       })
       .catch(err => {
           console.log(err);

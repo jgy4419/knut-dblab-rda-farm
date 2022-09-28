@@ -24,6 +24,7 @@ import axios from "axios"
 export default {
     data() {
         return {
+            user: JSON.parse(localStorage.getItem("user")),
             postcode: "",
             address: "",
             extraAddress: "",
@@ -134,11 +135,16 @@ export default {
 
             axios.post('http://localhost:8080/', frm, {
                 headers: {
+                    TOKEN: this.user.token,
                     'Content-Type': 'multipart/form-data'
                 }
             })
                 .then(res => {
                     console.log(res);
+                    if(res.headers.token != "token"){
+                        this.$store.commit('LOGOUT');
+                        this.$router.push('/login');
+                    }
                 })
                 .catch(err => {
                     console.log(err);

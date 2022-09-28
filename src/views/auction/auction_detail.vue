@@ -73,22 +73,22 @@
                     <li id="_rowLi20220213173042CHK2022021381488661" class="goods_pay_item ">
                         <div class="goods_item">
                             <p class="goods_thumb">
-                                <img :src='`/member_profile_images/${farmInformation.f_profile_img}.png`'
+                                <img :src='`/member_profile_images/${auction.f_profile_img}.png`'
                                     alt="" width="90" height="90" /></p>
                                 <!-- <img src="https://suhofarm.com/_upload/mall/20220112173148_86227.jpg" alt="" width="90" height="90"> -->
                             <div class="goods_info">
 
                                 <p class="guide2">
-                                    농가명 : {{farmInformation.f_farm_name}}
+                                    농가명 : {{auction.f_farm_name}}
                                 </p>
                                 <p class="guide2">
-                                    대표자 : {{farmInformation.f_name}}
+                                    대표자 : {{auction.f_name}}
                                 </p>
                                 <p class="guide2">
-                                    연락처 : {{farmInformation.f_phonenum}}
+                                    연락처 : {{auction.f_phonenum}}
                                 </p>
                                 <p class="guide2">
-                                    농가 주소 : {{farmInformation.f_location}}
+                                    농가 주소 : {{auction.f_location}}
                                 </p>
                                 
                             </div>
@@ -96,8 +96,8 @@
                         <!-- <div class="seller_item">
                             <div class="inner">
 
-                                <span class="seller">{{farmInformation.f_farm_name}}</span>
-                                <span class="tel">{{farmInformation.f_phonenum}}</span>
+                                <span class="seller">{{auction.f_farm_name}}</span>
+                                <span class="tel">{{auction.f_phonenum}}</span>
                                 <p
                                     class="state_button qna _click(nmp.front.order.timeline.home.list.shoppingInquiry(/merchant/shoppingInquiry/2022021381488661)) _stopDefault">
                                     문의하기
@@ -108,7 +108,7 @@
                 </ul>
             </div>
         <form action="farm_intro" class="login-form">
-            <router-link :to="`/auction_detail/farm_intro/${farmInformation.farm_id}`"><input class="login-form__btn" type="submit" value="농가 상세 소개"></router-link>
+            <router-link :to="`/auction_detail/farm_intro/${auction.farm_id}`"><input class="login-form__btn" type="submit" value="농가 상세 소개"></router-link>
         </form>
     </div>
 </template>
@@ -141,7 +141,6 @@ export default {
         isMaxPrice: 0,
         bidAlertText: "입찰하시겠습니까?",
         imgData: [],
-        farmInformation: {},
     }),
     mounted(){
         // JSON.parse(localStorage.getItem('user').farm_id) === this.auction.farm_id || JSON.parse(localStorage.getItem('user').farm_id)
@@ -151,9 +150,17 @@ export default {
     created() {
         this.connect()
         console.log('arr', this.$route.params.auction);
-        this.farmInformation = JSON.parse(this.$route.params.auction);
-        console.log('생산자 정보', this.farmInformation);
-        this.auction = JSON.parse(this.$route.params.auction)
+        // 페이지가 안 떠서 주석처리 했습니다! => 서버 문제 때문에 안 떴습니다. 지금 계속 인증 관련해서 실험하고 있어서..., 처음 경매 상세 페이지 입장을 고려해서 코드 수정했습니다!
+        
+        if(this.$route.params.auction == undefined) {
+            this.auction = JSON.parse(localStorage.getItem('auction'));
+            // undefined가 아니면 
+        } else {
+            this.auction = JSON.parse(this.$route.params.auction);
+            localStorage.setItem('auction', JSON.stringify(this.auction));
+        }
+        
+        console.log('경매 정보', this.auction);
 
         // 해당 경매 관련 이미지 여러 개 넣기
         let auctionImagesLength = this.auction.productDTO.product_img_name[this.auction.productDTO.product_img_name.length-1];
@@ -196,7 +203,7 @@ export default {
             }
 
             if (this.bid_price > this.auction.bid_price && this.stompClient && this.stompClient.connected){
-                if(confirm(this.bidAlertText) == true){
+                if(confirm(this.bidAlertText)){
                     this.stompClient.send("/receive_bidding", JSON.stringify(
                     {
                         auction_Id: this.auction.auction_Id, 
@@ -224,7 +231,8 @@ export default {
             console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
 
             console.log(this.$store.state.config.headers);
-            let headers = { TOKEN: this.$store.state.config.headers.TOKEN };
+            console.log("this.user.token: " + this.user.token);
+            let headers = { TOKEN: this.user.token};
             console.log(headers);
             this.stompClient.connect(
             headers,

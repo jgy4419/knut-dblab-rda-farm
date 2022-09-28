@@ -53,6 +53,7 @@ export default {
             buttonState: 1,
             getData: [],
             auctionState: true,
+            user: JSON.parse(localStorage.getItem("user")),
         }
     },
     async mounted(){
@@ -62,8 +63,15 @@ export default {
         // console.log(this.$store.state.login.userInfo.consumer_id);
         console.log(this.$store.state.user.checkUser);
         console.log(this.$store.state.user.id);
-        await axios.get(`/api/mypageAuctionDetails/${localStorage.getItem('checkUser')}/${localStorage.getItem('id')}/${0}`)
-        .then(res => {
+        await axios.get(`/api/mypageAuctionDetails/${localStorage.getItem('checkUser')}/${localStorage.getItem('id')}/${0}`, {
+            headers: {
+                TOKEN: this.user.token
+            }
+        }).then(res => {
+            if(res.headers.token != "token"){
+                this.$store.commit('LOGOUT');
+                this.$router.push('/login');
+            }
             this.getData.push(res.data);
             this.getData = this.getData.flat();
             console.log(this.getData);

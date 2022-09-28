@@ -28,12 +28,13 @@
 
 
 <script>
-import { useStorage } from "vue3-storage";
+// import { useStorage } from "vue3-storage";                            안 쓰이는 거 같아서 주석 처리했습니다!
+// import check_userVue from '../login/check_user.vue';
+// import axios from "axios"
 import Header from '../../components/Header/bellAndAddHeader.vue';
 import bottomNav from '@/components/bottomNav.vue';
 import { values } from 'sockjs-client/lib/transport-list';
-import check_userVue from '../login/check_user.vue';
-import axios from "axios"
+
 
 const bbb = 1;
 
@@ -43,12 +44,16 @@ export default{
         return {
             headerProps: 'Main',
             name: null,
-            f_data: []
-            
+            f_data: [],
+            user: JSON.parse(localStorage.getItem("user")),
         };
     },
+    // created(){
+    //     if(user == undefined) this.logout();
+    // },
     methods: {
         logout(){
+            console.log('logout');
             this.$store.commit('LOGOUT')
             this.$router.push('/login');
         },

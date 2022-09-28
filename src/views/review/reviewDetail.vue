@@ -7,7 +7,7 @@
             <img class="reviewImg" :src="`/product_images/${clickedData.product_img_name}.png`" 
             alt="auction 이미지" width="200" height="200">
             <p class="reviewContent">{{clickedData.consumer_review}}</p>
-            <Comment/>
+            <Comment :auction_id="clickedData.auction_Id"/>
         </div>
         <hr/>
     </div>    
@@ -21,7 +21,7 @@ export default {
         clickedData: Object
     },
     mounted(){
-        console.log(this.clickedData);
+        console.log(this.clickedData.auction_Id);
     },
     components: {
         Comment,

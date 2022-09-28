@@ -105,16 +105,22 @@ export default {
         checked(alert_id, alertList_index){
             console.log("alert_id: " + alert_id);
             // axios를 이용해서 DB에 있는 checked 변경
-            axios.patch(`/api/checkedAlert/${alert_id}`)
-			.then(res => {
+            axios.patch(`/api/checkedAlert/${alert_id}`,{},{
+                headers: {
+                    TOKEN: this.user.token
+                }
+            }).then(res => {
+                if(res.headers.token != "token"){
+                    this.$store.commit('LOGOUT');
+                    this.$router.push('/login');
+                }
 				console.log(res.data);
                 if (res.data == 1){
                     this.$store.commit('CHECKED_ALERT', alertList_index);
                 } else {
                     alert("읽음 표시 서버 에러!")
                 }
-			})
-			.catch(err => {
+			}).catch(err => {
 				console.log(err);
 			});
 

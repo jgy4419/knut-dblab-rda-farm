@@ -5,7 +5,6 @@
             <img class="review-image" :src="`/product_images/${getData.product_img_name}.png`" alt="리뷰할 사진">
             <div class="information">
                 <p>상품명 : {{getData.auction_name}}</p>
-                <p>최종낙찰 : {{parseInt(getData.a_max_price).toLocaleString()}}원</p>
             </div>
         </div>  
         <hr class="line"/>
@@ -33,7 +32,7 @@
         </div>
         <div class="final-buttons">
             <button class="final-button" @click="$router.go(-1)">취소</button>
-            <button class="final-button" @click="reqDatas()">등록</button>
+            <button class="final-button" @click="reqDatas()">{{editState === 0 ? '등록' : '수정'}}</button>
         </div>
     </div>    
 </template>
@@ -62,7 +61,10 @@ export default {
                 comment: '',
                 selectPicture: '',
             },
-            imgData: []
+            imgData: [],
+            user: JSON.parse(localStorage.getItem("user")),
+            editState: 0, // 리뷰 수정 페이지인지 작성 페이지인지 구별하기
+            editData: {},
         }
     },
             //     <!-- <div class="reviewBtns">
@@ -71,8 +73,17 @@ export default {
             //     </button>
             // </div> -->
     mounted(){
-        // 별점 처음에 선택되어져 있는 부분
-        document.querySelectorAll('.star-choice-button')[4].classList.add('active');
+        // url에 edit이 포함되어 있으면 수정페이지로 감지하기
+        if(this.$route.fullPath.includes('edit')){
+            this.editState = 1;
+            this.editData = this.$store.state.review.getReviewData;
+            document.getElementById('product-contents').value = this.editData.consumer_review;
+            this.reqData.starState = this.editData.grade_point;
+            document.querySelectorAll('.star-choice-button')[this.editData.grade_point - 1].classList.add('active');
+        }else{
+            // 별점 처음에 선택되어져 있는 부분
+            document.querySelectorAll('.star-choice-button')[4].classList.add('active');   
+        }
         // 후기 작성할 유저 게시글 불러오기 (vuex로 받은 데이터)
         this.getData = this.$store.state.review.getReviewData;
         // 별점 선택
@@ -121,7 +132,7 @@ export default {
             frm.append('checkUser', localStorage.getItem('checkUser'));
             frm.append('auction_Id', this.getData.auction_Id);
             frm.append('farm_id', this.getData.farm_id);
-            frm.append('consumer_id', JSON.parse(localStorage.getItem('user').consumer_id));
+            frm.append('consumer_id', JSON.parse(localStorage.getItem('user')).consumer_id);
             frm.append('grade_point', this.reqData.starState);
             frm.append('consumer_review', document.getElementById('product-contents').value);
             frm.append('auction_name', this.getData.auction_name);
@@ -129,12 +140,16 @@ export default {
             for(let i of frm) console.log(i);
             axios.post('/api/AuctionReview', frm, {
                 headers: {
-                'Content-Type': 'multipart/form-data'
+                    TOKEN: this.user.token,
+                    'Content-Type': 'multipart/form-data'
             }})
-            .then(() => {
+            .then(res => {
+             
                 this.$router.push('/farm_mypage_auction');
             }).catch(err => {
-                console.log(err);
+                alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                this.$store.commit('LOGOUT');
+                this.$router.push('/login');
             })
         }
     }
@@ -166,7 +181,8 @@ h2{
         .information{
             margin-left: 20px;
             p{
-                font-size: 14px;
+                margin-top: 10px;
+                font-size: 18px;
                 font-weight: 700;
             }
             p:nth-child(1){

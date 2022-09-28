@@ -18,6 +18,9 @@ input::-moz-placeholder {
     background: #ffffff;
     margin: 5%;
 }
+.seller_item{
+    height: 80px;
+}
 
 .upRow{
     width: 100px;

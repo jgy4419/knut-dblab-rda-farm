@@ -71,16 +71,26 @@ export default {
             // 실제 들어올 데이터
             // 프로필 사진, 농가설명, 주요농작물, 농가 주소 x, y 좌표(이건 나중에)
             farmIntroData: {},
+            user: JSON.parse(localStorage.getItem("user")),
         }
     },
     mounted(){
         console.log(this.$route.params.id);
-        axios.get(`/api/farmMember/${this.$route.params.id}`)
-        .then(res => {
+        axios.get(`/api/farmMember/${this.$route.params.id}`, {
+            headers: {
+                TOKEN: this.user.token
+            }
+        }).then(res => {
             this.farmIntroData = res.data;
             console.log(this.farmIntroData);
             if(this.farmIntroData.f_explanation == undefined) this.farmIntroData.f_explanation = this.test.description;
-        }).catch(error => console.log(error));
+
+        }).catch(error => {
+            console.log(err);      
+            alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+            this.$store.commit('LOGOUT');
+            this.$router.push('/login');   
+        });
 
         if (window.kakao && window.kakao.maps && !(new kakao.maps.services.Geocoder())) {
             this.initMap();     

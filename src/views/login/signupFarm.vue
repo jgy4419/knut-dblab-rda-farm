@@ -66,6 +66,6 @@ export default {
 
 <style lang="scss" scoped>
 .auth-button, .login-form__btn_right{
-    width: 300px;
+    width: 100%;
 }
 </style>

@@ -143,7 +143,7 @@ export default {
 					console.log(res.data);
                     localStorage.setItem("user", JSON.stringify(res.data));
 
-					this.$store.commit('login/TOKEN_SAVE', res.data.token);
+					this.$store.commit('TOKEN_SAVE', res.data.token);
 					console.log(this.$store.state.config.headers.TOKEN);
 					this.$router.push({name: 'main'});
 				}

@@ -70,9 +70,10 @@ export default {
     data() {
         return {
             headerProps: '찜한 목록',
-            startLimit: 0,
+            limit: 0,
             resData: [],
-            deadline_date: [], 
+            deadline_date: [],
+            user: JSON.parse(localStorage.getItem('user')),
         }
     },
     components: {
@@ -82,17 +83,29 @@ export default {
         this.moreProduct();
     },
     methods: {
+        
         async moreProduct(){
-            await axios.get(`/api/getWishList/${JSON.parse(localStorage.getItem('user').consumer_id)}/${this.startLimit}`)
-            .then(res => {
+            await axios.get(`/api/getWishList/${this.user.consumer_id}/${this.limit}`, {
+            headers: {
+                TOKEN: this.user.token
+            }
+        }).then(res => {
+        
                 this.resData.push(...res.data);
+                console.log(JSON.parse(localStorage.getItem('user').consumer_id));
+                console.log(this.limit);
                 console.log(res.data);
                 for(let i = 0; i < this.resData.length; i++){
                     this.deadline_date.push(dayjs(this.resData[i].deadline_date).format("YY-MM-DD"));
                 }
-                this.startLimit += 4;
-                console.log(this.startLimit);
-            }).catch(err => console.log(err));
+                this.limit += 4;
+                console.log(this.limit);
+            }).catch(err => {
+                console.log(err);      
+                alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                this.$store.commit('LOGOUT');
+                this.$router.push('/login');                
+            });
         }
     }
 }

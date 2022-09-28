@@ -25,17 +25,17 @@
                     <tr>
                         <td class="table-100-tyfk">중량</td>
                         <td class="table-100-0pky" colspan="3"><input id="td_input_text" type="text" name="text"
-                                size="20" style="width:100%;" required placeholder="kg" v-model="product_kg"></td>
-                    </tr>
+                                size="20" style="width:100%;" required placeholder="kg   (숫자만 입력 가능합니다.)" v-model="product_kg"></td>
+                    </tr> 
                     <tr>
                         <td class="table-100-tyfk">시작 가격</td>
                         <td class="table-100-0pky" colspan="3"><input id="td_input_text" type="text" name="text"
-                                size="20" style="width:100%;" required placeholder="원" v-model="p_starting_price"></td>
+                                size="20" style="width:100%;" required placeholder="원   (숫자만 입력 가능합니다.)" v-model="p_starting_price"></td>
                     </tr>
                     <tr>
                         <td class="table-100-tyfk">최대 가격</td>
                         <td class="table-100-0pky" colspan="3"><input id="td_input_text" type="text" name="text"
-                                size="20" style="width:100%;" required placeholder="원" v-model="p_max_price"></td>
+                                size="20" style="width:100%;" required placeholder="원   (숫자만 입력 가능합니다.)" v-model="p_max_price"></td>
                     </tr>
                     <tr>
                         <td class="table-100-tyfk">낙과 일자</td>
@@ -75,7 +75,7 @@
                 <ul class="main_m_ui_list">
                     <li class="nav__btn">
                         <a class="nav__link" href="#">
-                            <h4 class="user-component__title" @click="submitProduct()">{{auctionSubmit}}</h4>
+                            <h4 class="user-component__title" @click="submitAuction()">{{auctionSubmit}}</h4>
                         </a>
                     </li>
                 </ul>
@@ -110,8 +110,16 @@
                 p_status: null,
                 p_explanation: null,
                 product_img_files: [],
+                user: JSON.parse(localStorage.getItem("user")),
                 farm_id: JSON.parse(localStorage.getItem("user")).farm_id,
                 auctionId: 0,
+                blankErrorText: "모두 작성해주셔야 합니다!",
+                numberErrorText: "중량, 시작가, 최대가는 숫자만 입력 가능합니다!",
+                auctionPriceErrorText: "시작가는 최대가격 보다 작아야 합니다!",
+                auctionDropDateErrorText: "낙과일자는 현재 시간 이전이어야 합니다!",
+                auctionDeadlineDateErrorText: "경매 마감일자는 최소 현재 시간보다 5분 이후이어야 합니다.!",
+                auctionRegistText: "경매 등록하시겠습까?",
+                FIVE_MINUTE: 1000 * 60 * 5,                // millisecond 단위
             };
         },
         mounted(){
@@ -130,24 +138,57 @@
             writeState(){
                 let auction_id = this.$route.params.id;
                 // 글 수정 페이지면 ex) /auction_reg/33 => input창의 value에 값을 가각 넣어주기
-                axios.get(`/api/auctionInfo/${auction_id}`).then(res => {
+                axios.get(`/api/auctionInfo/${auction_id}`, {
+                    headers: {
+                        TOKEN: this.user.token
+                    }
+                }).then(res => {
+          
                     console.log(res.data[0]);
                     const data = res.data[0];
                     this.p_name = data.auction_name;
                     this.p_starting_price = data.a_starting_price;
                     this.p_max_price = data.a_max_price; 
                     this.deadline_date = data.deadline_date;
-                }).catch(err => console.log(err));
+                }).catch(err => {
+                    console.log(err);      
+                    alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                    this.$store.commit('LOGOUT');
+                    this.$router.push('/login');
+                });
             },
             upload() {
                 this.product_img_files = document.getElementById("product_img_files");
                 console.log('test', this.product_img_files.files);
             },
-            submitProduct() {
+            submitAuction() {
+                // 빈 문자열 검사
+                if(this.p_name == null || this.product == null || this.product_kg == null || this.p_starting_price == null || this.p_max_price == null 
+                || this.p_drop_date == null || this.deadline_date == null || this.size == null || this.p_status == null || this.p_explanation == null){
+                    return alert(this.blankErrorText);
+                }
+                if(this.p_name == "" || this.product == "" || this.product_kg == "" || this.p_starting_price == "" || this.p_max_price == "" 
+                || this.p_drop_date == "" || this.deadline_date == "" || this.size == "" || this.p_status == "" || this.p_explanation == ""){
+                    return alert(this.blankErrorText);
+                }
+                
+                if(!this.isNumber(this.product_kg) || !this.isNumber(this.p_starting_price) || !this.isNumber(this.p_max_price)) return alert(this.numberErrorText);    // 중량, 시작가, 최대가 숫자 검사
+                if(Number(this.p_max_price) < Number(this.p_starting_price)) return alert(this.auctionPriceErrorText);                                                            // 시작가 최대가 검사
+                
+                // 낙과일자 검사, 현재 시간 전만 허용
+                let now = new Date();
+                if(new Date(this.p_drop_date) > now) return alert(this.auctionDropDateErrorText);
+
+                // 마감일 검사, 현재 시간 5분 이후 허용
+                if(new Date(this.deadline_date).getTime() < now.getTime() + this.FIVE_MINUTE) return alert(this.auctionDeadlineDateErrorText);
+
+                // 마지막 확인
+                if(!confirm(this.auctionRegistText)) return;
                 let frm = new FormData();
                 
+
+                // 서버에 데이터 전송하는 코드
                 console.log('p_drop_date : ' + this.p_drop_date);
-                console.log('deadline_date : ' + this.deadline_date);
                 console.log('deadline_date : ' + this.deadline_date);
 
                 for(let imageFile of this.product_img_files.files) frm.append("productDTO.product_img_files", imageFile);
@@ -173,33 +214,46 @@
                 if(this.$route.path !== '/auction_reg'){
                     axios.patch('/api/updateAuction', frm, {
                         headers: {
+                            TOKEN: this.user.token,
                             'Content-Type': 'multipart/form-data'
                         }
-                    }).then(() => {
+                    }).then(res => {
+
                         alert('등록 완료!');
                         this.$router.push('/auction');
                     })
                     .catch(err => {
-                        console.log(err);
+                        console.log(err);      
+                        alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                        this.$store.commit('LOGOUT');
+                        this.$router.push('/login');
                     });
                 }else{
                     // 글 등록
                     axios.post('/api/registAuction', frm, {
                         headers: {
+                            TOKEN: this.user.token,
                             'Content-Type': 'multipart/form-data'
                         }
                     }).then(() => {
+
                         alert('등록 완료!');
                         this.$router.push('/auction');
                     })
                     .catch(err => {
-                        console.log(err);
+                        console.log(err);      
+                        alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                        this.$store.commit('LOGOUT');
+                        this.$router.push('/login');
                     });
                 }
             },
+            isNumber(number){
+                if(Number.isNaN(number)) return false;
+                let tempNumber = Number(number);
+                return Number.isInteger(tempNumber) ? tempNumber > 0  : false;
+            },
         },
-
-
     };
 </script>
 

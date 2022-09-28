@@ -2,7 +2,7 @@
     <div class="auth-contain">
         <v-col cols="12">
             <div class="auth-box">
-                               <button class="auth-complete-btn" @click="search()">주소 검색</button>
+                <button class="auth-complete-btn" @click="search()">주소 검색</button>
                 <input type="text" id="postcode" class="information-form__input" placeholder="우편번호">
                 <input type="text" id="roadAddress" class="information-form__input2" placeholder="도로명 주소"><br>
                 
@@ -28,10 +28,10 @@ export default {
     },
     mounted() {
         console.log('addressInfo: ' + this.addressInfo.zipcode);
-        if(this.addressInfo.zipcode != 0){
-            document.getElementById('postcode').value = '우편번호 '+ this.addressInfo.zipcode;
-            document.getElementById("roadAddress").value = '주소 '+ this.addressInfo.address;
-        }
+        // if(this.addressInfo.zipcode != 0){
+            document.getElementById('postcode').value = '우편번호: '+ this.addressInfo.zipcode;
+            document.getElementById("roadAddress").value = '주소: '+ this.addressInfo.address;
+        // }
     },
 
     methods: {
@@ -60,8 +60,8 @@ export default {
                     }
 
                     // 우편번호와 주소 정보를 해당 필드에 넣는다.
-                    document.getElementById('postcode').value = '우편번호 '+ data.zonecode;
-                    document.getElementById("roadAddress").value = '주소 '+ roadAddr;
+                    document.getElementById('postcode').value = '우편번호: '+ data.zonecode;
+                    document.getElementById("roadAddress").value = '주소: '+ roadAddr;
                     this.zipcode = data.zonecode;
                     this.address = roadAddr;
                     

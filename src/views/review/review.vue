@@ -40,6 +40,7 @@ export default {
             reviewState: '내가 쓴 리뷰',
             infiniteScrollValue: 1,
             getData: [],
+            user: JSON.parse(localStorage.getItem("user")),
         }
     },
     mounted(){
@@ -51,12 +52,23 @@ export default {
     },
     methods: {
         getReviewData(){
-            axios.get(`/api/AuctionReview/${localStorage.getItem('checkUser')}/${localStorage.getItem('id')}`)
-            .then(res => {  
+            axios.get(`/api/AuctionReview/${localStorage.getItem('checkUser')}/${JSON.parse(localStorage.getItem('id'))}`, {
+            headers: {
+                TOKEN: this.user.token
+            }
+        }).then(res => {  
+
+
                 this.getData.push(res.data);
                 this.spinnerState = false;
+                console.log(res);
                 console.log(this.getData.flat(Infinity));
-            }).catch(err => console.log(err));
+            }).catch(err => {
+                console.log(err);      
+                alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                this.$store.commit('LOGOUT');
+                this.$router.push('/login');
+            });
         },
         async infiniteScroll() {
             // 스크롤 최적화 시키기

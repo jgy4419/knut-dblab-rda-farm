@@ -115,18 +115,32 @@ export default {
             headerProps: '이용후기',
             getData: [],
             userState: 'consumer',
+            user: JSON.parse(localStorage.getItem("user")),
         }
     },
     async mounted(){
         if(!JSON.parse(localStorage.getItem('user').consumer_id)){
             this.userState = 'farm'
         }
-        await axios.get(`/api/mypageAuctionDetails/${this.userState}/${JSON.parse(localStorage.getItem('user').consumer_id)}/${0}`)
-        .then(res => {
+        await axios.get(`/api/mypageAuctionDetails/${this.userState}/${JSON.parse(localStorage.getItem('user')).consumer_id}/${0}`, {
+            headers: {
+                TOKEN: this.user.token
+            }
+        }).then(res => {
+            if(res.headers.token != "token"){
+                this.$store.commit('LOGOUT');
+                this.$router.push('/login');
+            }
             this.getData.push(res.data);
             this.getData = this.getData.flat();
             console.log(this.getData);
-        }).catch(err => console.log(err));
+        }).catch(err => {
+            console.log(err);
+            if(res.headers.token != "token"){
+                this.$store.commit('LOGOUT');
+                this.$router.push('/login');
+            }}
+        )
     },
     methods() {
     //   axios.get='/getAuctionReview/{checkUser}/id';  

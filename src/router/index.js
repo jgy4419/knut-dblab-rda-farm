@@ -155,10 +155,15 @@ const routes = [
     name: 'farm_mypage_auction',
     component: () => import('../views/myPage/farm_mypage_auction.vue')
   },
-  // 리뷰 작성 페이지
+  // 리뷰 작성 / 수정 페이지
   {
     path: '/farm_mypage_auction/writeReview/:id',
     name: 'writeReview',
+    component: () => import('../views/review/writeReview.vue')
+  },
+  {
+    path: '/farm_mypage_auction/writeReview/edit/:id',
+    name: 'editReview',
     component: () => import('../views/review/writeReview.vue')
   },
   {

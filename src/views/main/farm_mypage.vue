@@ -8,7 +8,7 @@
                 <li id="_rowLi20220213173042CHK2022021381488661" class="goods_pay_item ">
                     <div class="goods_item">
                         <a href="/orderStatus/2022021339733581" class="goods_thumb">
-                            <img class="circle_image" :src="`/product_images/${user.f_profile_img}.png`" alt="" width="90"
+                            <img class="circle_image" :src="user.f_profile_img == null || user.f_profile_img == '' ? '/member_profile_images/base_image.png' : `/member_profile_images/${user.f_profile_img}.png`" alt="" width="90"
                                 height="90"></a>
                         <div class="goods_info">
                             <p class="guide2">
@@ -62,11 +62,13 @@ export default {
             user: JSON.parse(localStorage.getItem("user")),
             pachiPoint: 0,
             pachiCount: 0,
+            user: JSON.parse(localStorage.getItem("user")),
         }
     },
     methods: {
         logout(){
-            this.$store.commit('LOGOUT')
+            this.$store.commit('LOGOUT');
+            this.$router.push('/login');
         },
     },
     async mounted(){
@@ -74,14 +76,29 @@ export default {
         console.log(this.$store.state.user.id);
         this.userData = JSON.parse(localStorage.getItem('user'));
         console.log(this.userData.farm_id);
-        await axios.get(`/api/farmPachiPoint/${this.userData.farm_id}`)
-        .then(res => {
+        await axios.get(`/api/farmPachiPoint/${this.userData.farm_id}`, {
+            headers: {
+                TOKEN: this.user.token
+            }
+        }).then(res => {
+            if(res.headers.token != "token"){
+                this.$store.commit('LOGOUT');
+                this.$router.push('/login');
+            }
             this.pachiPoint = res.data;
             console.log(res);
         }).catch(error => console.log(error));
         
-        axios.get(`/api/farmCountAuction/${this.userData.farm_id}`)
-        .then(res => {
+        axios.get(`/api/farmCountAuction/${this.userData.farm_id}`, {
+            headers: {
+                TOKEN: this.user.token
+            }
+        }).then(res => {
+            if(res.headers.token != "token"){
+                this.$store.commit('LOGOUT');
+                this.$router.push('/login');
+            }
+
             this.pachiCount = res.data;
         }).catch(error => console.log(error));
     }
