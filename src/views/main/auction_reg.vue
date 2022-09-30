@@ -6,7 +6,7 @@
                 accept="image/*"><br> -->
             <img src="image">
             <!-- 테스트 해보기 -->
-            <input multiple="multiple" style="display: 'none'" @change="imgPreview($event)" class="select-img-hidden" type="file" id="product_img_file" name="product_img_file" accept="image/*"><br>                        
+            <input multiple="multiple" style="display: 'none'" @change="imgPreview($event)" class="select-img-hidden" type="file" id="product_img_files" name="product_img_files" accept="image/*"><br>                        
             <input type="button" value="이미지 파일 올리기"/>
             <div id="image_container" class="image_container">
             </div>
@@ -133,6 +133,7 @@
                 alert('농가회원이 아닙니다!');
                 this.$router.go(-1);
             }
+            console.log(this.$route.params.id);
             if(this.$route.path !== '/auction_reg'){
                 this.headerProps = '경매 수정';
                 this.auctionSubmit = '수정하기';
@@ -161,7 +162,6 @@
                         TOKEN: this.user.token
                     }
                 }).then(res => {
-          
                     console.log(res.data[0]);
                     const data = res.data[0];
                     this.p_name = data.auction_name;
@@ -200,7 +200,7 @@
                 if(new Date(this.p_drop_date) > now) return alert(this.auctionDropDateErrorText);
 
                 // 마감일 검사, 현재 시간 5분 이후 허용
-                if(new Date(this.deadline_date).getTime() < now.getTime() + this.FIVE_MINUTE) return alert(this.auctionDeadlineDateErrorText);
+                // if(new Date(this.deadline_date).getTime() < now.getTime() + this.FIVE_MINUTE) return alert(this.auctionDeadlineDateErrorText);
 
                 // 마지막 확인
                 if(!confirm(this.auctionRegistText)) return;
@@ -211,6 +211,11 @@
                 console.log('p_drop_date : ' + this.p_drop_date);
                 console.log('deadline_date : ' + this.deadline_date);
 
+                // 이미지 파일을 안 넣었으면 경고창.
+                if(this.product_img_files.length < 1){
+                    alert('이미지 파일이 없습니다.');
+                    return;
+                }
                 for(let imageFile of this.product_img_files.files) frm.append("productDTO.product_img_files", imageFile);
                 frm.append('auction_name', this.p_name);
                 frm.append('productDTO.product', this.product);
@@ -225,11 +230,7 @@
                 frm.append('deadline_date', this.deadline_date);
                 frm.append('farm_id', this.farm_id);
 
-                // 이미지 파일을 안 넣었으면 경고창.
-                if(this.product_img_files.length < 1){
-                    alert('이미지 파일이 없습니다.');
-                    return;
-                }
+                
                 // 글 수정
                 if(this.$route.path !== '/auction_reg'){
                     axios.patch('/api/updateAuction', frm, {

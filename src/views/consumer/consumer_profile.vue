@@ -74,6 +74,15 @@
                                 <button type="button" @click="c_name_show" class="n-btn w100 btn-sm btn-default" style="float: right;">회원명 수정</button>
                             </td>
                         </tr>
+                        <tr>
+                            <th scope="row"><strong>주민등록번호</strong></th>
+                            <td>
+                                {{user.c_zipcode}}
+                            </td>
+                            <!-- <td>
+                                <button type="button" @click="c_name_show" class="n-btn w100 btn-sm btn-default" style="float: right;">회원명 수정</button>
+                            </td> -->
+                        </tr>
                         <tr v-if="isShow3">
                             <td></td>
                             <v-text-field v-model="c_name" label="" required></v-text-field>
@@ -114,6 +123,7 @@
                     </tbody>
                 </table>
                 <SearchAddress :addressInfo="addressInfo" @searchAddressRes="searchAddressResult"/>
+                <UserSecession/>
             </v-form>
         </div>
     </div>
@@ -122,12 +132,13 @@
 
 <script>
 import Header from '../../components/Header/backHeader.vue';
+import UserSecession from '../../components/userSecession.vue';
 import bottomNav from '@/components/bottomNav.vue';
 import axios from 'axios';
 import SearchAddress from '../../components/search_address.vue';
 
 export default {
-    components: { Header, bottomNav, SearchAddress },
+    components: { Header, bottomNav, SearchAddress, UserSecession },
     data() {
         return {
             headerProps: '개인정보 수정',
@@ -171,6 +182,7 @@ export default {
         };
     },
     mounted(){
+        console.log(this.user);
         if(!this.user.consumer_id){
             this.checkUser = 'farm'
         }

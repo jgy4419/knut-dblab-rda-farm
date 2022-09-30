@@ -11,30 +11,30 @@
                               class="goods_pay_item _interlockNo20220211200904406814">
                               <div class="goods_item">
                                 <!-- a 태그 -> router 태그 -->
-                                  <div class="goods_thumb">
-                                      <img :src='`/product_images/${auction.productDTO.product_img_name}.png`'
-                                          alt="" width="90" height="90" /></div>
-                                  <div class="goods_info">
-                                      <div class="goods">
-                                          <p class="name">
-                                              {{auction.auction_name}}
-                                          </p>
-                                          <ul class="info">
-                                              <li><span class="blind">상품금액</span>{{auction.bid_price}}원</li>
-                                              <li class="date"><span class="blind">등록일</span> {{auction.productDTO.p_reg_date}}
-                                              </li>
-                                          </ul>
-                                      </div>
-                                      <p class="state _statusName value_color_green _click(nmp.front.order.timeline.home.list.openDeliveryPopup(/o/orderStatus/deliveryTracking/2022020394386781/ORDER_DELIVERY/api)) _stopDefault"
-                                      v-if="auction.bid_status === 1">
-                                          ({{updateDeadlineDate(auction.deadline_date)}} 경매 종료)</p>
-                                      <p class="state _statusName value_color_green _click(nmp.front.order.timeline.home.list.openDeliveryPopup(/o/orderStatus/deliveryTracking/2022020394386781/ORDER_DELIVERY/api)) _stopDefault"
-                                        v-if="auction.bid_status === 0">
-                                          최종 낙찰가격 {{auction.a_max_price.toLocaleString()}}원</p>
-                                      <p class="guide">
-                                          {{auction.productDTO.p_explanation}}
-                                      </p>
-                                  </div>
+                                <div class="goods_thumb">
+                                    <img :src='`/product_images/${auction.productDTO.product_img_name}.png`'
+                                        alt="" width="90" height="90" /></div>
+                                <div class="goods_info">
+                                    <div class="goods">
+                                        <p class="name">
+                                            {{auction.auction_name}}
+                                        </p>
+                                        <ul class="info">
+                                            <li><span class="blind">상품금액</span>{{auction.bid_price.toLocaleString()}}원</li>
+                                            <li class="date"><span class="blind">등록일</span> {{auction.productDTO.p_reg_date}}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <p class="state _statusName value_color_green _click(nmp.front.order.timeline.home.list.openDeliveryPopup(/o/orderStatus/deliveryTracking/2022020394386781/ORDER_DELIVERY/api)) _stopDefault"
+                                    v-if="auction.bid_status === 1">
+                                        ({{updateDeadlineDate(auction.deadline_date)}} 경매 종료)</p>
+                                    <p class="state _statusName value_color_green _click(nmp.front.order.timeline.home.list.openDeliveryPopup(/o/orderStatus/deliveryTracking/2022020394386781/ORDER_DELIVERY/api)) _stopDefault"
+                                      v-if="auction.bid_status === 0">
+                                        최종 낙찰가격 {{auction.a_max_price.toLocaleString()}}원</p>
+                                    <p class="guide">
+                                        {{auction.productDTO.p_explanation}}
+                                    </p>
+                                </div>
                               </div>
                               <div class="seller_item">
                                   <div class="inner">
@@ -157,10 +157,8 @@ export default{
 
           this.stompClient.subscribe("/send_auction_data/"+this.$store.state.config.headers.TOKEN,  res => {
             this.spinnerState = false;
-
             const response_data = JSON.parse(res.body);
             console.log("response_data.length: " + response_data.length);
-            
             if(response_data.length){
                 for (let i = 0; i < response_data.length; i++) {
                   this.$store.commit('PUSH_AUCTION', response_data[i]);
@@ -171,6 +169,7 @@ export default{
             
             console.log("2131231limit:" + this.$store.state.limit);
           });
+          this.moreProduct();
           this.stompClient.subscribe("/send_bidding",  res => {
 
             const response_bidding = JSON.parse(res.body);
@@ -209,9 +208,11 @@ export default{
   position: relative;
   width: 100%;
   .goods_item{
-    position: absolute;
     left: 0;
     width: 100%;
   }
+}
+.state{
+  font-size: 10px;
 }
 </style>

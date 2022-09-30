@@ -5,10 +5,10 @@
             <div class="commentList">
                 <hr>
                 <br/>
-                <button class="commentButton" @click="inputState = 1">답글 달기</button>
+                <button class="commentButton" @click="inputState = 1">{{ !clickedData.farm_review ? '답글달기' : '수정하기'}}</button>
                 <div class="comment">
                     <h3 class="userName">{{"농가이름 넣어주기"}}</h3>
-                    <p class="userComment">{{!getData.farm_review ? "아직 답글이 없습니다." : getData.farm_review}}</p>
+                    <p class="userComment">{{!clickedData.farm_review ? "아직 답글이 없습니다." : clickedData.farm_review}}</p>
                 </div>
                 <!-- <div class="comment" v-for="comment, i in testData.user.length" :key="i">
                     <h3 class="userName">{{testData.user[i]}}</h3>
@@ -35,7 +35,8 @@
 import axios from 'axios'
 export default {
     props: {
-        auction_id: Number
+        auction_id: Number,
+        clickedData: Object
     },
     data(){
         return {
@@ -51,6 +52,7 @@ export default {
     },
     // farm_review
     mounted(){
+        console.log(this.clickedData);
         if(localStorage.getItem('checkUser') === 'farm') this.userState = 1;
         else this.userState = 0;
         console.log(JSON.parse(localStorage.getItem('id')));
@@ -69,11 +71,9 @@ export default {
     },
     methods: {
         commentPush(){
-            let check = localStorage.getItem('checkUser');
-            let id = localStorage.getItem('id');
             let frm = new FormData();
             frm.append('checkUser', localStorage.getItem('checkUser'));
-            frm.append('auction_Id', localStorage.getItem('id'));
+            frm.append('auction_Id', this.getData.auction_Id);
             frm.append('grade_point', this.getData.grade_point);
             frm.append('consumer_review', this.getData.auction_name);
             frm.append('review_img_name', this.getData.review_img_name);

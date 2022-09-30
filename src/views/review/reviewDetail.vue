@@ -8,7 +8,9 @@
             <img class="reviewImg" :src="`/auciton_review_images/${clickedData.review_img_name}.png`" 
             alt="auction 이미지" width="200" height="200">
             <p class="reviewContent">{{clickedData.consumer_review}}</p>
-            <Comment :auction_id="clickedData.auction_Id"/>
+            <Comment 
+                :auction_id="clickedData.auction_Id"
+                :clickedData="clickedData"/>
         </div>
         <hr/>
     </div>    

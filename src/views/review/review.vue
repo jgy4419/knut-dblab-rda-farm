@@ -53,15 +53,14 @@ export default {
     methods: {
         getReviewData(){
             let id =  this.user.consumer_id != undefined ? this.user.consumer_id : this.user.farm_id;
+            console.log(id);
             axios.get(`/api/AuctionReview/${localStorage.getItem('checkUser')}/${id}`, {
             headers: {
                 TOKEN: this.user.token
             }
         }).then(res => {  
-
-
                 this.getData.push(res.data);
-                this.spinnerState = false;
+                this.spinnerState = false;``
                 console.log(res);
                 console.log(this.getData.flat(Infinity));
             }).catch(err => {

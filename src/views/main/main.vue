@@ -2,11 +2,12 @@
     <div class="main-contain">
         <Header :headerProps="headerProps"/>
 
-        <fieldset>
-            <div class="sh_group">
-                <img class="profile_photo3" id="profile_photo" src="https://static.nid.naver.com/images/web/user/default.png?type=s160">
-            </div>
-        </fieldset>
+        <!-- <fieldset> -->
+            <Slide/>
+            <!-- <div class="sh_group">
+                <img class="profile_photo3" id="profile_photo" :src="`/member_profile_images/${userState}.png`">
+            </div> -->
+        <!-- </fieldset> -->
 
         <fieldset>
             <div class="sh_group">
@@ -27,29 +28,30 @@
 
 
 <script>
-// import { useStorage } from "vue3-storage";                            안 쓰이는 거 같아서 주석 처리했습니다!
-// import check_userVue from '../login/check_user.vue';
-// import axios from "axios"
 import Header from '../../components/Header/bellAndAddHeader.vue';
+import Slide from '../../components/slide.vue';
 import bottomNav from '@/components/bottomNav.vue';
 import { values } from 'sockjs-client/lib/transport-list';
 
-
-const bbb = 1;
-
 export default{
-  components: { bottomNav, Header },
+  components: { bottomNav, Header, Slide },
     data() {
         return {
             headerProps: 'Main',
             name: null,
             f_data: [],
             user: JSON.parse(localStorage.getItem("user")),
+            userState: '',
         };
     },
-    // created(){
-    //     if(user == undefined) this.logout();
-    // },
+    mounted(){
+        console.log(this.userState);
+        if(localStorage.getItem('checkUser') === 'farm'){
+            this.userState = this.user.f_profile_img
+        }else{
+            this.userState = this.user.c_profile_img
+        }
+    },
     methods: {
         logout(){
             console.log('logout');
@@ -62,26 +64,10 @@ export default{
             localStorage.setItem("totalinfo", JSON.stringify(f_data));
         }
     },
-
-    
-
-    created() {
+    // created() {
         
-        this.$storage.setStorageSync("test-key", "5");
-    },
-
-//     export default {
-//   data() {
-//     return {
-//       newTodoItem: ''
-//     }
-//   },
-//   methods: {
-//     addTodo() {
-//       localStorage.setItem(this.newTodoItem, this.newTodoItem);
-//     }
-//   }
-// }
+    //     this.$storage.setStorageSync("test-key", "5");
+    // },
 
     
 

@@ -168,20 +168,8 @@
 
                     <tr>
                         <th scope="row"><strong>사업자 등록번호</strong></th>
-                        <td>
-                            {{user.f_BRN}}
-                        </td>
-                        <td>
-                            <button type="button" @click="f_brn_show" class="n-btn w100 btn-sm btn-default" style="float: right;">사업자 번호 수정</button>
-                        </td>
-                    </tr>
-
-                    <tr v-if="isShow7">
-                        <td></td>
-                        <v-text-field v-model="f_BRN" label="" required></v-text-field>
-                        <td>
-                            <button type="button" @click="updateFarmMemberBRN()"
-                                class="n-btn w100 btn-sm btn-default" style="float: right;">수정하기</button>
+                        <td class="rrn_num">
+                            {{user.f_RRN}}
                         </td>
                     </tr>
 
@@ -305,6 +293,7 @@
                     </tr>
                 </tbody>
             </table>
+            <UserSecession/>
         </div>
     </div>
     <bottom-nav />
@@ -312,12 +301,13 @@
 
 <script>
 import Header from '../../components/Header/backHeader.vue';
+import UserSecession from '../../components/userSecession.vue';
 import bottomNav from '@/components/bottomNav.vue';
 import SearchAddress from '../../components/search_address.vue';
 import axios from 'axios';
 
 export default {
-    components: { Header, bottomNav, SearchAddress },
+    components: { Header, bottomNav, SearchAddress, UserSecession },
     data() {
         return {
             headerProps: '개인정보 수정',
@@ -394,7 +384,12 @@ export default {
             farmImageChangeSuccess: "농가 사진이 변경되었습니다!",
         };
     },
-
+    mounted(){
+        if(localStorage.getItem('checkUser') === 'consumer'){
+            this.checkUser = 'consumer';
+        }
+        console.log(this.user);
+    },
     methods: {
         f_passwd_show() {
             this.isShow1 = !this.isShow1;
@@ -414,9 +409,6 @@ export default {
         },
         f_num_show() {
             this.isShow6 = !this.isShow6;
-        },
-        f_brn_show() {
-            this.isShow7 = !this.isShow7;
         },
         f_bank_show() {
             this.isShow8 = !this.isShow8;
@@ -690,41 +682,6 @@ export default {
                 // }          
             });
         },
-        isNotBrn(){
-            if(this.f_BRN.length != 10) return true;
-            if(Number.isNaN(this.isNotBrn)) return true;
-            let tempNumber = Number(this.isNotBrn);
-            return Number.isInteger(tempNumber) ? tempNumber < 0  : true;
-        },
-        // 아직 백엔드 구현 x
-        updateFarmMemberBRN(){
-            if(this.isNotBrn()) return alert(this.farmNumberRuleWarning);
-            if(this.user.f_BRN == this.f_BRN) return alert(this.sameFarmNumberWarning);
-            if(!confirm(this.farmNameChangeConfirmation)) return;
-
-            // 서버에 변경된 데이터 보내기
-            axios.patch('api/farmMemberNumber', { 
-                farm_id: this.user.farm_id,
-                f_BRN: this.f_BRN
-            }, {
-                headers: {
-                    TOKEN: this.user.token
-                }
-            }).then(res => {
-        
-                this.user.f_BRN = this.f_BRN;
-                localStorage.setItem("user", JSON.stringify(this.user));
-                alert(this.farmNumberChangeSuccess);
-            }).catch(err => {
-                console.log(err); 
-                // if(res.headers.token != "token"){     
-                //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-                //     this.$store.commit('LOGOUT');
-                //     this.$router.push('/login');
-                // }       
-            });
-        },
-
         updateFarmMemberBank() {
             if(!confirm(this.bankInfoChangeConfirmation)) return;
             let frm = new FormData();
@@ -860,6 +817,9 @@ export default {
 }
 .inner{
     padding: 10px;
+    .rrn_num{
+        text-align: right;
+    }
 }
 
 </style>

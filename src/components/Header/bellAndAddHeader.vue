@@ -9,7 +9,7 @@
                     </router-link>
                 </li>
                 <li class="main_m_li_list">
-                    <p class="nav_m_link">{{headerProps}}</p>
+                    <img class="logo" :src="logo" alt="로고" width="45">
                 </li>
 
                 <li class="nav__btn">
@@ -21,16 +21,32 @@
 </template>
 
 <script>
+import img from '../../assets/logo.png';
 export default {
     props: {
         headerProps: String
     },
+    data(){
+        return{
+            logo: img,
+        }
+    },
+    mounted(){
+        console.log(img);
+    }
 }
 </script>
 
 <style lang="scss" scoped>
 i{
     font-size: 25px;
+}
+.logo{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 5px;
+    margin: auto;
 }
 .main_nav_t_div{
     position: relative;

@@ -3,7 +3,7 @@
         <Header :headerProps="headerProps"/>
         <!-- 슬라이드 이미지 props로 넘겨주시면 됩니다! -->
         <Slide :imgData="imgData"/>
-        <fieldset>
+        <fieldset class="auction-info">
             <h2 class="profileh2">상세 정보</h2>
             <h2 class="profileh2">{{auction.auction_name}}</h2>
             <div class="aside_area aside_popular">
@@ -19,22 +19,22 @@
                         </tr> -->
                         <tr class="">
                             <th>시작가</th>
-                            <td>{{auction.a_starting_price}}원</td>
+                            <td>{{auction.a_starting_price.toLocaleString()}}원</td>
                         </tr>
 
                         <tr class="">
                             <th>최대 입찰가</th>
-                            <td>{{auction.a_max_price}}원</td>
+                            <td>{{auction.a_max_price.toLocaleString()}}원</td>
                         </tr>
 
                         <tr class="">
                             <th>현재가</th>
-                            <td>{{auction.bid_price}}원</td>
+                            <td>{{auction.bid_price.toLocaleString()}}원</td>
                         </tr>
 
                         <tr class="">
                             <th>낙과 일자</th>
-                            <td>{{auction.productDTO.p_drop_date}}</td>
+                            <td>{{auction.productDTO.p_drop_date.slice(0, 19)}}</td>
                         </tr>
 
                         <tr class="">
@@ -52,12 +52,13 @@
             <div v-if="this.auction.farm_id == user.farm_id" >
                 <v-btn class="delete-button" block @click="bid()">삭제하기</v-btn>
                 <!-- /auction_reg/:id -->
-                <v-btn class="delete-button" block @click="$router.push(`/auction_reg/${auction}`)">
+                <v-btn class="edit-button" block @click="$router.push(`/auction_reg/${auction.auction_Id}`)">
                     수정하기
                 </v-btn>
             </div>
             <div v-if=" user.consumer_id != undefined">
-                <v-text-field type="number" id=bid_price v-model="bid_price"></v-text-field>
+                <input type="number" placeholder="입찰할 가격을 입력(숫자만)해주세요!" id="bid_price" v-model="bid_price"/>
+                <!-- <v-text-field placeholder="입찰할 가격을 입력해주세요!" type="number" id="bid_price" v-model="bid_price"></v-text-field> -->
                 <div class="stateBtn">
                     <Like class="like-button" :key="likeState" @click="likeStateFunc()"/>
                     <v-btn class="bid-button" block @click="bid()">입찰하기</v-btn>
@@ -134,7 +135,6 @@ export default {
         auction: null,
         bid_price: null,
         consumer_id: null,
-        user: JSON.parse(localStorage.getItem("user")),
         testConsumerId: 12,
         userState: false,
         likeState: 0,
@@ -161,14 +161,12 @@ export default {
         }
         
         console.log('경매 정보', this.auction);
-
         // 해당 경매 관련 이미지 여러 개 넣기
         let auctionImagesLength = this.auction.productDTO.product_img_name[this.auction.productDTO.product_img_name.length-1];
         console.log('img', auctionImagesLength)
-        for(let i=0; i<auctionImagesLength; i++){
+        for(let i = 0; i < auctionImagesLength; i++){
             this.imgData.push(this.auction.productDTO.product_img_name.replace('(0)', `(${i})`))
         }
-        // this.imgData.push(this.auction.productDTO.product_img_name);
         console.log('pushImg', this.imgData);
     },
     methods: {
@@ -181,10 +179,12 @@ export default {
             console.log(this.bid_price, this.auction.a_max_price);
 
             console.log("auction.auction_Id:" + this.auction.auction_Id);
+            console.log("auction.consumer_id:" + this.auction.consumer_id);
             console.log("auction.a_starting_price: " + this.auction.a_starting_price);
             console.log("bid_price:" + this.bid_price);
             console.log("auction.bid_price: " + this.auction.bid_price);
             console.log("this.user.consumer_id: " + this.user.consumer_id);
+            console.log("farm_id: " + this.auction.farm_id);
             console.log(this.stompClient);
             console.log(this.stompClient.connected);
 
@@ -231,7 +231,7 @@ export default {
             console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
 
             console.log(this.$store.state.config.headers);
-            console.log("this.user.token: " + this.user.token);
+            console.log(this.user);
             let headers = { TOKEN: this.user.token};
             console.log(headers);
             this.stompClient.connect(
@@ -267,10 +267,20 @@ export default {
 
 
 <style lang="scss" scoped>
-.delete-button{
+td, th{
+    font-weight: 500;
+}
+.auction-info{
+    padding: 10px;
+}
+.delete-button, .edit-button{
     width: 20vw;
     background-color: rgb(255, 176, 176);
     color: #fff;
+    margin-top: 10px;
+}
+.edit-button{
+    background-color: #FFC1AA;
 }
 .stateBtn{
     display: flex;
@@ -281,5 +291,10 @@ export default {
 }
 .bid-button{
     width: 100px;
+}
+#bid_price{
+    padding: 10px;
+    height: 50px;
+    width: 100%;
 }
 </style>

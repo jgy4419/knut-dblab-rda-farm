@@ -40,26 +40,41 @@ export default {
   props: {
     imgData: Array
   },
+  created(){
+    console.log(this.imgData);
+  },
   mounted(){
-    if(this.imgData.length > 0){
-      this.items = [];
-      for(let img of this.imgData){
-        this.items.push(`/product_images/${img}.png`);
-        console.log('이미지 url', this.items);
-      }
-    }
+    setTimeout(() => {
+      if(this.imgData !== undefined){
+        if(this.imgData.length > 0){
+          this.items = [];
+          for(let img of this.imgData){
+            this.items.push(`/product_images/${img}.png`);
+            console.log('이미지 url', this.items);
+          }
+        }
+      }else{
+        let basicImg = [
+          '/auciton_slide_images/slide_1.jpg',
+          '/auciton_slide_images/slide_2.jpg',
+          '/auciton_slide_images/slide_3.jpg',
+          '/auciton_slide_images/slide_4.jpg',
+        ]
+        for(let i = 0; i < basicImg.length; i++){
+          this.items.push(basicImg[i]);
+        }
+      }   
+    }, 1000);
     
   },
   data(){
     return {
       modules: [Autoplay, Pagination, Navigation],
       items: [
-        // test 이미지
         '/auciton_slide_images/slide_1.jpg',
-        '/auciton_slide_images/slide_2.jpg',
-        '/auciton_slide_images/slide_3.jpg',
-        '/auciton_slide_images/slide_4.jpg',
-        // 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg',
+          '/auciton_slide_images/slide_2.jpg',
+          '/auciton_slide_images/slide_3.jpg',
+          '/auciton_slide_images/slide_4.jpg',
       ],
     }
   }
@@ -69,7 +84,7 @@ export default {
 <style lang="scss" scoped>
 .swiper {
   width: 100%;
-  height: 100%;
+  height: 250px;
 }
 .slideList{
     width: 100vw;

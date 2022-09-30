@@ -1,6 +1,7 @@
 <template>
     <div class="farm-contain">
         <Header :headerProps="test.farmName"/>
+        <Slide :imgData="imgData"/>
         <div class="farm-information">
             <img class="farm-image" :src='`/member_profile_images/${this.farmIntroData.f_profile_img}.png`' alt="농가 사진"/>
         </div>
@@ -23,7 +24,7 @@
                 <button class="best" @click="bestToggle()">주요 농작물</button>
                 <div v-if="bestState === true" class="best-detail">
                     <ul>
-                        <li v-for="best, i in test.bestFarm.length" :key="i">{{i + 1}}. {{test.bestFarm[i]}}</li>
+                        <li v-for="best, i in bestFarm[0].length" :key="i">{{i + 1}}. {{bestFarm[0][i]}}</li>
                     </ul>
                 </div>
             </div>
@@ -44,9 +45,10 @@
 import axios from 'axios';
 /*global kakao*/
 import Header from '../../components/Header/bellAndBackHeader.vue';
+import Slide from '../../components/slide.vue';
 export default {
     components: {
-        Header
+        Header, Slide
     },
     data(){
         return {
@@ -72,7 +74,38 @@ export default {
             // 프로필 사진, 농가설명, 주요농작물, 농가 주소 x, y 좌표(이건 나중에)
             farmIntroData: {},
             user: JSON.parse(localStorage.getItem("user")),
+            imgData: [],
+            bestFarm: [],
         }
+    },
+    // // 해당 경매 관련 이미지 여러 개 넣기
+    created(){
+        // console.log(this.$route.params.id);
+        // axios.get(`/api/farmMember/${this.$route.params.id}`, {
+        //     headers: {
+        //         TOKEN: this.user.token
+        //     }
+        // }).then(res => {
+        //     this.farmIntroData = res.data;
+        //     console.log(this.farmIntroData.f_major_crop.split(', ').length);
+        //     this.bestFarm.push(this.farmIntroData.f_major_crop.split(', '));
+        //     console.log(this.bestFarm);
+        //     let auctionImagesLength = this.farmIntroData.f_img[this.farmIntroData.f_img.length - 1];
+        //     console.log(auctionImagesLength);
+        //     for(let i = 0; i < auctionImagesLength; i++){
+        //         this.imgData.push(this.farmIntroData.f_img.replace('(0)', `(${i})`))
+        //     }
+
+        //     if(this.farmIntroData.f_explanation == undefined) this.farmIntroData.f_explanation = this.test.description;
+
+        // }).catch(err => {
+		// 	console.log(err); 
+		// 	// if(res.headers.token != "token"){     
+		// 	// 	alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+		// 	// 	this.$store.commit('LOGOUT');
+		// 	// 	this.$router.push('/login');
+		// 	// }
+        // });  
     },
     mounted(){
         console.log(this.$route.params.id);
@@ -82,10 +115,16 @@ export default {
             }
         }).then(res => {
             this.farmIntroData = res.data;
-            console.log(this.farmIntroData);
+            
+            let auctionImagesLength = this.farmIntroData.f_img[this.farmIntroData.f_img.length - 1];
+            console.log(auctionImagesLength);
+            for(let i = 0; i < auctionImagesLength; i++){
+                this.imgData.push(this.farmIntroData.f_img.replace('(0)', `(${i})`))
+            }
+
             if(this.farmIntroData.f_explanation == undefined) this.farmIntroData.f_explanation = this.test.description;
 
-        }).catch(error => {
+        }).catch(err => {
 			console.log(err); 
 			// if(res.headers.token != "token"){     
 			// 	alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        

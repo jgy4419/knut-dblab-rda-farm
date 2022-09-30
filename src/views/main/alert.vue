@@ -2,6 +2,7 @@
 <div>
     <Header :headerProps="headerProps"/>
     <div class="inner">
+        <Spinner v-if="spinnerState === 1"/>
         <div class="main-screen">
             <fieldset>
                 <ul class="goods_group">
@@ -59,10 +60,12 @@
 
 <script>
 import Header from '../../components/Header/backHeader.vue';
+import Spinner from '../../components/spinner.vue';
 import axios from 'axios'
 export default {
     components: {
-        Header
+        Header,
+        Spinner
     },
     data() {
         return {
@@ -72,34 +75,43 @@ export default {
             id: null,
             user: JSON.parse(localStorage.getItem("user")),
             getData: [],
+            spinnerState: 1,
+            statusText: [],
+            checkUser: '',
         }
     },
     mounted() {
+        setTimeout(() => {
+            this.spinnerState = 0;
+        }, 3000);
+
+        this.checkUser = localStorage.getItem('checkUser');
+        console.log(this.checkUser);
         // console.log('집어넣을 데이터', this.$store.state.alertList[69].f_farm_name);
         // 로그인 했을 때 실행되도록 하기
-        if (this.user.farm_id == undefined) {
-            this.checkUser = 'consumer'
-            this.id = this.user.consumer_id
-        } else {
-            this.checkUser = 'farm'
-            this.id = this.user.farm_id
-        }
-        console.log(this.checkUser + '/' + this.id);
+        // if (this.user.farm_id == undefined) {
+        //     this.checkUser = 'consumer'
+        //     this.id = this.user.consumer_id
+        // } else {
+        //     this.checkUser = 'farm'
+        //     this.id = this.user.farm_id
+        // }
+        // console.log(this.checkUser + '/' + this.id);
 
-        this.$sse.create(`https://118.67.134.38:80/api/subscribeAlert/` + this.checkUser + '/' + this.id)
-        .on('init', (init_data) => {
-            console.log('initssss', init_data);
-            this.$store.commit('INIT_ALERT_LIST', JSON.parse(init_data));
-        })
-        .on('alert', (alert_data) => {
-            let data = JSON.parse(alert_data);
-            // 페이지에 보여줄 코드 작성 
-            this.$store.commit('PUSH_ALERT_LIST', data);
+        // this.$sse.create(`https://118.67.134.38:80/api/subscribeAlert/` + this.checkUser + '/' + this.id)
+        // .on('init', (init_data) => {
+        //     console.log('initssss', init_data);
+        //     this.$store.commit('INIT_ALERT_LIST', JSON.parse(init_data));
+        // })
+        // .on('alert', (alert_data) => {
+        //     let data = JSON.parse(alert_data);
+        //     // 페이지에 보여줄 코드 작성 
+        //     this.$store.commit('PUSH_ALERT_LIST', data);
 
-        })
-        .on('error', (err) => console.error('Failed to parse or lost connection:', err))
-        .connect()
-        .catch((err) => console.error('Failed make initial connection:', err));
+        // })
+        // .on('error', (err) => console.error('Failed to parse or lost connection:', err))
+        // .connect()
+        // .catch((err) => console.error('Failed make initial connection:', err));
     },
     methods: {
         checked(alert_id, alertList_index){
@@ -110,7 +122,6 @@ export default {
                     TOKEN: this.user.token
                 }
             }).then(res => {
-
 				console.log(res.data);
                 if (res.data == 1){
                     this.$store.commit('CHECKED_ALERT', alertList_index);
@@ -129,6 +140,14 @@ export default {
         navigategoback() {
             this.$router.go(-1);
         },
+        // status(){
+        //     let status = 0;
+        //     switch(status){
+        //         case 0:
+        //             if()
+        //             this.statusText.push();
+        //     }
+        // }
 
     }
 

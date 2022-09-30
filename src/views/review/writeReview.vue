@@ -136,7 +136,7 @@ export default {
             frm.append('grade_point', this.reqData.starState);
             frm.append('consumer_review', document.getElementById('product-contents').value);
             frm.append('auction_name', this.getData.auction_name);
-            if(this.imgData[0] !== undefined){
+            if(this.imgData.length > 0){
                 frm.append('review_img_file', this.imgData[0])
             }
             for(let i of frm) console.log(i);

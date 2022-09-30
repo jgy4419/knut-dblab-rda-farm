@@ -8,9 +8,9 @@
         <!-- // -->
         <div class="reviews" >
             <div class="review" @click="reviewModalState = 1, clickedData = i" v-for="reviewCount, i in getData.flat(Infinity).length" :key="i">
-                <img :src="`/product_images/${getData[0][i].product_img_name}.png`" alt="상품 이미지" width="50" height="50"/>
+                <img :src="`/auciton_review_images/${getData[0][i].review_img_name}.png`" alt="상품 이미지" width="50" height="50"/>
                 <div class="reviewContent">
-                    <p class="reviewTitle">{{getData[0][i].f_name}}</p>
+                    <p class="reviewTitle">{{userState === 0 ? getData[0][i].f_name : getData[0][i].c_name}}</p>
                     <p class="reviewTitle">{{getData[0][i].auction_name}}</p>
                     <div class="stars">
                         <!-- testData.star[i] -->

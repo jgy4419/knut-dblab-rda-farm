@@ -134,8 +134,8 @@ export default createStore({
         if(response_bidding.auction_Id == state.auctionList[i].auction_Id){
           console.log(state.auctionList[i].auction_Id);
           console.log(response_bidding.auction_Id);
-
-          state.auctionList[i].bid_price = response_bidding.bid_price
+          state.auctionList[i].consumer_id = response_bidding.consumer_id;
+          state.auctionList[i].bid_price = response_bidding.bid_price;
           break;
         }
       }
@@ -184,11 +184,12 @@ export default createStore({
       state.searchAuctionList = [];
     },
     UPDATE_SEARCH_BID_PRICE: (state, response_bidding) => {
-      console.log("UPDATE_BID_PRICE");
+      console.log("UPDATE_SEARCH_BID_PRICE");
       console.log(response_bidding);
 
       for (let i = 0; i < state.searchAuctionList.length; i++) {
         if(response_bidding.auction_Id == state.searchAuctionList[i].auction_Id){
+          state.searchAuctionList[i].consumer_id = response_bidding.consumer_id;
           state.searchAuctionList[i].bid_price = response_bidding.bid_price
           break;
         }

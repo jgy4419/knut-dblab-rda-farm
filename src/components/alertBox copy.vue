@@ -17,12 +17,11 @@
 export default {
     data(){
         return {
-            alertState: false,
+            alertState: 0,
             checkUser: null,
             id: null,
-            user: null,
+            user: JSON.parse(localStorage.getItem("user")),
             alertData: {},
-            sseClient : null,
         }
     },
     methods: {
@@ -34,8 +33,16 @@ export default {
                 alertModal.classList.remove('event');
             }, 3000);
         },
-        alertSseInit(){
-            this.$sse.create(`https://118.67.134.38:80/api/subscribeAlert/` + this.checkUser + '/' + this.id)
+        checkAlert(){
+            if (this.user.farm_id == undefined) {
+            this.checkUser = 'consumer'
+            this.id = this.user.consumer_id
+            } else {
+                this.checkUser = 'farm'
+                this.id = this.user.farm_id
+            }
+            if(localStorage.getItem('user')){
+                this.$sse.create(`https://118.67.134.38:80/api/subscribeAlert/` + this.checkUser + '/' + this.id)
                 .on('init', (init_data) => {
                     console.log('init: ', JSON.parse(init_data));
                     this.$store.commit('INIT_ALERT_LIST', JSON.parse(init_data));
@@ -49,39 +56,27 @@ export default {
                     this.$store.commit('PUSH_ALERT_LIST', data);
                     this.modalToggle();
                 })
-                .on('error', (err) => {
-                    console.error('Failed to parse or lost connection:', err);
-                    this.alertState = false;
-                })
+                .on('error', (err) => console.error('Failed to parse or lost connection:', err))
                 .connect()
-                .catch((err) => {
-                    console.error('Failed make initial connection:', err)
-                    this.alertState = false;
-                });
-        },
-        async checkAlert(){
-            console.log("checkAlert: " + this.alertState);
-            if(!this.alertState){
-                console.log(localStorage.getItem('user'));
-                if(localStorage.getItem('user')){
-                    console.log("알림 SSE 실행 구간");
-                    this.user = JSON.parse(localStorage.getItem("user"));
-                    if(this.user.consumer_id == undefined){
-                        this.checkUser = "farm";
-                        this.id = this.user.farm_id;
-                    } else{
-                        this.checkUser = "consumer";
-                        this.id = this.user.consumer_id;
-                    }
-                    this.alertState = true;
-                    this.alertSseInit();
-                    
-                }
+                .catch((err) => console.error('Failed make initial connection:', err));
+            }else if(!JSON.parse(localStorage.getItem('user'))){
+                this.$router.push('/login');
             }
-        },
+        }
     },
     mounted(){
-        setInterval(this.checkAlert, 3000);
+        // 로그인 했을 때 실행되도록 하기
+        // if (this.user.farm_id == undefined) {
+        //     this.checkUser = 'consumer'
+        //     this.id = this.user.consumer_id
+        // } else {
+        //     this.checkUser = 'farm'
+        //     this.id = this.user.farm_id
+        // }
+        if(localStorage.getItem('user')){
+            console.log('mounted 실행');
+            this.checkAlert();
+        }
     },
 }
 </script>

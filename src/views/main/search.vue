@@ -86,7 +86,9 @@
                 <button class="more-button" @click="searchAuction(this.preKeyword)">더보기</button>
             </fieldset>
         </div>
-    <!-- <bottom-nav/> -->
+
+        <bottom-nav/> 
+
     </div>
 </template>
 
@@ -95,10 +97,10 @@ import axios from "axios";
 import Stomp from 'webstomp-client';
 import SockJS from 'sockjs-client';
 import Header from '../../components/Header/bellAndBackHeader.vue';
-import bottomNav from '../../components/bottomNav.vue';
+import bottomNav from '@/components/bottomNav.vue';
 
 export default {
-  components: { bottomNav, Header },
+  components: {  Header, bottomNav},
   name: "search",
   data() {
     return {
@@ -213,5 +215,9 @@ export default {
     height: 50px;
     font-weight: 700;
     background-color: #FFC1AA;
+}
+.inner{
+  position: relative;
+  min-height: 95vh;
 }
 </style>
