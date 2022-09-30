@@ -146,7 +146,9 @@ export default {
             user: JSON.parse(localStorage.getItem("user")) || "",
             addressInfo: {
                 zipcode: JSON.parse(localStorage.getItem("user")).c_zipcode, 
-                address: JSON.parse(localStorage.getItem("user")).c_location
+                address: JSON.parse(localStorage.getItem("user")).c_location,
+                c_detail_location: JSON.parse(localStorage.getItem("user")).c_detail_location,
+                isConsumer: true,
             },
             isShow1: false,
             isShow2: false,
@@ -345,7 +347,8 @@ export default {
                 checkUser: "consumer", 
                 id: this.user.consumer_id, 
                 zipcode: event.zipcode,
-                location: event.address
+                location: event.address,
+                c_detail_location: event.c_detail_location,
                 }, {
                     headers: {
                         TOKEN: this.user.token

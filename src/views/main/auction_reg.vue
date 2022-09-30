@@ -19,57 +19,81 @@
                 <tbody>
                     <tr>
                         <td class="table-100-tyfk">경매명</td>
-                        <td class="table-100-0pky" colspan="3"><input id="td_input_text" type="text" name="text"
-                                size="20" style="width:100%;" required placeholder="경매명을 입력해주세요" v-model="p_name"></td>
+                        <td class="table-100-0pky" colspan="3" v-if="isAuctionRegistPage"><input id="td_input_text" type="text" name="text"
+                            size="20" style="width:100%;" required placeholder="경매명을 입력해주세요" v-model="auction_name"></td>
+                        <td class="table-100-0pky" colspan="3" v-if="!isAuctionRegistPage"><p id="td_input_text" type="text" name="text"
+                            size="20" style="width:100%;">{{auction.auction_name}}</p></td>
+                        <!-- <td class="table-100-0pky" colspan="3" v-if="this.$route.path !== '/auction_reg'">{{auction.productDTO.product}}</td> -->
                     </tr>
                     <tr>
                         <td class="table-100-tyfk">작물</td>
-                        <td class="table-100-0pky" colspan="3"><input id="td_input_text" type="text" name="text"
-                                size="20" style="width:100%;" required placeholder="작물을 입력해주세요" v-model="product"></td>
+                        <td class="table-100-0pky" colspan="3" v-if="isAuctionRegistPage"><input id="td_input_text" type="text" name="text"
+                            size="20" style="width:100%;" required placeholder="작물을 입력해주세요" v-model="product"></td>
+                        <td class="table-100-0pky" colspan="3" v-if="!isAuctionRegistPage"><p id="td_input_text" type="text" name="text"
+                            size="20" style="width:100%;">{{auction.productDTO.product}}</p></td>
                     </tr>
                     <tr>
                         <td class="table-100-tyfk">중량</td>
-                        <td class="table-100-0pky" colspan="3"><input id="td_input_text" type="text" name="text"
+                        <td class="table-100-0pky" colspan="3" v-if="isAuctionRegistPage"><input id="td_input_text" type="text" name="text"
                                 size="20" style="width:100%;" required placeholder="kg   (숫자만 입력 가능합니다.)" v-model="product_kg"></td>
+                        <td class="table-100-0pky" colspan="3" v-if="!isAuctionRegistPage"><p id="td_input_text" type="text" name="text"
+                            size="20" style="width:100%;">{{auction.productDTO.product_kg}}</p></td>
                     </tr> 
                     <tr>
                         <td class="table-100-tyfk">시작 가격</td>
-                        <td class="table-100-0pky" colspan="3"><input id="td_input_text" type="text" name="text"
-                                size="20" style="width:100%;" required placeholder="원   (숫자만 입력 가능합니다.)" v-model="p_starting_price"></td>
+                        <td class="table-100-0pky" colspan="3" v-if="isAuctionRegistPage"><input id="td_input_text" type="text" name="text"
+                            size="20" style="width:100%;" required placeholder="원   (숫자만 입력 가능합니다.)" v-model="p_starting_price"></td>
+                        <td class="table-100-0pky" colspan="3" v-if="!isAuctionRegistPage"><p id="td_input_text" type="text" name="text"
+                            size="20" style="width:100%;">{{auction.a_starting_price}}</p></td>
                     </tr>
                     <tr>
                         <td class="table-100-tyfk">최대 가격</td>
-                        <td class="table-100-0pky" colspan="3"><input id="td_input_text" type="text" name="text"
+                        <td class="table-100-0pky" colspan="3" v-if="isAuctionRegistPage"><input id="td_input_text" type="text" name="text"
                                 size="20" style="width:100%;" required placeholder="원   (숫자만 입력 가능합니다.)" v-model="p_max_price"></td>
+                        <td class="table-100-0pky" colspan="3" v-if="!isAuctionRegistPage"><p id="td_input_text" type="text" name="text"
+                            size="20" style="width:100%;">{{auction.a_max_price}}</p></td>
                     </tr>
                     <tr>
                         <td class="table-100-tyfk">낙과 일자</td>
-                        <td class="table-100-1pky" colspan="3"><input type="datetime-local" v-model="p_drop_date"></td>
+                        <td class="table-100-1pky" colspan="3" v-if="isAuctionRegistPage"><input type="datetime-local" v-model="p_drop_date"></td>
+                        <td class="table-100-0pky" colspan="3" v-if="!isAuctionRegistPage"><p id="td_input_text" type="text" name="text"
+                            size="20" style="width:100%;">{{auction.productDTO.p_drop_date.slice(0, 16)}}</p></td>
                     </tr>
                     <tr>
                         <td class="table-100-tyfk">마감일</td>
-                        <td class="table-100-1pky" colspan="3"><input type="datetime-local" v-model="deadline_date"></td>
+                        <td class="table-100-1pky" colspan="3" v-if="isAuctionRegistPage"><input type="datetime-local" v-model="deadline_date"></td>
+                        <td class="table-100-0pky" colspan="3" v-if="!isAuctionRegistPage"><p id="td_input_text" type="text" name="text"
+                            size="20" style="width:100%;">{{auction.deadline_date.slice(0, 16)}}</p></td>
                     </tr>
                     <tr>
                         <td class="table-100-tyfk">크기</td>
-                        <td class="table-100-1pky"><input type='radio' name="size" v-model="size" value="소"> 소</td>
-                        <td class="table-100-1pky"><input type='radio' name="size" v-model="size" value="중"> 중</td>
-                        <td class="table-100-1pky"><input type='radio' name="size" v-model="size" value="대"> 대</td>
+                        <div v-if="isAuctionRegistPage">
+                            <td class="table-100-1pky"><input type='radio' name="size" v-model="size" value="소"> 소</td>
+                            <td class="table-100-1pky"><input type='radio' name="size" v-model="size" value="중"> 중</td>
+                            <td class="table-100-1pky"><input type='radio' name="size" v-model="size" value="대"> 대</td>
+                        </div>
+                        <td class="table-100-0pky" colspan="3" v-if="!isAuctionRegistPage"><p id="td_input_text" type="text" name="text"
+                            size="20" style="width:100%;">{{auction.productDTO.size}}</p></td>
                     </tr>
                     <tr>
                         <td class="table-100-tyfk">상태</td>
-                        <td class="table-100-1pky"><input type='radio' name="status" v-model="p_status" value="상"> 상
-                        </td>
-                        <td class="table-100-1pky"><input type='radio' name="status" v-model="p_status" value="중"> 중
-                        </td>
-                        <td class="table-100-1pky"><input type='radio' name="status" v-model="p_status" value="하"> 하
-                        </td>
+                        <div v-if="isAuctionRegistPage">
+                            <td class="table-100-1pky"><input type='radio' name="status" v-model="p_status" value="상"> 상
+                            </td>
+                            <td class="table-100-1pky"><input type='radio' name="status" v-model="p_status" value="중"> 중
+                            </td>
+                            <td class="table-100-1pky"><input type='radio' name="status" v-model="p_status" value="하"> 하
+                            </td>
+                        </div>
+                        <td class="table-100-0pky" colspan="3" v-if="!isAuctionRegistPage"><p id="td_input_text" type="text" name="text"
+                            size="20" style="width:100%;">{{auction.productDTO.p_status}}</p></td>
                     </tr>
                     <tr>
                         <td class="table-100-tyfk">설명</td>
-                        <td class="table-100-0pky" colspan="3"><input id="td_input_text" type="text" name="text"
-                                size="20" style="width:100%;" required placeholder="작물의 세부사항을 적어주세요"
-                                v-model="p_explanation"></td>
+                        <td class="table-100-0pky" colspan="3"  v-if="isAuctionRegistPage"><input id="td_input_text" type="text" name="text"
+                            size="20" style="width:100%;" required placeholder="작물의 세부사항을 적어주세요" v-model="p_explanation"></td>
+                        <td class="table-100-0pky" colspan="3"  v-if="!isAuctionRegistPage"><input id="td_input_text" type="text" name="text"
+                            size="20" style="width:100%;" required placeholder="작물의 세부사항을 적어주세요" v-model="auction.productDTO.p_explanation"></td>
                     </tr>
                 </tbody>
             </table>
@@ -102,8 +126,11 @@
         name: 'submitProduct',
         data() {
             return {
-                headerProps: '경매 등록',
-                auctionSubmit: '등록하기',
+                headerProps: this.$route.path == '/auction_reg' ? '경매 등록' : '경매 수정',
+                auctionSubmit: this.$route.path == '/auction_reg' ? '등록하기' : '수정하기',
+                isAuctionRegistPage: this.$route.path == '/auction_reg',
+                auction: JSON.parse(localStorage.getItem('auction')),
+                auction_name: null,
                 p_name: null,
                 product: null,
                 product_kg: null,
@@ -116,7 +143,6 @@
                 p_explanation: null,
                 product_img_files: [],
                 user: JSON.parse(localStorage.getItem("user")),
-                farm_id: JSON.parse(localStorage.getItem("user")).farm_id,
                 auctionId: 0,
                 blankErrorText: "모두 작성해주셔야 합니다!",
                 numberErrorText: "중량, 시작가, 최대가는 숫자만 입력 가능합니다!",
@@ -124,20 +150,19 @@
                 auctionDropDateErrorText: "낙과일자는 현재 시간 이전이어야 합니다!",
                 auctionDeadlineDateErrorText: "경매 마감일자는 최소 현재 시간보다 5분 이후이어야 합니다.!",
                 auctionRegistText: "경매 등록하시겠습까?",
+                productUpdateText: "상품 내용을 수정하시겠습까?",
                 FIVE_MINUTE: 1000 * 60 * 5,                // millisecond 단위
             };
         },
         mounted(){
             // 실제 구현 시 !== -> === 로 바꿔주기
-            if(this.farm_id == null){
+            if(this.user.farm_id == null){
                 alert('농가회원이 아닙니다!');
                 this.$router.go(-1);
             }
             console.log(this.$route.params.id);
             if(this.$route.path !== '/auction_reg'){
-                this.headerProps = '경매 수정';
-                this.auctionSubmit = '수정하기';
-                this.writeState();   
+                console.log(this.auction);
             }
         },
         methods: {
@@ -154,40 +179,53 @@
                 console.log(event.target.files[0]);
                 this.upload();
             },
-            writeState(){
-                let auction_id = this.$route.params.id;
-                // 글 수정 페이지면 ex) /auction_reg/33 => input창의 value에 값을 가각 넣어주기
-                axios.get(`/api/auctionInfo/${auction_id}`, {
-                    headers: {
-                        TOKEN: this.user.token
-                    }
-                }).then(res => {
-                    console.log(res.data[0]);
-                    const data = res.data[0];
-                    this.p_name = data.auction_name;
-                    this.p_starting_price = data.a_starting_price;
-                    this.p_max_price = data.a_max_price; 
-                    this.deadline_date = data.deadline_date;
-                }).catch(err => {
-                    console.log(err); 
-                    // if(res.headers.token != "token"){     
-                    //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-                    //     this.$store.commit('LOGOUT');
-                    //     this.$router.push('/login');
-                    // }
-                });
-            },
             upload() {
                 this.product_img_files = document.getElementById("product_img_files");
                 console.log('test', this.product_img_files.files);
             },
             submitAuction() {
+                let frm = new FormData();
+                console.log(this.isAuctionRegistPage);
+                // 글 수정
+                if(!this.isAuctionRegistPage){
+                    if(this.product_img_files.length < 1){
+                        alert('이미지 파일이 없습니다.');
+                        return;
+                    }
+                    if(!confirm(this.productUpdateText)) return;
+
+                    for(let imageFile of this.product_img_files.files) frm.append("product_img_files", imageFile);
+                    frm.append('product_id', this.auction.product_id);
+                    frm.append('product_img_name', this.auction.productDTO.product_img_name);
+                    frm.append('p_explanation', this.auction.productDTO.p_explanation);
+
+                    axios.patch('/api/updateProduct', frm, {
+                        headers: {
+                            TOKEN: this.user.token,
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }).then(res => {
+                        console.log(res.data);
+                        alert('수정 완료!');
+                        this.$router.push('/auction');
+                    })
+                    .catch(err => {
+                        console.log(err); 
+                        // if(res.headers.token != "token"){     
+                        //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                        //     this.$store.commit('LOGOUT');
+                        //     this.$router.push('/login');
+                        // }
+                    });
+                    return;
+                }
+
                 // 빈 문자열 검사
-                if(this.p_name == null || this.product == null || this.product_kg == null || this.p_starting_price == null || this.p_max_price == null 
+                if(this.auction_name == null || this.product == null || this.product_kg == null || this.p_starting_price == null || this.p_max_price == null 
                 || this.p_drop_date == null || this.deadline_date == null || this.size == null || this.p_status == null || this.p_explanation == null){
                     return alert(this.blankErrorText);
                 }
-                if(this.p_name == "" || this.product == "" || this.product_kg == "" || this.p_starting_price == "" || this.p_max_price == "" 
+                if(this.auction_name == "" || this.product == "" || this.product_kg == "" || this.p_starting_price == "" || this.p_max_price == "" 
                 || this.p_drop_date == "" || this.deadline_date == "" || this.size == "" || this.p_status == "" || this.p_explanation == ""){
                     return alert(this.blankErrorText);
                 }
@@ -204,8 +242,6 @@
 
                 // 마지막 확인
                 if(!confirm(this.auctionRegistText)) return;
-                let frm = new FormData();
-                
 
                 // 서버에 데이터 전송하는 코드
                 console.log('p_drop_date : ' + this.p_drop_date);
@@ -217,7 +253,7 @@
                     return;
                 }
                 for(let imageFile of this.product_img_files.files) frm.append("productDTO.product_img_files", imageFile);
-                frm.append('auction_name', this.p_name);
+                frm.append('auction_name', this.auction_name);
                 frm.append('productDTO.product', this.product);
                 frm.append('productDTO.product_kg', this.product_kg);
                 frm.append('productDTO.p_drop_date', this.p_drop_date);
@@ -228,48 +264,26 @@
                 frm.append('bid_price', this.p_starting_price);
                 frm.append('a_max_price', this.p_max_price);
                 frm.append('deadline_date', this.deadline_date);
-                frm.append('farm_id', this.farm_id);
+                frm.append('farm_id', this.user.farm_id);
+                frm.append('f_farm_name', this.user.f_farm_name);
 
-                
-                // 글 수정
-                if(this.$route.path !== '/auction_reg'){
-                    axios.patch('/api/updateAuction', frm, {
-                        headers: {
-                            TOKEN: this.user.token,
-                            'Content-Type': 'multipart/form-data'
-                        }
-                    }).then(res => {
-
-                        alert('등록 완료!');
-                        this.$router.push('/auction');
-                    })
-                    .catch(err => {
-                        console.log(err); 
-                        // if(res.headers.token != "token"){     
-                        //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-                        //     this.$store.commit('LOGOUT');
-                        //     this.$router.push('/login');
-                        // }
-                    });
-                }else{
-                    // 글 등록
-                    axios.post('/api/registAuction', frm, {
-                        headers: {
-                            TOKEN: this.user.token,
-                            'Content-Type': 'multipart/form-data'
-                        }
-                    }).then(res => {
-                        // if(res.headers.token != "token"){           
-                        //     this.$store.commit('LOGOUT');
-                        //     this.$router.push('/login');
-                        // }
-                        alert('등록 완료!');
-                        this.$router.push('/auction');
-                    })
-                    .catch(err => {
-                        console.log(err);  
-                    });
-                }
+                // 글 등록
+                axios.post('/api/registAuction', frm, {
+                    headers: {
+                        TOKEN: this.user.token,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }).then(res => {
+                    // if(res.headers.token != "token"){           
+                    //     this.$store.commit('LOGOUT');
+                    //     this.$router.push('/login');
+                    // }
+                    alert('등록 완료!');
+                    this.$router.push('/auction');
+                })
+                .catch(err => {
+                    console.log(err);  
+                });
             },
             isNumber(number){
                 if(Number.isNaN(number)) return false;

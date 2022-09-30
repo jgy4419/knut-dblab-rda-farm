@@ -7,7 +7,7 @@
                 <br/>
                 <button class="commentButton" @click="inputState = 1">{{ !clickedData.farm_review ? '답글달기' : '수정하기'}}</button>
                 <div class="comment">
-                    <h3 class="userName">{{"농가이름 넣어주기"}}</h3>
+                    <h3 class="userName">{{this.user.f_farm_name}}</h3>
                     <p class="userComment">{{!clickedData.farm_review ? "아직 답글이 없습니다." : clickedData.farm_review}}</p>
                 </div>
                 <!-- <div class="comment" v-for="comment, i in testData.user.length" :key="i">
@@ -73,7 +73,7 @@ export default {
         commentPush(){
             let frm = new FormData();
             frm.append('checkUser', localStorage.getItem('checkUser'));
-            frm.append('auction_Id', this.getData.auction_Id);
+            frm.append('auction_Id', this.clickedData.auction_Id);
             frm.append('grade_point', this.getData.grade_point);
             frm.append('consumer_review', this.getData.auction_name);
             frm.append('review_img_name', this.getData.review_img_name);

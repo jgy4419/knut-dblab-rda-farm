@@ -5,9 +5,9 @@
             <img :src=" `/product_images/${alertData.product_img_name}.png`" alt="알림 이미지"
             width="50" height="50">
             <div class="alert-information">
-                <p></p>
                 <p class="alert-user">{{alertData.f_farm_name}}</p>
                 <p class="alert-title">{{alertData.auction_name}}</p>
+                <p class="alert-text">{{alertText}}</p>
             </div>
         </div>
     </div>
@@ -18,11 +18,11 @@ export default {
     data(){
         return {
             alertState: false,
-            checkUser: null,
-            id: null,
-            user: null,
+            checkUser: localStorage.getItem('chekUser'),
+            id: localStorage.getItem('id'),
+            user: JSON.parse(localStorage.getItem('user')),
             alertData: {},
-            sseClient : null,
+            alertText: '',
         }
     },
     methods: {
@@ -47,6 +47,7 @@ export default {
                     this.alertData = data;
                     // 페이지에 보여줄 코드 작성 
                     this.$store.commit('PUSH_ALERT_LIST', data);
+                    this.statusFunc(this.alertData.d_status);
                     this.modalToggle();
                 })
                 .on('error', (err) => {
@@ -79,6 +80,64 @@ export default {
                 }
             }
         },
+        statusFunc(status){
+            let alertList = this.$store.state.alertList;
+            switch(status){
+                case 0:
+                    if(this.checkUser === 'farm'){
+                        this.alertText = `${this.aletData.c_name}님이 입찰했습니다.`;
+                        
+                    }else{
+                        this.alertText = `${this.alertData.c_name}님이 입찰했습니다.`;
+                    }
+                    break;
+                case 1:
+                    // console.log('alertList.pre_consumer_id: ' + alertList[i].pre_consumer_id);
+                    // console.log('this.user.consumer_id: ' + this.user.consumer_id);
+                    if(this.checkUser === 'farm'){
+                        this.alertText = `${this.alertData.c_name}님이 입찰했습니다.`;
+                    }else{
+                        if(this.alertData.pre_consumer_id === this.user.consumer_id){
+                            this.alertText = `${this.alertData.c_name}님이 ${this.alertData.auction_name}를 더 높은 가격에 입찰했습니다.`;
+                        } else {
+                            this.alertText = `${this.aletData.f_farm_name}님 것을 입찰했습니다.`; 
+                        }
+                    }
+                    break;
+                case 2:
+                    if(this.checkUser === 'farm'){
+                        this.alertText = `${this.aletData.c_name}님이 최대가에 입찰해서 마감되었습니다.`;
+                    }else {
+                        this.alertText = `${this.aletData.f_farm_name}님의 경매를 최대가에 입찰했습니다.`;
+                    }
+                    break;
+                case 3:
+                    if(this.checkUser === 'farm'){
+                        if(!this.alertData.consumer_id){
+                            this.alertText = '낙찰가 없이 경매가 마감되었습니다.';   
+                        }else{
+                            this.alertText = `${this.aletData.c_name}님이 낙찰하셨습니다.`;
+                        }
+                    }else{
+                        this.alertText = `${this.aletData.f_farm_name}님의 경매를 낙찰했습니다.`;
+                    }
+                    break;
+                case 4:
+                    if(this.checkUser === 'farm'){
+                        this.alertText = `${this.aletData.c_name}님이 ${this.aletData.auction_name}에 리뷰를 남겼습니다.`;   
+                    }
+                    break;
+                case 5:
+                    if(this.checkUser === 'consumer'){
+                        this.alertText = `${this.aletData.f_farm_name}님이 ${this.aletData.auction_name}의 리뷰에 댓글을 남겼습니다.`;
+                    }
+                    break;
+                default:
+                    return;
+            }
+            console.log('message', this.alertText);
+        }
+        
     },
     mounted(){
         setInterval(this.checkAlert, 3000);
@@ -105,8 +164,9 @@ export default {
         border-top-left-radius: 10px;
         border-bottom-left-radius: 10px;
         right: 0;
-        width: 150px;
-        height: 80px;
+        width: 200px;
+        height: 90px;
+        overflow-y: hidden;
         img{
             margin-top: 10px;
             margin-right: 10px;
@@ -114,7 +174,7 @@ export default {
         p{
             margin-top: 5px;
             font-size: 12px;
-            width: 70px;
+            width: 100px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -126,6 +186,11 @@ export default {
         }
         .alert-title{
             margin-top: 10px;
+            font-weight: 600;
+        }
+        .alert-text{
+            white-space: pre-wrap;
+            font-size: 10px;
             font-weight: 500;
         }
     }

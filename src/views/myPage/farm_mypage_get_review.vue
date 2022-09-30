@@ -127,7 +127,6 @@ export default {
                 TOKEN: this.user.token
             }
         }).then(res => {
-
             this.getData.push(res.data);
             this.getData = this.getData.flat();
             console.log(this.getData);

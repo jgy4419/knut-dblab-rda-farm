@@ -3,8 +3,7 @@
     <Header :headerProps="headerProps"/>
     <fieldset>
         <div class="goods_pay_section ">
-            <div v-for="data, i in resData.length" :key="i" class="goods_group">
-                <router-link :to='`/auction_detail/${resData[i].auction_Id}`'>
+            <div v-for="data, i in resData.length" :key="i" class="goods_group" v-on:click="navigateAuction(resData[i].auction_Id)">
                 <ul class="goods_group_list">
                     <li id="_rowLi20220213173042CHK2022021381488661" class="goods_pay_item ">
                         <div class="goods_item">
@@ -39,7 +38,6 @@
                         </div>
                     </li>
                 </ul>
-                </router-link>
             </div>
         </div>
         <div>
@@ -83,16 +81,14 @@ export default {
         this.moreProduct();
     },
     methods: {
-        
         async moreProduct(){
             await axios.get(`/api/getWishList/${this.user.consumer_id}/${this.limit}`, {
             headers: {
                 TOKEN: this.user.token
             }
-        }).then(res => {
-        
+            }).then(res => {
                 this.resData.push(...res.data);
-                console.log(JSON.parse(localStorage.getItem('user').consumer_id));
+                console.log(this.user.consumer_id);
                 console.log(this.limit);
                 console.log(res.data);
                 for(let i = 0; i < this.resData.length; i++){
@@ -108,7 +104,24 @@ export default {
                 //     this.$router.push('/login');
                 // }           
             });
-        }
+        },
+        navigateAuction (auction_Id) {
+            axios.get(`/api/auctionInfo/${auction_Id}`, {
+                headers: {
+                    TOKEN: this.user.token
+                }
+            }).then(res => {
+                console.log(res.data);
+                this.$router.push({name:'auction_detail', params: { id: auction_Id, auction: JSON.stringify(res.data) }});
+            }).catch(err => {
+                console.log(err); 
+                // if(res.headers.token != "token"){     
+                // 	alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                // 	this.$store.commit('LOGOUT');
+                // 	this.$router.push('/login');
+                // }
+            });
+        },
     }
 }
 </script>

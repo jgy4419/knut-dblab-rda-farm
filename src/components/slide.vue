@@ -40,42 +40,73 @@ export default {
   props: {
     imgData: Array
   },
-  created(){
-    console.log(this.imgData);
+  watch: {
+    imgData() {
+      alert('!!');
+    }
   },
   mounted(){
-    setTimeout(() => {
-      if(this.imgData !== undefined){
-        if(this.imgData.length > 0){
-          this.items = [];
-          for(let img of this.imgData){
-            this.items.push(`/product_images/${img}.png`);
-            console.log('이미지 url', this.items);
-          }
+    console.log(this.$route.fullPath.split('/'));
+    console.log('이미지 데이터', this.imgData);
+    if(this.imgData !== undefined){
+      if(this.$route.fullPath.split('/')[3]){
+        this.items = [];
+        for(let img of this.imgData){
+          this.items.push(`/farm_images/${img}.png`);
+          console.log('이미지 url', this.items);
         }
       }else{
-        let basicImg = [
-          '/auciton_slide_images/slide_1.jpg',
-          '/auciton_slide_images/slide_2.jpg',
-          '/auciton_slide_images/slide_3.jpg',
-          '/auciton_slide_images/slide_4.jpg',
-        ]
-        for(let i = 0; i < basicImg.length; i++){
-          this.items.push(basicImg[i]);
+          console.log('product 페이지');
+        this.items = [];
+        for(let img of this.imgData){
+          this.items.push(`/product_images/${img}.png`);
+          console.log('이미지 url', this.items);
         }
-      }   
-    }, 1000);
+      }
+    }else{
+      let basicImg = [
+        '/auciton_slide_images/slide_1.jpg',
+        '/auciton_slide_images/slide_2.jpg',
+        '/auciton_slide_images/slide_3.jpg',
+        '/auciton_slide_images/slide_4.jpg',
+      ]
+      for(let i = 0; i < basicImg.length; i++){
+        this.items.push(basicImg[i]);
+      }
+      console.log(this.items);
+    }   
+  },
+  beforeMount(){
+    
+  },
+  created(){
+    // setTimeout(() => {
+    //   if(this.imgData !== undefined){
+    //     if(this.imgData.length > 0){
+    //       this.items = [];
+    //       for(let img of this.imgData){
+    //         this.items.push(`/product_images/${img}.png`);
+    //         console.log('이미지 url', this.items);
+    //       }
+    //     }
+    //   }else{
+    //     let basicImg = [
+    //       '/auciton_slide_images/slide_1.jpg',
+    //       '/auciton_slide_images/slide_2.jpg',
+    //       '/auciton_slide_images/slide_3.jpg',
+    //       '/auciton_slide_images/slide_4.jpg',
+    //     ]
+    //     for(let i = 0; i < basicImg.length; i++){
+    //       this.items.push(basicImg[i]);
+    //     }
+    //   }   
+    // }, 10);
     
   },
   data(){
     return {
       modules: [Autoplay, Pagination, Navigation],
-      items: [
-        '/auciton_slide_images/slide_1.jpg',
-          '/auciton_slide_images/slide_2.jpg',
-          '/auciton_slide_images/slide_3.jpg',
-          '/auciton_slide_images/slide_4.jpg',
-      ],
+      items: [],
     }
   }
 };

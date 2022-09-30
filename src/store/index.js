@@ -135,6 +135,7 @@ export default createStore({
           console.log(state.auctionList[i].auction_Id);
           console.log(response_bidding.auction_Id);
           state.auctionList[i].consumer_id = response_bidding.consumer_id;
+          state.auctionList[i].c_name = response_bidding.c_name;
           state.auctionList[i].bid_price = response_bidding.bid_price;
           break;
         }

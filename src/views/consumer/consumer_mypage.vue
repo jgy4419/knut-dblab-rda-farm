@@ -40,7 +40,7 @@
                     <li><router-link to="/farm_mypage_get_review"><button type="button" class="fpmgBt1">이용후기</button></router-link></li>
                     <li><router-link to="/ServiceCenter"><button type="button" class="fpmgBt1">고객센터</button></router-link></li>
                     <li><router-link to="/consumer_profile"><button type="button" class="fpmgBt1">개인정보 수정</button></router-link></li>
-                    <li><router-link to="/"><button type="button" class="fpmgBt1" @click="logout()">로그아웃</button></router-link></li>
+                    <li><button type="button" class="fpmgBt1" @click="logout()">로그아웃</button></li>
                 </ul>
             </fieldset>
         </div>

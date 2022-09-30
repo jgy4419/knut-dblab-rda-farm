@@ -4,9 +4,9 @@
       <fieldset>
           <div class="white_div">
               <div class="goods_pay_section ">
-                  <div class="goods_group">
+                  <div class="goods_groups">
                       <ul class="goods_group_list">
-                          <li v-on:click="navigateProduct(auction)"  v-for="auction in this.$store.state.auctionList" :key="auction.auction_Id"
+                          <li v-on:click="navigateAuction(auction)"  v-for="auction in this.$store.state.auctionList" :key="auction.auction_Id"
                               id="_rowLi20220203162708CHK2022020394386781"
                               class="goods_pay_item _interlockNo20220211200904406814">
                               <div class="goods_item">
@@ -21,8 +21,6 @@
                                         </p>
                                         <ul class="info">
                                             <li><span class="blind">상품금액</span>{{auction.bid_price.toLocaleString()}}원</li>
-                                            <li class="date"><span class="blind">등록일</span> {{auction.productDTO.p_reg_date}}
-                                            </li>
                                         </ul>
                                     </div>
                                     <p class="state _statusName value_color_green _click(nmp.front.order.timeline.home.list.openDeliveryPopup(/o/orderStatus/deliveryTracking/2022020394386781/ORDER_DELIVERY/api)) _stopDefault"
@@ -40,12 +38,9 @@
                                   <div class="inner">
 
                                       <span class="seller">{{auction.f_farm_name}}</span>
-                                      <span class="tel">{{auction.f_phonenum}}</span>
-                                      <!-- <router-link :to="{ name: 'auction_detail', params: { auction}, }"> auction_detail </router-link> -->
+                                      <span class="tel">Tel : {{auction.f_phonenum}}</span>
+                                      <span class="date">{{auction.productDTO.p_reg_date}}</span>
                                       <br><br>
-                                      
-                                      <!-- <a v-on:click="navigateProduct(auction)" 
-                                          class="state_button qna _click(nmp.front.order.timeline.home.list.shoppingInquiry(/merchant/shoppingInquiry/2022020394386781)) _stopDefault">경매 상세</a> -->
                                   </div>
                               </div>
                           </li>
@@ -124,10 +119,8 @@ export default{
       let seconds = Math.floor(tmp_time % (60*60) % 60);
       return `${day}일 ${hours}시간 ${minutes}분 ${seconds}초 후`;
     },
-    navigateProduct (auction) {
-      // this.$router.push({path:`/user/${auction_id}`, params: { auction_id: 3}});
+    navigateAuction (auction) {
       this.$router.push({name:'auction_detail', params: { id: auction.auction_Id, auction: JSON.stringify(auction) }});
-      
     },
     navigategoback() {
       console.log('!!');
@@ -193,6 +186,10 @@ export default{
 </script>
 
 <style lang="scss" scoped>
+.date{
+  font-size: 12px;
+  color: rgb(183, 183, 183);
+}
 .main_nav_t_div{
   position: relative;
   z-index: 10;
@@ -207,9 +204,29 @@ export default{
 .goods_pay_item{
   position: relative;
   width: 100%;
+  height: 120px;
   .goods_item{
     left: 0;
     width: 100%;
+    height: 100%;
+    .goods_info{
+      .goods{
+        .info{
+          height: 50px;
+          .blind{
+            margin-bottom: 10px;
+            font-size: 20px;
+            font-weight: 700;
+          }
+        }
+      }
+    }
+  }
+  .seller_item{
+    height: 100px;
+    .inner{
+      height: 100px;
+    }
   }
 }
 .state{

@@ -14,9 +14,6 @@
                             <th>{{auction.productDTO.product}}</th>
                             <td>{{auction.productDTO.product_kg}}kg</td>
                         </tr>
-                        <!-- <tr class="">
-                            <th>consumer_id : {{testConsumerId}}</th>
-                        </tr> -->
                         <tr class="">
                             <th>시작가</th>
                             <td>{{auction.a_starting_price.toLocaleString()}}원</td>
@@ -52,7 +49,7 @@
             <div v-if="this.auction.farm_id == user.farm_id" >
                 <v-btn class="delete-button" block @click="bid()">삭제하기</v-btn>
                 <!-- /auction_reg/:id -->
-                <v-btn class="edit-button" block @click="$router.push(`/auction_reg/${auction.auction_Id}`)">
+                <v-btn class="edit-button" block @click="$router.push({name: `auction_reg_patch`, params: { id: this.auction.auction_Id} })">
                     수정하기
                 </v-btn>
             </div>
@@ -94,17 +91,6 @@
                                 
                             </div>
                         </div>
-                        <!-- <div class="seller_item">
-                            <div class="inner">
-
-                                <span class="seller">{{auction.f_farm_name}}</span>
-                                <span class="tel">{{auction.f_phonenum}}</span>
-                                <p
-                                    class="state_button qna _click(nmp.front.order.timeline.home.list.shoppingInquiry(/merchant/shoppingInquiry/2022021381488661)) _stopDefault">
-                                    문의하기
-                                </p>
-                            </div>
-                        </div> -->
                     </li>                
                 </ul>
             </div>
@@ -142,15 +128,9 @@ export default {
         bidAlertText: "입찰하시겠습니까?",
         imgData: [],
     }),
-    mounted(){
-        // JSON.parse(localStorage.getItem('user').farm_id) === this.auction.farm_id || JSON.parse(localStorage.getItem('user').farm_id)
-        // ? this.userState = true 
-        // : this.userState = false;
-    },
     created() {
         this.connect()
         console.log('arr', this.$route.params.auction);
-        // 페이지가 안 떠서 주석처리 했습니다! => 서버 문제 때문에 안 떴습니다. 지금 계속 인증 관련해서 실험하고 있어서..., 처음 경매 상세 페이지 입장을 고려해서 코드 수정했습니다!
         
         if(this.$route.params.auction == undefined) {
             this.auction = JSON.parse(localStorage.getItem('auction'));
@@ -189,7 +169,7 @@ export default {
             console.log(this.stompClient.connected);
 
             // 이미 경매에 참여한 사람들 알아내기
-            if(this.auction.comsumer_id == JSON.parse(localStorage.getItem('id'))){
+            if(this.auction.consumer_id == this.user.consumer_id){
                 alert('이미 경매에 참여하셨습니다!');
                 return;
             }
@@ -246,8 +226,12 @@ export default {
                     console.log(response_bidding);
                     if (response_bidding.auction_Id != undefined) {
                         this.$store.commit('UPDATE_BID_PRICE', response_bidding);
+                        if(this.auction.auction_Id == response_bidding.auction_Id){
+                            this.auction.consumer_id = response_bidding.consumer_id;
+                            this.auction.c_name = response_bidding.c_name;
+                            this.auction.bid_price = response_bidding.bid_price;
+                        }
                         
-                        this.auction.bid_price = response_bidding.bid_price
                     }
                 });
             },

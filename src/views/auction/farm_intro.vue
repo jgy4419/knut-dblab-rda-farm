@@ -1,7 +1,8 @@
 <template>
     <div class="farm-contain">
         <Header :headerProps="test.farmName"/>
-        <Slide :imgData="imgData"/>
+        <Slide :imgData="imgData"
+        :key="reload"/>
         <div class="farm-information">
             <img class="farm-image" :src='`/member_profile_images/${this.farmIntroData.f_profile_img}.png`' alt="농가 사진"/>
         </div>
@@ -52,6 +53,7 @@ export default {
     },
     data(){
         return {
+            reload: 0,
             headerName: '',
             // map: null,
             test: {
@@ -78,36 +80,13 @@ export default {
             bestFarm: [],
         }
     },
+    watch: {
+        farmIntroData(){
+            
+        }
+    },
     // // 해당 경매 관련 이미지 여러 개 넣기
     created(){
-        // console.log(this.$route.params.id);
-        // axios.get(`/api/farmMember/${this.$route.params.id}`, {
-        //     headers: {
-        //         TOKEN: this.user.token
-        //     }
-        // }).then(res => {
-        //     this.farmIntroData = res.data;
-        //     console.log(this.farmIntroData.f_major_crop.split(', ').length);
-        //     this.bestFarm.push(this.farmIntroData.f_major_crop.split(', '));
-        //     console.log(this.bestFarm);
-        //     let auctionImagesLength = this.farmIntroData.f_img[this.farmIntroData.f_img.length - 1];
-        //     console.log(auctionImagesLength);
-        //     for(let i = 0; i < auctionImagesLength; i++){
-        //         this.imgData.push(this.farmIntroData.f_img.replace('(0)', `(${i})`))
-        //     }
-
-        //     if(this.farmIntroData.f_explanation == undefined) this.farmIntroData.f_explanation = this.test.description;
-
-        // }).catch(err => {
-		// 	console.log(err); 
-		// 	// if(res.headers.token != "token"){     
-		// 	// 	alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-		// 	// 	this.$store.commit('LOGOUT');
-		// 	// 	this.$router.push('/login');
-		// 	// }
-        // });  
-    },
-    mounted(){
         console.log(this.$route.params.id);
         axios.get(`/api/farmMember/${this.$route.params.id}`, {
             headers: {
@@ -121,8 +100,12 @@ export default {
             for(let i = 0; i < auctionImagesLength; i++){
                 this.imgData.push(this.farmIntroData.f_img.replace('(0)', `(${i})`))
             }
+            this.reload = 1;
+            console.log(this.imgData);
 
-            if(this.farmIntroData.f_explanation == undefined) this.farmIntroData.f_explanation = this.test.description;
+            if(this.farmIntroData.f_explanation == undefined) {
+                this.farmIntroData.f_explanation = this.test.description;
+            }
 
         }).catch(err => {
 			console.log(err); 
@@ -132,6 +115,37 @@ export default {
 			// 	this.$router.push('/login');
 			// }
         });
+    },
+    beforeMount(){
+
+    },
+    mounted(){
+        // console.log(this.$route.params.id);
+        // axios.get(`/api/farmMember/${this.$route.params.id}`, {
+        //     headers: {
+        //         TOKEN: this.user.token
+        //     }
+        // }).then(res => {
+        //     this.farmIntroData = res.data;
+            
+        //     let auctionImagesLength = this.farmIntroData.f_img[this.farmIntroData.f_img.length - 1];
+        //     console.log(auctionImagesLength);
+        //     for(let i = 0; i < auctionImagesLength; i++){
+        //         this.imgData.push(this.farmIntroData.f_img.replace('(0)', `(${i})`))
+        //     }
+
+        //     if(this.farmIntroData.f_explanation == undefined) {
+        //         this.farmIntroData.f_explanation = this.test.description;
+        //     }
+
+        // }).catch(err => {
+		// 	console.log(err); 
+		// 	// if(res.headers.token != "token"){     
+		// 	// 	alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+		// 	// 	this.$store.commit('LOGOUT');
+		// 	// 	this.$router.push('/login');
+		// 	// }
+        // });
 
         if (window.kakao && window.kakao.maps && !(new kakao.maps.services.Geocoder())) {
             this.initMap();     

@@ -4,6 +4,7 @@
         <div class="inner">
             <p class="close" @click="$emit('closeModal', '모달 닫기')">X</p>
             <h2 class="title">{{clickedData.auction_name}}</h2>
+            <p>{{clickedData.auction_Id}}</p>
             <!-- 이미지..불러오기,, -->
             <img class="reviewImg" :src="`/auciton_review_images/${clickedData.review_img_name}.png`" 
             alt="auction 이미지" width="200" height="200">

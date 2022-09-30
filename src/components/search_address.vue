@@ -5,9 +5,9 @@
                 <button class="auth-complete-btn" @click="search()">주소 검색</button>
                 <input type="text" id="postcode" class="information-form__input" placeholder="우편번호">
                 <input type="text" id="roadAddress" class="information-form__input" placeholder="도로명 주소"><br>
-                
+                <input type="text" id="roadAddress" class="information-form__input" placeholder="상세 주소" v-model="c_detail_location" v-if="this.addressInfo.isConsumer"><br>
             </div>
-            <button class="auth-button" @click="$emit('searchAddressRes', {zipcode: this.zipcode, address: this.address})">주소 확인</button>
+            <button class="auth-button" @click="$emit('searchAddressRes', {zipcode: this.zipcode, address: this.address, c_detail_location: this.c_detail_location})">주소 확인</button>
         </v-col>
     </div>
 </template>
@@ -17,17 +17,23 @@ export default {
     props: {
         addressInfo: {
             zipcode: String,
-            address: String
+            address: String,
+            c_detail_location: String,
+            isConsumer: Boolean,
         }
     },
     data() {
         return {
             zipcode: "",
             address: "",
+            c_detail_location: "",
         };
     },
     mounted() {
+        this.c_detail_location = this.addressInfo.c_detail_location;
         console.log('addressInfo: ' + this.addressInfo.zipcode);
+        console.log('addressInfo: ' + this.addressInfo.address);
+        console.log('addressInfo: ' + this.addressInfo.isConsumer);
         // if(this.addressInfo.zipcode != 0){
             document.getElementById('postcode').value = '우편번호: '+ this.addressInfo.zipcode;
             document.getElementById("roadAddress").value = '주소: '+ this.addressInfo.address;

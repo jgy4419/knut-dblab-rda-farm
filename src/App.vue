@@ -31,7 +31,7 @@ export default {
 @import url(./assets/css/main.css);
 .app{
   margin: auto;
-  width: 28vw;
+  width: 400px;
   height: 100vh;
   overflow-x: hidden;
 }

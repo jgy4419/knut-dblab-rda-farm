@@ -6,12 +6,14 @@
             <p :style="[getData.length === 0 ? {display: 'block'} : {display: 'none'}]" class="not-auction-title">경매 내역이 없습니다.</p>
             <div class="item" v-for="data, i in getData.length" :key="i">
                 <img :src='`/product_images/${getData[i].product_img_name}.png`'
-                alt="" width="90" height="90" />
+                alt="" width="90" height="90" v-on:click="navigateAuction(getData[i].auction_Id)"/>
                 <div class="content">
-                    <p class="name">{{getData[i].auction_name}}({{getData[i].p_status}})</p>
-                    <div class="auction">
-                        <p class="final-bid">현재경매 : {{getData[i].bid_price.toLocaleString()}}원</p>
-                        <p class="current-auction">최종낙찰: {{getData[i].a_max_price.toLocaleString()}}원</p>
+                    <div v-on:click="navigateAuction(getData[i].auction_Id)">
+                        <p class="name">{{getData[i].auction_name}}({{getData[i].p_status}})</p>
+                        <div class="auction">
+                            <p class="final-bid">현재경매 : {{getData[i].bid_price.toLocaleString()}}원</p>
+                            <p class="current-auction">최종낙찰: {{getData[i].a_max_price.toLocaleString()}}원</p>
+                        </div>
                     </div>
                     <div class="auctionBtns">
                         <button  v-if="getData[i].bid_status === true" class="auctionBtn-ing">경매중</button>                        
@@ -19,7 +21,8 @@
                         <button v-if="getData[i].bid_status === false && buttonState === 1" class="auctionBtn">계산하기</button>
                         <router-link v-if="getData[i].bid_status === false" :to="`/farm_mypage_auction/writeReview/${getData[i].auction_Id}`">
                         <!-- <router-link v-if="getData[i].bid_status === false" :to="`#`"> -->
-                            <button @click="setReviewData(i)" v-if="buttonState === 0" class="reviewBtn">후기작성</button>
+                            <button @click="setReviewData(i)" v-if="writeUrlState[i] === 0" class="reviewBtn">후기작성</button>
+                            <button v-if="writeUrlState[i] === 1" class="reviewBtn">작성완료</button>
                         </router-link>
                     </div>
                 </div>
@@ -53,6 +56,7 @@ export default {
             getData: [],
             auctionState: true,
             user: JSON.parse(localStorage.getItem("user")),
+            writeUrlState: [],
         }
     },
     async mounted(){
@@ -67,10 +71,18 @@ export default {
                 TOKEN: this.user.token
             }
         }).then(res => {
-
+            console.log(res.data);
             this.getData.push(res.data);
             this.getData = this.getData.flat();
-            console.log(this.getData);
+            for(let i = 0; i < this.getData.length; i++){
+                console.log(this.getData[i].consumer_review);
+                if(this.getData[i].consumer_review){
+                    this.writeUrlState.push(1);
+                }else{
+                    this.writeUrlState.push(0);
+                }
+            }
+            console.log(this.writeUrlState);
         }).catch(err => {
 			console.log(err); 
 			// if(res.headers.token != "token"){     
@@ -84,7 +96,24 @@ export default {
         setReviewData(index){
             console.log(this.getData[index]);
             this.$store.commit('GET_REVIEW_DATA', this.getData[index]);
-        }
+        },
+        navigateAuction (auction_Id) {
+            axios.get(`/api/auctionInfo/${auction_Id}`, {
+                headers: {
+                    TOKEN: this.user.token
+                }
+            }).then(res => {
+                console.log(res.data);
+                this.$router.push({name:'auction_detail', params: { id: auction_Id, auction: JSON.stringify(res.data) }});
+            }).catch(err => {
+                console.log(err); 
+                // if(res.headers.token != "token"){     
+                // 	alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                // 	this.$store.commit('LOGOUT');
+                // 	this.$router.push('/login');
+                // }
+            });
+        },
     }
 }
 </script>

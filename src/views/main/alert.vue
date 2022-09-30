@@ -15,6 +15,7 @@
                             <div class="user-component__text">
                                 <h4 class="user-component__title">{{$store.state.alertList[i].auction_name}}</h4>
                                 <h5 class="user-component__subtitle">{{$store.state.alertList[i].f_farm_name}}</h5>
+                                <p class="user-component__content">{{checkUser === 'consumer' ? status.consumerAlert[i] : status.farmAlert[i]}}</p>
                                 <!-- <h4 class="user-component__title">농가이름</h4>
                                 <h5 class="user-component__subtitle">제목</h5> -->
                             </div>
@@ -76,42 +77,23 @@ export default {
             user: JSON.parse(localStorage.getItem("user")),
             getData: [],
             spinnerState: 1,
-            statusText: [],
-            checkUser: '',
+            checkUser: localStorage.getItem('checkUser'),
+            status: {
+                consumerAlert: [],
+                beforeConsumerAlert: [],
+                farmAlert: [],
+            },
         }
     },
     mounted() {
         setTimeout(() => {
             this.spinnerState = 0;
+            this.statusFunc();
+            // this.getData.push();            
         }, 3000);
 
         this.checkUser = localStorage.getItem('checkUser');
         console.log(this.checkUser);
-        // console.log('집어넣을 데이터', this.$store.state.alertList[69].f_farm_name);
-        // 로그인 했을 때 실행되도록 하기
-        // if (this.user.farm_id == undefined) {
-        //     this.checkUser = 'consumer'
-        //     this.id = this.user.consumer_id
-        // } else {
-        //     this.checkUser = 'farm'
-        //     this.id = this.user.farm_id
-        // }
-        // console.log(this.checkUser + '/' + this.id);
-
-        // this.$sse.create(`https://118.67.134.38:80/api/subscribeAlert/` + this.checkUser + '/' + this.id)
-        // .on('init', (init_data) => {
-        //     console.log('initssss', init_data);
-        //     this.$store.commit('INIT_ALERT_LIST', JSON.parse(init_data));
-        // })
-        // .on('alert', (alert_data) => {
-        //     let data = JSON.parse(alert_data);
-        //     // 페이지에 보여줄 코드 작성 
-        //     this.$store.commit('PUSH_ALERT_LIST', data);
-
-        // })
-        // .on('error', (err) => console.error('Failed to parse or lost connection:', err))
-        // .connect()
-        // .catch((err) => console.error('Failed make initial connection:', err));
     },
     methods: {
         checked(alert_id, alertList_index){
@@ -140,14 +122,68 @@ export default {
         navigategoback() {
             this.$router.go(-1);
         },
-        // status(){
-        //     let status = 0;
-        //     switch(status){
-        //         case 0:
-        //             if()
-        //             this.statusText.push();
-        //     }
-        // }
+        statusFunc(){
+            let alertList = this.$store.state.alertList;
+            for(let i = 0; i < alertList.length; i++){
+                console.log(alertList[i]);
+                switch(alertList[i].d_status){
+                    case 0:
+                        if(this.checkUser === 'farm'){
+                            this.status.farmAlert.push(`${alertList[i].c_name}님이 입찰했습니다.`);
+                            
+                        }else{
+                            this.status.consumerAlert.push(`${alertList[i].f_farm_name}님 것을 입찰했습니다.`);
+                        }
+                        break;
+                    case 1:
+                        console.log('alertList.pre_consumer_id: ' + alertList[i].pre_consumer_id);
+                        console.log('this.user.consumer_id: ' + this.user.consumer_id);
+                        if(this.checkUser === 'farm'){
+                            this.status.farmAlert.push(`${alertList[i].c_name}님이 입찰했습니다.`)
+                        }else{
+                            if(alertList[i].pre_consumer_id === this.user.consumer_id){
+                                this.status.consumerAlert.push(`${alertList[i].c_name}님이 ${alertList[i].auction_name}를 더 높은 가격에 입찰했습니다.`);
+                            } else {
+                                this.status.consumerAlert.push(`${alertList[i].f_farm_name}님 것을 입찰했습니다.`); 
+                            }
+                        }
+                        break;
+                    case 2:
+                        if(this.checkUser === 'farm'){
+                            this.status.farmAlert.push(`${alertList[i].c_name}님이 최대가에 입찰해서 마감되었습니다.`);
+                        }else {
+                            this.status.consumerAlert.push(`${alertList[i].f_farm_name}님의 경매를 최대가에 입찰했습니다.`);
+                        }
+                        break;
+                    case 3:
+                        if(this.checkUser === 'farm'){
+                            if(alertList[i].consumer_id){
+                                this.status.farmAlert.push('낙찰가 없이 경매가 마감되었습니다.');   
+                            }else{
+                                this.status.farmAlert.push(`${alertList[i].c_name}님이 낙찰하셨습니다.`);
+                            }
+                        }else{
+                            this.status.consumerAlert.push(`${alertList[i].f_farm_name}님의 경매를 낙찰했습니다.`);
+                        }
+                        break;
+                    case 4:
+                        if(this.checkUser === 'farm'){
+                            this.status.farmAlert.push(`${alertList[i].c_name}님이 ${alertList[i].auction_name}에 리뷰를 남겼습니다.`);   
+                        }
+                        break;
+                    case 5:
+                        if(this.checkUser === 'consumer'){
+                            this.status.consumerAlert.push(`${alertList[i].f_farm_name}님이 ${alertList[i].auction_name}의 리뷰에 댓글을 남겼습니다.`);
+                        }
+                        break;
+                    default:
+                        return;
+                }
+                console.log('consumer', this.status.consumerAlert);
+                // console.log('beforeConsumer', this.status.beforeConsumerAlert);
+                console.log('farm', this.status.farmAlert);
+            }
+        }
 
     }
 

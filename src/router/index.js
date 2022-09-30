@@ -90,7 +90,6 @@ const routes = [
     name: 'auction_reg',
     component: () => import('../views/main/auction_reg.vue')
   },
-  // 경매 수정 페이지
   {
     path: '/auction_reg/:id',
     name: 'auction_reg_patch',

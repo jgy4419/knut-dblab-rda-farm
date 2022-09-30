@@ -21,7 +21,7 @@
 
 #menu .menu li {
     display: inline-block;
-    *display: inline;
+    display: inline;
     text-align: center;
     float: left;
     width: 25%;

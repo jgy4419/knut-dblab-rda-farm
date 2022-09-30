@@ -21,7 +21,7 @@
                 <v-text-field class="inutBox" v-model="passwd_chk" label="비밀번호 확인*" type="password" :rules="passwd_rule2">
                 </v-text-field>
             </v-col>
-            <SearchAddress @searchAddressRes="searchAddressResult" v-if="this.urlState == 0"/>
+            <SearchAddress :addressInfo="addressInfo" @searchAddressRes="searchAddressResult" v-if="this.urlState == 0"/>
             <Auth :info="info" @authRes="phonenumAuthResult"/>
         </v-row>
         <br/><br/>
@@ -45,6 +45,12 @@ export default {
     },
     data() {
         return {
+            addressInfo:{
+                zipcode: '',
+                address: '',
+                c_detail_location: '',
+                isConsumer: this.$route.fullPath == '/signup',
+            },
             info: {
                 checkUser: 'signup',
                 name: null,
@@ -58,6 +64,7 @@ export default {
             phonenum: null,
             zipcode: null,
             location: null,
+            c_detail_location: null,
             dialog: false,
             state: 'ins',
             authList: [
@@ -125,6 +132,8 @@ export default {
             console.log('event: ', event);
             this.zipcode = event.zipcode;
             this.location = event.address;
+            this.c_detail_location = event.c_detail_location;
+            console.log('this.c_detail_location: ' + this.c_detail_location);
             this.addressCheck = true;
             alert("주소 입력이 완료되었습니다!");
         },
@@ -170,7 +179,9 @@ export default {
                 console.log();
                 axios.post('/api/signupConsumer', { c_name: this.name, c_email: this.email, 
                                                     c_passwd: this.passwd, c_phonenum: this.phonenum, 
-                                                    c_zipcode: this.zipcode, c_location: this.location})
+                                                    c_zipcode: this.zipcode, c_location: this.location,
+                                                    c_detail_location: this.c_detail_location,
+                                                    })
                     .then(res => {
                         console.log(res);
                         if (res.data == 0) {
