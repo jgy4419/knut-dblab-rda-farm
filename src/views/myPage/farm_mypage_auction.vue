@@ -19,10 +19,10 @@
                         <button  v-if="getData[i].bid_status === true" class="auctionBtn-ing">경매중</button>                        
                         <button  v-if="getData[i].bid_status === false && buttonState === 1" class="auctionBtn">경매종료</button>
                         <button v-if="getData[i].bid_status === false && buttonState === 1" class="auctionBtn">계산하기</button>
+                        <button v-if="writeUrlState[i] === 1" class="reviewBtn-end">작성완료</button>
                         <router-link v-if="getData[i].bid_status === false" :to="`/farm_mypage_auction/writeReview/${getData[i].auction_Id}`">
                         <!-- <router-link v-if="getData[i].bid_status === false" :to="`#`"> -->
                             <button @click="setReviewData(i)" v-if="writeUrlState[i] === 0" class="reviewBtn">후기작성</button>
-                            <button v-if="writeUrlState[i] === 1" class="reviewBtn">작성완료</button>
                         </router-link>
                     </div>
                 </div>
@@ -169,12 +169,16 @@ export default {
             .auctionBtns{
                 display: flex;
                 justify-content: space-between;
-                .auctionBtn, .reviewBtn, .auctionBtn-ing{
+                .auctionBtn, .reviewBtn, .auctionBtn-ing, .reviewBtn-end{
                     width: 80px;
                     height: 40px;
                     border-radius: 5px;
                     border: 1px solid rgb(187, 187, 187);
                     @include text-basic();
+                }
+                .reviewBtn-end{
+                    background-color: lightgrey;
+                    color: #fff;
                 }
                 .auctionBtn-ing{
                     background-color: #f5dad1;

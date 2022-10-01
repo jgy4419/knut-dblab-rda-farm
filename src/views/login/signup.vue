@@ -190,10 +190,13 @@ export default {
                             alert("회원가입 성공..")
                             // main으로 넘기기
                             console.log("main으로!!");
-                            console.log(this.token);
-                            console.log(res.data.token);
-                            this.token = res.data.token;
-                            this.$router.push({ name: 'main', params: this.token });
+                            console.log(res.data);
+
+                            let expire = Date.now() + 86400000;
+                            localStorage.setItem('expire', JSON.stringify(expire));
+                            localStorage.setItem("user", JSON.stringify(res.data));
+                            this.$store.commit('TOKEN_SAVE', res.data.token);
+                            this.$router.push({name: 'main'});
                         }
                     })
                     .catch(err => {

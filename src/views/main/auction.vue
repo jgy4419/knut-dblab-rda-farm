@@ -24,7 +24,7 @@ export default{
   data() {
       return {        
         headerProps: '경매 알림',
-        imgData: [],
+        imgData: undefined,
       }
   },
 }

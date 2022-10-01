@@ -40,11 +40,6 @@ export default {
   props: {
     imgData: Array
   },
-  watch: {
-    imgData() {
-      alert('!!');
-    }
-  },
   mounted(){
     console.log(this.$route.fullPath.split('/'));
     console.log('이미지 데이터', this.imgData);
