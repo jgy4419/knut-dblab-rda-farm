@@ -14,7 +14,7 @@
         <p class="call-button" type="button" @click="modalchang=true">
           카카오톡 1:1 문의
         </p>
-        <a :href="'https://open.kakao.com/o/sCXa6CEe'" class="catok-text">클릭시 1:1채팅방으로 이동됩니다!</a>
+        <a :href="'https://open.kakao.com/o/sCXa6CEe'" class="catok-text">오픈 채팅방으로 이동하기</a>
 
       </div>
 
@@ -101,7 +101,7 @@ export default {
 .catok-text{
   font-weight: 600;
   font-size: 20px;
-  color: rgb(64, 12, 185);
+  color: rgb(234, 61, 61);
   margin-bottom: 10px;
 }
 .inner{

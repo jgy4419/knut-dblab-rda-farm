@@ -156,21 +156,16 @@ export default{
                 for (let i = 0; i < response_data.length; i++) {
                   this.$store.commit('PUSH_AUCTION', response_data[i]);
                 }
-                // 4로 바꿔주기..?
-                this.$store.commit('UP_LIMIT', 2);
+                this.$store.commit('UP_LIMIT', 4);
             }
-            
-            console.log("2131231limit:" + this.$store.state.limit);
           });
           this.moreProduct();
           this.stompClient.subscribe("/send_bidding",  res => {
-
             const response_bidding = JSON.parse(res.body);
             console.log(response_bidding);
             if (response_bidding != undefined) {
               this.$store.commit('UPDATE_BID_PRICE', response_bidding);
             }
-
             // response_data.auction_id로 현재 가지고 있는 리스트의 가격을 변경
           });
         },

@@ -3,7 +3,7 @@
         <div class="back"/>
         <div class="inner">
             <p class="close" @click="$emit('closeModal', '모달 닫기')">X</p>
-            <h2 class="title">{{clickedData.auction_name}}</h2>
+            <h2 class="title" v-on:click="navigateAuction(clickedData.auction_Id)">{{clickedData.auction_name}}</h2>
             <p>{{clickedData.auction_Id}}</p>
             <!-- 이미지..불러오기,, -->
             <img class="reviewImg" :src="`/auciton_review_images/${clickedData.review_img_name}.png`" 
@@ -19,10 +19,16 @@
 
 <script>
 import Comment from '../../components/Comment/comment.vue';
+import axios from 'axios';
 export default {
     props: {
         reviewModalState: Number,
         clickedData: Object
+    },
+    data(){
+        return {
+            user: JSON.parse(localStorage.getItem("user")),
+        }
     },
     mounted(){
         console.log(`/auciton_review_images/${this.clickedData.review_img_name}.png`);
@@ -31,6 +37,25 @@ export default {
     components: {
         Comment,
         // CommentInput
+    },
+    methods: {
+        navigateAuction (auction_Id) {
+            axios.get(`/api/auctionInfo/${auction_Id}`, {
+                headers: {
+                    TOKEN: this.user.token
+                }
+            }).then(res => {
+                console.log(res.data);
+                this.$router.push({name:'auction_detail', params: { id: auction_Id, auction: JSON.stringify(res.data) }});
+            }).catch(err => {
+                console.log(err); 
+                // if(res.headers.token != "token"){     
+                // 	alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                // 	this.$store.commit('LOGOUT');
+                // 	this.$router.push('/login');
+                // }
+            });
+        },
     }
 }
 </script>

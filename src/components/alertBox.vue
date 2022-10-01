@@ -46,7 +46,7 @@ export default {
                     // 알림 데이터 넣기
                     this.alertData = data;
                     // 페이지에 보여줄 코드 작성 
-                    this.$store.commit('PUSH_ALERT_LIST', data);
+                    this.$store.commit('UNSHIFT_ALERT_LIST', data);
                     this.statusFunc(this.alertData.d_status);
                     this.modalToggle();
                 })

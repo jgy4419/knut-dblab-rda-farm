@@ -47,7 +47,7 @@
                 </table>
             </div>
             <div v-if="this.auction.farm_id == user.farm_id" >
-                <v-btn class="delete-button" block @click="bid()">삭제하기</v-btn>
+                <v-btn class="delete-button" block @click="deleteAuction()">삭제하기</v-btn>
                 <!-- /auction_reg/:id -->
                 <v-btn class="edit-button" block @click="$router.push({name: `auction_reg_patch`, params: { id: this.auction.auction_Id} })">
                     수정하기
@@ -71,7 +71,7 @@
                     <li id="_rowLi20220213173042CHK2022021381488661" class="goods_pay_item ">
                         <div class="goods_item">
                             <p class="goods_thumb">
-                                <img :src='`/member_profile_images/${auction.f_profile_img}.png`'
+                                <img :src="user.f_profile_img == null || user.f_profile_img == '' ? '/member_profile_images/base_image.png' : `/member_profile_images/${auction.f_profile_img}.png`"
                                     alt="" width="90" height="90" /></p>
                                 <!-- <img src="https://suhofarm.com/_upload/mall/20220112173148_86227.jpg" alt="" width="90" height="90"> -->
                             <div class="goods_info">
@@ -108,6 +108,7 @@ import SockJS from 'sockjs-client';
 import Header from '../../components/Header/backHeader.vue';
 import Like from '../../components/like.vue';
 import Slide from '../../components/slide.vue';
+import axios from 'axios';
 // import bottomNav from '@/components/bottomNav.vue';
 // import { ref } from 'vue';
 
@@ -126,6 +127,12 @@ export default {
         likeState: 0,
         isMaxPrice: 0,
         bidAlertText: "입찰하시겠습니까?",
+        consumerBidDeletedAuctionText: "경매가 삭제되어 입찰 불가합니다.",
+        deleteAuctionConsumerExistText: "이미 입찰이 진행된 경매는 삭제 불가합니다!",
+        deleteAuctionFourHourText: "현재시간으로부터 마감시간까지 4시간 이내 경매는 삭제 불가합니다!",
+        deleteAuctionConfirmText: "해당 경매를 삭제하시겠습니까?",
+        deleteAuctionAlertText: "경매가 삭제되었습니다.",
+        FOUR_HOUR: 1000 * 60 * 60 * 4,
         imgData: [],
     }),
     created() {
@@ -219,14 +226,16 @@ export default {
             frame => {
                 this.connected = true;
                 console.log('소켓 연결 성공', frame);
-
                 this.stompClient.subscribe("/send_bidding",  res => {
-
                     const response_bidding = JSON.parse(res.body);
                     console.log(response_bidding);
                     if (response_bidding.auction_Id != undefined) {
                         this.$store.commit('UPDATE_BID_PRICE', response_bidding);
                         if(this.auction.auction_Id == response_bidding.auction_Id){
+                            if(response_bidding.bid_price == -1){                       // bid_price가 -1인 경우(삭제된 경매) 알림 후 뒤로 보내기
+                                alert(this.consumerBidDeletedAuctionText);
+                                this.$router.go(-1);
+                            }
                             this.auction.consumer_id = response_bidding.consumer_id;
                             this.auction.c_name = response_bidding.c_name;
                             this.auction.bid_price = response_bidding.bid_price;
@@ -241,6 +250,29 @@ export default {
                 this.connected = false;
             }
             );  
+        },
+        deleteAuction(){
+            if(this.auction.consumer_id) return alert(this.deleteAuctionConsumerExistText);
+            if(new Date(this.auction.deadline_date).getTime() < new Date().getTime() + this.FOUR_HOUR) return alert(this.deleteAuctionFourHourText);
+            if(!confirm(this.deleteAuctionConfirmText)) return;
+            console.log(this.user.token);
+            axios.delete(`/api/auction/${this.auction.auction_Id}/${this.auction.product_id}/${this.auction.productDTO.product_img_name}`, {
+                headers: {
+                    TOKEN: this.user.token
+                }
+           })
+           .then(res => {
+                console.log(res);
+                alert(this.deleteAuctionAlertText);
+                this.$router.go(-1);
+            }).catch(err => {    
+                console.log(err); 
+                // if(res.headers.token != "token"){     
+                //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                //     this.$store.commit('LOGOUT');
+                //     this.$router.push('/login');
+                // }  
+            });
         }
     },
 

@@ -28,15 +28,18 @@ export default {
             id: '',
             pw: '',
             modalState: 0,
+            user: JSON.parse(localStorage.getItem("user")),
+            checkUser: localStorage.getItem("checkUser"),
         }
     },
     methods: {
         userSecession(){
+            let user_id = this.checkUser == 'consumer' ? this.user.consumer_id : this.user.farm_id;
             if(window.confirm('정말 회원 탈퇴를 하시겠습니까?')){
-                axios.delete('/api/memberPassword', {
-                    checkUser: localStorage.getItem('checkUser'),
-                    id: this.id,
-                    passwd: this.pw
+                axios.delete(`/api/member/${this.checkUser}/${user_id}`, {
+                    headers: {
+                        TOKEN: this.user.token
+                    }
                 }).then(res => {
                     if(res.data === 1){
                         alert('탈퇴되었습니다!');

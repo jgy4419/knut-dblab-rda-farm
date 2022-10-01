@@ -42,10 +42,13 @@
                 </div>
             </div>
         </div>
-
+        
         <div class="main_nav_b_div">
             <nav class="main_b_nav">
                 <ul class="main_m_ui_list">
+                    <li class="nav__btn">
+                        <button @click="getAlertData()">더보기</button>
+                    </li>
                     <li class="nav__btn">
                         <router-link class="nav__link" to="/auction">
                             <button class="aution_button">경매장으로 가기</button>
@@ -83,6 +86,7 @@ export default {
                 beforeConsumerAlert: [],
                 farmAlert: [],
             },
+            maxAlertText: "더 이상 가져올 알림이 없습니다."
         }
     },
     mounted() {
@@ -93,9 +97,29 @@ export default {
         }, 3000);
 
         this.checkUser = localStorage.getItem('checkUser');
+        this.id = this.checkUser == 'consumer' ? this.user.consumer_id : this.user.farm_id;
         console.log(this.checkUser);
     },
     methods: {
+        getAlertData(){
+            if(this.$store.state.isMaxStartLimit) return alert(this.maxAlertText);
+            axios.get(`/api/alert/${this.checkUser}/${this.id}/${this.$store.state.alertStartLimit}`, {
+                headers: {
+                    TOKEN: this.user.token
+                }
+           })
+           .then(res => {
+                console.log(res.data);
+                this.$store.commit('PUSH_ALERT_LIST', res.data);
+            }).catch(err => {    
+                console.log(err); 
+                // if(res.headers.token != "token"){     
+                //     alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                //     this.$store.commit('LOGOUT');
+                //     this.$router.push('/login');
+                // }  
+            });
+        },
         checked(alert_id, alertList_index){
             console.log("alert_id: " + alert_id);
             // axios를 이용해서 DB에 있는 checked 변경
@@ -116,8 +140,6 @@ export default {
                 //     this.$router.push('/login');
                 // }
 			});
-
-            
         },
         navigategoback() {
             this.$router.go(-1);

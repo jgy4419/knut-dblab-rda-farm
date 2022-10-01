@@ -113,7 +113,7 @@ export default {
   height: 250px;
 }
 .slideList{
-    width: 100vw;
+    width: 100%;
     height: 250px;
     background-size: contain;
     

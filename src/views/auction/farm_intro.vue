@@ -4,7 +4,7 @@
         <Slide :imgData="imgData"
         :key="reload"/>
         <div class="farm-information">
-            <img class="farm-image" :src='`/member_profile_images/${this.farmIntroData.f_profile_img}.png`' alt="농가 사진"/>
+            <img class="farm-image" :src="farmIntroData.f_profile_img == null || farmIntroData.f_profile_img == '' ? '/member_profile_images/base_image.png' : `/member_profile_images/${farmIntroData.f_profile_img}.png`" alt="농가 사진"/>
         </div>
         <div class="farm-name-tel">
             <div class="farm-userName">
@@ -94,12 +94,16 @@ export default {
             }
         }).then(res => {
             this.farmIntroData = res.data;
-            
-            let auctionImagesLength = this.farmIntroData.f_img[this.farmIntroData.f_img.length - 1];
-            console.log(auctionImagesLength);
-            for(let i = 0; i < auctionImagesLength; i++){
-                this.imgData.push(this.farmIntroData.f_img.replace('(0)', `(${i})`))
+            if(this.farmIntroData.f_img == undefined){
+                this.imgData.push('base_farm_image');
+            } else{
+                let auctionImagesLength = this.farmIntroData.f_img[this.farmIntroData.f_img.length - 1];
+                console.log(auctionImagesLength);
+                for(let i = 0; i < auctionImagesLength; i++){
+                    this.imgData.push(this.farmIntroData.f_img.replace('(0)', `(${i})`));
+                }
             }
+            
             this.reload = 1;
             console.log(this.imgData);
 

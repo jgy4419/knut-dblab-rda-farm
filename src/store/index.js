@@ -33,6 +33,8 @@ export default createStore({
     limit: 0,
     searchAuctionList: [],
     alertList: [],
+    alertStartLimit: null,
+    isMaxStartLimit: false,
     keywordList: [],
     popularKeywordList: [],
   },
@@ -132,8 +134,10 @@ export default createStore({
 
       for (let i = 0; i < state.auctionList.length; i++) {
         if(response_bidding.auction_Id == state.auctionList[i].auction_Id){
-          console.log(state.auctionList[i].auction_Id);
-          console.log(response_bidding.auction_Id);
+          if(response_bidding.bid_price == -1){     // bid_price가 -1인 경우(삭제된 경매) 경매 리스트에서 삭제
+            state.auctionList.splice(1, 1);
+            break;
+          }
           state.auctionList[i].consumer_id = response_bidding.consumer_id;
           state.auctionList[i].c_name = response_bidding.c_name;
           state.auctionList[i].bid_price = response_bidding.bid_price;
@@ -146,11 +150,19 @@ export default createStore({
     INIT_ALERT_LIST: (state, init_alertList) => {
       console.log('!!', init_alertList);
       state.alertList = init_alertList;
+      state.alertStartLimit = init_alertList.length;
+      if(state.alertStartLimit < 10) state.isMaxStartLimit = true;
     },
-    PUSH_ALERT_LIST: (state, alert) => {
-      // alert('데이터 받기');
-      // console.log('받은 데이터', alert);
-      state.alertList.push(alert);
+    PUSH_ALERT_LIST: (state, response_alertList) => {
+      if(response_alertList != undefined){
+        for(let alertData of response_alertList) state.alertList.push(alertData);
+      } 
+      state.alertStartLimit += response_alertList.length;
+      if(response_alertList.length < 10) state.isMaxStartLimit = true;
+    },
+    UNSHIFT_ALERT_LIST: (state, alertData) => {
+      state.alertList.unshift(alertData);
+      state.alertStartLimit++;
     },
     CHECKED_ALERT: (state, alertList_index) => {
       console.log("alertList_index: " + alertList_index);
@@ -190,6 +202,10 @@ export default createStore({
 
       for (let i = 0; i < state.searchAuctionList.length; i++) {
         if(response_bidding.auction_Id == state.searchAuctionList[i].auction_Id){
+          if(response_bidding.bid_price == -1){     // bid_price가 -1인 경우(삭제된 경매) 경매 리스트에서 삭제
+            state.searchAuctionList.splice(1, 1);
+            break;
+          }
           state.searchAuctionList[i].consumer_id = response_bidding.consumer_id;
           state.searchAuctionList[i].bid_price = response_bidding.bid_price
           break;

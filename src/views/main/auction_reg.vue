@@ -148,8 +148,8 @@
                 numberErrorText: "중량, 시작가, 최대가는 숫자만 입력 가능합니다!",
                 auctionPriceErrorText: "시작가는 최대가격 보다 작아야 합니다!",
                 auctionDropDateErrorText: "낙과일자는 현재 시간 이전이어야 합니다!",
-                auctionDeadlineDateErrorText: "경매 마감일자는 최소 현재 시간보다 5분 이후이어야 합니다.!",
-                auctionRegistText: "경매 등록하시겠습까?",
+                auctionDeadlineDateErrorText: "경매 마감일자는 최소 현재시간보다 5분 이후이어야 합니다.!",
+                auctionRegistText: "경매 등록하시겠습까?\n주의사항: 경매 삭제는 마감시간 기준 4시간 이전 경매만 가능합니다.",
                 productUpdateText: "상품 내용을 수정하시겠습까?",
                 FIVE_MINUTE: 1000 * 60 * 5,                // millisecond 단위
             };
@@ -199,7 +199,7 @@
                     frm.append('product_img_name', this.auction.productDTO.product_img_name);
                     frm.append('p_explanation', this.auction.productDTO.p_explanation);
 
-                    axios.patch('/api/updateProduct', frm, {
+                    axios.patch('/api/product', frm, {
                         headers: {
                             TOKEN: this.user.token,
                             'Content-Type': 'multipart/form-data'

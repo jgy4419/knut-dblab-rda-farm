@@ -18,7 +18,7 @@
         <input v-model="farm_member_info.f_BRN" class="login-form__input" type="text" required placeholder="사업자 등록번호">
 
         <label id="login-form-label">사업장 소재지</label>
-		<SearchAddress @searchAddressRes="searchAddressResult"/>
+		<SearchAddress :addressInfo="addressInfo" @searchAddressRes="searchAddressResult"/>
         <!-- <input v-model="farm_member_info.f_location" class="login-form__input" type="text" required placeholder="사업장 소재지"> -->
 
         <label id="login-form-label">농가 전화번호</label>
@@ -40,6 +40,12 @@ export default {
     },
 	data() {
 		return {
+			addressInfo:{
+                zipcode: '',
+                address: '',
+                c_detail_location: '',
+                isConsumer: this.$route.fullPath == '/signup',
+            },
 			farm_member_info: {
 				f_name: this.$store.state.user.name,
 				f_email: this.$store.state.user.email,
@@ -76,8 +82,12 @@ export default {
 					console.log("main으로!!");
 					console.log(res.data.token);
 					
+					localStorage.setItem('expire', JSON.stringify(Date.now() + 86400000));
+					localStorage.setItem("user", JSON.stringify(res.data));
+					localStorage.setItem('checkUser', 'farm');
+					localStorage.setItem('id', res.data.farm_id);
 					this.$store.commit('TOKEN_SAVE', res.data.token);
-					this.$router.push({name: 'main', params: this.token});
+					this.$router.push({name: 'main'});
 				}
 			})
 			.catch(err => {

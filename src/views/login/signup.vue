@@ -13,7 +13,7 @@
                     :disabled="state == 'ins' ? false : true" required></v-text-field>
             </v-col>
 
-            <button class="login-form__btn_right" @click="existEmail(email)">이메일 중복 검사</button>
+            <button class="login-form__btn_right" @click="existEmail()">이메일 중복 검사</button>
             <v-col cols="12">
                 <v-text-field class="inutBox" v-model="passwd" label="비밀번호*" type="password" :rules="passwd_rule"></v-text-field>
             </v-col>
@@ -121,18 +121,17 @@ export default {
         }
     },
     methods:{
-        existEmail(email) {
-            this.$store.dispatch('existEmail', email)
-            console.log(email);
-            if(email == email){
-            }
+        existEmail() {
+            if(!this.email) return alert('유효하지 않은 형식의 E-mail 입니다.');
+            this.$store.dispatch('existEmail', this.email);
         },
         searchAddressResult(event){
-            // 인증번호 맞는지 검사하고 맞다면 비밀번호 변경창 띄우기
             console.log('event: ', event);
             this.zipcode = event.zipcode;
             this.location = event.address;
             this.c_detail_location = event.c_detail_location;
+            if(this.zipcode == '' || this.zipcode == '우편번호: ' || this.location == '' || this.location == '주소: ' 
+                || this.c_detail_location == '' || this.c_detail_location == null) return alert('주소를 모두 입력해주세요!');
             console.log('this.c_detail_location: ' + this.c_detail_location);
             this.addressCheck = true;
             alert("주소 입력이 완료되었습니다!");
@@ -163,7 +162,7 @@ export default {
                 console.log("다른 거 확인하길 바람");
             } else if (this.$store.state.existEmail) {
                 alert('이메일 중복 확인을 완료해주세요!')
-            } else if(!this.addressCheck){
+            } else if(this.urlState == 0 && !this.addressCheck){
                 alert('주소 입력을 완료해주세요!')
             } else if(!this.phonenumAuth){
                 alert('핸드폰 번호 인증을 완료해주세요!')
@@ -192,9 +191,10 @@ export default {
                             console.log("main으로!!");
                             console.log(res.data);
 
-                            let expire = Date.now() + 86400000;
-                            localStorage.setItem('expire', JSON.stringify(expire));
+                            localStorage.setItem('expire', JSON.stringify(Date.now() + 86400000));
                             localStorage.setItem("user", JSON.stringify(res.data));
+                            localStorage.setItem('checkUser', 'consumer');
+                            localStorage.setItem('id', res.data.consumer_id);
                             this.$store.commit('TOKEN_SAVE', res.data.token);
                             this.$router.push({name: 'main'});
                         }

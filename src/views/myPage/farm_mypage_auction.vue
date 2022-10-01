@@ -22,7 +22,7 @@
                         <button v-if="writeUrlState[i] === 1" class="reviewBtn-end">작성완료</button>
                         <router-link v-if="getData[i].bid_status === false" :to="`/farm_mypage_auction/writeReview/${getData[i].auction_Id}`">
                         <!-- <router-link v-if="getData[i].bid_status === false" :to="`#`"> -->
-                            <button @click="setReviewData(i)" v-if="writeUrlState[i] === 0" class="reviewBtn">후기작성</button>
+                            <button @click="setReviewData(i)" v-if="buttonState === 0" class="reviewBtn">후기작성</button>
                         </router-link>
                     </div>
                 </div>
@@ -56,11 +56,12 @@ export default {
             getData: [],
             auctionState: true,
             user: JSON.parse(localStorage.getItem("user")),
+            checkUser: localStorage.getItem('checkUser'),
             writeUrlState: [],
         }
     },
     async mounted(){
-        if(localStorage.getItem('checkUser') === 'consumer'){
+        if(this.checkUser === 'consumer'){
             this.buttonState = 0;
         }
         // console.log(this.$store.state.login.userInfo.consumer_id);
