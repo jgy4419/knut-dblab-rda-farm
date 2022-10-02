@@ -5,18 +5,16 @@
             <div class="commentList">
                 <hr>
                 <br/>
-                <button class="commentButton" @click="inputState = 1">{{ !clickedData.farm_review ? '답글달기' : '수정하기'}}</button>
-                <div class="comment">
+                <div class="comment" v-if="inputState === 0">
                     <h3 class="userName">{{this.user.f_farm_name}}</h3>
-                    <p class="userComment">{{!clickedData.farm_review ? "아직 답글이 없습니다." : clickedData.farm_review}}</p>
+                    <p class="userComment">{{!clickedData.farm_review || clickedData.farm_review === '' ? "아직 답글이 없습니다." : clickedData.farm_review}}</p>
                 </div>
-                <!-- <div class="comment" v-for="comment, i in testData.user.length" :key="i">
-                    <h3 class="userName">{{testData.user[i]}}</h3>
-                    <p class="userComment">{{testData.comment[i]}}</p>
-                </div> -->
             </div>
-            <!-- <i class="fa fa-comment commentIcon" v-if="userState === 1" @click="inputState = 1"/> -->
-            <!-- <button class="commentButton" @click="inputState = 1">답글 달기</button> -->
+            <div class="control-button" v-if="checkUser === 'farm'">
+                <button class="commentButton" v-if="inputState === 0" @click="inputState = 1">{{ !clickedData.farm_review ? '답글달기' : '수정하기'}}</button>
+                <!--  -->
+                <button class="deleteButton" v-if="inputState === 0" @click="commentPush(0)">삭제하기</button>
+            </div>
             <div class="commentInput" v-if="inputState === 1">
                 <div class="inputHeader">
                     <h2>댓글 쓰기</h2>
@@ -24,7 +22,7 @@
                 </div>
                 <textarea type="text" v-model="reqData.comment" placeholder="댓글을 입력해주세요!"/>
                 <br/>
-                <button @click="commentPush()" class="comment-button">확인</button>
+                <button @click="commentPush(1)" class="comment-button">확인</button>
             </div>
         </div>
         <br/>
@@ -43,6 +41,7 @@ export default {
             reqData: {
                 comment: ''
             },
+            checkUser: localStorage.getItem('checkUser'),
             // 0이면 사용자, 1이면 농가 (댓글 작성 여부 판단하기)
             userState: 0,
             inputState: 0,
@@ -70,7 +69,8 @@ export default {
         .catch(err => console.log(err));
     },
     methods: {
-        commentPush(){
+        // state가 1이면 작성 0이면 삭제 시켜주기
+        commentPush(state){
             let frm = new FormData();
             frm.append('checkUser', localStorage.getItem('checkUser'));
             frm.append('auction_Id', this.clickedData.auction_Id);
@@ -78,7 +78,16 @@ export default {
             frm.append('consumer_review', this.getData.auction_name);
             frm.append('review_img_name', this.getData.review_img_name);
             frm.append('product_img_name', this.getData.product_img_name);
-            frm.append('farm_review', this.reqData.comment);
+            if(state === 0){ // 삭제하면 빈 값              
+                if(window.confirm('댓글을 삭제하시겠습니까?')){
+                    alert('삭제되었습니다!');
+                    frm.append('farm_review', '');
+                }else{
+                    return;
+                }
+            }else{ // 작성하면 input 값
+                frm.append('farm_review', this.reqData.comment);
+            }
             frm.append('consumer_id', 12);
             frm.append('auction_name', this.getData.auction_name);
             frm.append('f_farm_name', JSON.parse(localStorage.getItem('user')).f_farm_name);
@@ -92,12 +101,11 @@ export default {
             })
             .then(res => {
                 console.log(res);
-                // location.reload();
+                location.reload();
             }).catch(err => {
                 console.log(err);
             })
-            
-        }
+        },
     }
 }
 </script>
@@ -106,15 +114,21 @@ export default {
 .commentContain{
     .inner{
         position: relative;
-        .commentButton{
+        .commentButton, .deleteButton{
+            border-radius: 10px;
             position: relative;
+            margin-left: 10px;
             right: 0;
             z-index: 100;
             font-size: 10px;
             border: .5px solid #333;
             padding: 10px;
             font-weight: 600;
-
+        }
+        .deleteButton{
+            background-color: rgb(248, 185, 185);
+            border: 0;
+            color: #fff;
         }
         .commentIcon{
             position: absolute;
@@ -127,7 +141,6 @@ export default {
         .commentInput{
             position: relative;
             height: 150px;
-            top: 50px;
             text-align: left;
             .inputHeader{
                 display: flex;
@@ -166,26 +179,31 @@ export default {
                 font-weight: 700;
             }
         }
-    }
-    .commentList{
+        .control-button{
             position: relative;
             top: 40px;
-            left: 0;
             right: 0;
-            height: 100%;
-            padding-bottom: 20px;
-            .comment{
-                position: relative;
-                text-align: left;
-                padding: 20px;
-                width: 100%;
-                height: 60px;
-                .userName{
-                    font-size: 16px;
-                    font-weight: 700;
-                    margin-bottom: 10px;
-                }
+        }
+    }
+    .commentList{
+        position: relative;
+        top: 40px;
+        left: 0;
+        right: 0;
+        height: 100%;
+        padding-bottom: 20px;
+        .comment{
+            position: relative;
+            text-align: left;
+            // padding: 20px;
+            width: 100%;
+            height: 60px;
+            .userName{
+                font-size: 16px;
+                font-weight: 700;
+                margin-bottom: 10px;
             }
         }
+    }
 }
 </style>

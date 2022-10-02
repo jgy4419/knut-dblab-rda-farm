@@ -63,7 +63,7 @@ export default {
     transform : translateY(-10%);
     // padding: 5px;
     // bottom: 0;
-    width: 100%;
+    width: 400px;
     display: flex;
     justify-content: space-between;
     .button{
@@ -76,6 +76,11 @@ export default {
             font-size: 10px;
             color: grey;
         }
+    }
+}
+@media screen and (max-width: 500px){
+    .bottom-contain{
+        width: 100%;
     }
 }
 </style>

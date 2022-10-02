@@ -18,7 +18,6 @@
                                     </p>
                                     <ul class="info">
                                         <li><span class="blind">상품금액</span>{{resData[i].a_max_price.toLocaleString()}}원</li>
-                                        <li class="date"><span class="blind">경매 종료 날짜</span> {{deadline_date[i]}}</li>
                                     </ul>
                                 </div>
                                 <div class="state _statusName value_color_green _click(nmp.front.order.timeline.home.list.openDeliveryPopup(/o/orderStatus/deliveryTracking/2022021381488661/ORDER_DELIVERY/api)) _stopDefault">경매중
@@ -32,6 +31,7 @@
                             <div class="inner">
                                 <span class="seller">{{resData[i].product}}</span>
                                 <span class="tel">1544-0967</span>
+                                <li class="date"><span class="blind">경매 종료 날짜</span> {{deadline_date[i]}}</li>
                                 <router-link to="/ServiceCenter"><p class="state_button qna _click(nmp.front.order.timeline.home.list.shoppingInquiry(/merchant/shoppingInquiry/2022021381488661)) _stopDefault">
                                 문의하기</p></router-link>
                             </div>
@@ -40,23 +40,9 @@
                 </ul>
             </div>
         </div>
-        <div>
-            <button class="more-data" @click="moreProduct()">더보기</button>
-        </div>
     </fieldset>
-
-    <div class="main_nav_b_div">
-        <nav class="main_b_nav">
-            <ul class="main_m_ui_list">
-                <li class="nav__btn">
-                    <a class="nav__link" href="auction">
-                        <h4 class="user-component__title">경매장으로 가기</h4>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </div>
-
+    <button class="more-data" @click="moreProduct()">더보기</button>
+    <!-- <button @click="$router.push('/auction')" class="auction_link_button">경매장으로 가기</button> -->
 </div>
 </template>
 
@@ -127,9 +113,48 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.more-data{
+.goods_pay_item{
+  position: relative;
+  width: 100%;
+  height: 120px;
+  .goods_item{
+    left: 0;
     width: 100%;
-    height: 50px;
+    height: 100%;
+    .goods_info{
+      .goods{
+        height: 50px;
+        .info{
+          height: 50px;
+          li{
+            border: 0;
+            
+          }
+        }
+      }
+    }
+  }
+  .seller_item{
+    height: 100px;
+    .inner{
+      height: 100px;
+      .date{
+            border: 0;
+            height: 20px;
+            margin-bottom: 10px;
+            font-size: 10px;
+            color: lightgrey;
+            font-weight: 700;
+      }
+      .state_button{
+         // margin-bottom: 50px;
+      }
+    }
+  }
+}
+.more-data, .auction_link_button{
+    width: 100%;
+    height: 40px;
     font-size: 16px;
     font-weight: 700;
     background-color: #FFC1AA;

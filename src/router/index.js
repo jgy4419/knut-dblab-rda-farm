@@ -123,7 +123,7 @@ const routes = [
   
   //경매
   {
-    path: '/farm_calculate',
+    path: '/farm_calculate/:id',
     name: 'farm_calculate',
     component: () => import('../views/auction/farm_calculate.vue')
   },

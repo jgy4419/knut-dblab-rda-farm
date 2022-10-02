@@ -47,16 +47,16 @@ export default {
     }
   },
   methods: {
-    copy(){
-      let call = document.querySelector('.call-text');
-      // call.select();
-      document.value.execCommand('copy');
-    }
+    // copy(){
+    //   let call = document.querySelector('.call-text');
+    //   call.select();
+    //   document.value.execCommand('copy');
+    // }
   },
   mounted(){
-    let call = document.querySelector('.call-text');
-    call.select();
-    document.execCommand('copy');
+    // let call = document.querySelector('.call-text');
+    // call.select();
+    // document.execCommand('copy');
   }
 }
 </script>

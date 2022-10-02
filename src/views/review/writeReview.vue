@@ -47,7 +47,7 @@ export default {
     data(){
         return{
             headerProps: '리뷰 작성',
-            starState: ['안좋아요', '그냥 그래요', '보통이에요', '안좋아요', '정말좋아요'],
+            starState: ['안좋아요', '그냥 그래요', '보통이에요', '괜찮아요', '정말좋아요'],
             // 벡엔드한테 받을 상품 데이터
             getTest: {
                 img: '',
@@ -147,7 +147,7 @@ export default {
                         'Content-Type': 'multipart/form-data'
                 }})
                 .then(res => {                
-                    this.$router.push('/farm_mypage_auction');
+                    this.$router.push('/consumer_mypage');
                 }).catch(err => {
                     console.log(err); 
                     // if(res.headers.token != "token"){     
@@ -166,7 +166,7 @@ export default {
                 }})
                 .then(res => {
                     alert('수정이 완료되었습니다.');
-                    this.$router.push('/farm_mypage_auction');
+                    this.$router.push('/consumer_mypage');
                 }).catch(err => {
                     console.log(err);
                     // if(res.headers.token != "token"){     

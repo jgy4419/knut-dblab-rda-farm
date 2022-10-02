@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div class="auctionList-contain">
     <Spinner v-if="spinnerState === true"/>
       <fieldset>
           <div class="white_div">
               <div class="goods_pay_section ">
                   <div class="goods_groups">
-                      <ul class="goods_group_list">
+                      <ul ref="items" class="goods_group_list">
                           <li v-on:click="navigateAuction(auction)"  v-for="auction in this.$store.state.auctionList" :key="auction.auction_Id"
                               id="_rowLi20220203162708CHK2022020394386781"
                               class="goods_pay_item _interlockNo20220211200904406814">
@@ -25,10 +25,10 @@
                                     </div>
                                     <p class="state _statusName value_color_green _click(nmp.front.order.timeline.home.list.openDeliveryPopup(/o/orderStatus/deliveryTracking/2022020394386781/ORDER_DELIVERY/api)) _stopDefault"
                                     v-if="auction.bid_status === 1">
-                                        ({{updateDeadlineDate(auction.deadline_date)}} 경매 종료)</p>
+                                        {{updateDeadlineDate(auction.deadline_date)}} 경매 종료</p>
                                     <p class="state _statusName value_color_green _click(nmp.front.order.timeline.home.list.openDeliveryPopup(/o/orderStatus/deliveryTracking/2022020394386781/ORDER_DELIVERY/api)) _stopDefault"
                                       v-if="auction.bid_status === 0">
-                                        최종 낙찰가격 {{auction.a_max_price.toLocaleString()}}원</p>
+                                        최종 낙찰가 {{auction.a_max_price.toLocaleString()}}원</p>
                                     <p class="guide">
                                         {{auction.productDTO.p_explanation}}
                                     </p>
@@ -36,9 +36,8 @@
                               </div>
                               <div class="seller_item">
                                   <div class="inner">
-
                                       <span class="seller">{{auction.f_farm_name}}</span>
-                                      <span class="tel">Tel : {{auction.f_phonenum}}</span>
+                                      <span class="tel">Tel : 0{{auction.f_phonenum.toString().replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{1}|^0[0-9]{4})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-")}}</span>
                                       <span class="date">{{auction.productDTO.p_reg_date}}</span>
                                       <br><br>
                                   </div>
@@ -49,9 +48,9 @@
               </div>
           </div>
       </fieldset>
-      <div>
+      <!-- <div>
         <button class="more-data" @click="moreProduct()">더보기</button>
-      </div>
+      </div> -->
       <p style="display: none">{{now}}</p>
       <InfiniteLoading :comments="auction" @infinite="moreProduct()"/>
   </div>
@@ -64,8 +63,7 @@ import Spinner from '../../components/spinner.vue';
 import Like from '../like.vue';
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
-// import { ref } from 'vue';
-
+import _ from 'lodash';
 
 export default{
   components: {
@@ -76,11 +74,14 @@ export default{
       return {     
         spinnerState: false,   
         limit: 0,
-        infiniteId: +new Date(),
+        // infiniteId: +new Date(),
         now: 0,
       }
   },
   mounted () {
+    window.addEventListener('scroll', _.throttle(() => {
+        this.infiniteScroll();
+    }, 500), true);
     this.updateNow();
     setInterval(this.updateNow.bind(this) , 1000);
   },
@@ -89,17 +90,24 @@ export default{
     // vue 생성 시 소켓 연결
     this.connect();
   },
-
   methods: {
+    infiniteScroll(){
+        console.log(this.$route.path);
+        if(this.$route.path === '/auction'){
+          const {innerHeight} = window;
+          if(Math.round(this.$refs.items.scrollTop + window.innerHeight) >= this.$refs.items.scrollHeight){
+              console.log('스크롤 실행');
+              this.moreProduct();
+          }
+        }
+        console.log(innerHeight);
+    },
     updateNow() {
       this.now = Math.round(Date.now() / 1000);
       // aution들이 가지고 있는 시간 빼기
     },
     updateDeadlineDate(deadline){
       let date = new Date(); // 2022-07-25 00:00:00.0
-      console.log('date', date); // 현재시간 밀리초
-      console.log('auction', this.auction);
-      console.log('deadline', deadline)
       date.setFullYear(Number(deadline.substr(0, 4)))
       date.setMonth(Number(deadline.substr(5, 2))-1)  // 1월~12월 => 0~11
       date.setDate(Number(deadline.substr(8, 2)))
@@ -117,9 +125,15 @@ export default{
       let hours =  Math.floor(tmp_time / (60*60));
       let minutes = Math.floor(tmp_time % (60*60) / 60);
       let seconds = Math.floor(tmp_time % (60*60) % 60);
-      return `${day}일 ${hours}시간 ${minutes}분 ${seconds}초 후`;
+      let remainingTime = '';
+
+      if(day != 0) remainingTime += day + '일 ';
+      if(hours != 0) remainingTime += hours + '시간 ';
+      if(minutes != 0) remainingTime += minutes + '분 ';
+      if(seconds != 0) remainingTime += seconds + '초 후';
+      return remainingTime;
     },
-    navigateAuction (auction) {
+    navigateAuction(auction) {
       this.$router.push({name:'auction_detail', params: { id: auction.auction_Id, auction: JSON.stringify(auction) }});
     },
     navigategoback() {
@@ -181,6 +195,18 @@ export default{
 </script>
 
 <style lang="scss" scoped>
+.auctionList-contain{
+  position: relative;
+  // height: 80vh;
+}
+.goods_groups{
+  .goods_group_list{
+    position: relative;
+    height: 280px;
+    overflow-y: scroll;
+  }
+}
+
 .date{
   font-size: 12px;
   color: rgb(183, 183, 183);
@@ -207,7 +233,7 @@ export default{
     .goods_info{
       .goods{
         .info{
-          height: 50px;
+          height: 20px;
           .blind{
             margin-bottom: 10px;
             font-size: 20px;
@@ -221,6 +247,9 @@ export default{
     height: 100px;
     .inner{
       height: 100px;
+      .tel{
+        width: 100px;
+      }
     }
   }
 }

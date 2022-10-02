@@ -1,6 +1,8 @@
 <template>
 <div>
-    <div class="main_nav_t_div">
+    <Header :headerProps="headerProps"/>
+    <Slide :imgData="imgData"/>
+    <!-- <div class="main_nav_t_div">
         <nav class="main_t_nav">
             <ul class="main_t_nav_list">
                 <li class="nav__btn">
@@ -24,10 +26,10 @@
 
             </ul>
         </nav>
-    </div>
+    </div> -->
     <h2 class="profile_loc_h2">결제 상품</h2>
 
-  <v-carousel>
+  <!-- <v-carousel>
     <v-carousel-item
       v-for="(item,i) in items"
       :key="i"
@@ -35,7 +37,7 @@
       reverse-transition="fade-transition"
       transition="fade-transition"
     ></v-carousel-item>
-  </v-carousel>
+  </v-carousel> -->
 
     <fieldset>
         <div class="aside_area aside_popular">
@@ -48,19 +50,19 @@
                     </tr>
                     <tr>
                         <th>낙과 일자</th>
-                        <td>2022.02.19</td>
+                        <td>{{auction.p_drop_date.slice(0, 19).replace('T', ' ')}}</td>
                     </tr>
                     <tr>
                         <th>사이즈</th>
-                        <td>중</td>
+                        <td>{{auction.size}}</td>
                     </tr>
                     <tr>
                         <th>상태</th>
-                        <td>상</td>
+                        <td>{{auction.p_status}}</td>
                     </tr>
                     <tr>
                         <th>낙찰된 가격</th>
-                        <td>50,000 원</td>
+                        <td>{{auction.bid_price.toLocaleString()}}원</td>
                     </tr>
                 </tbody>
             </table>
@@ -74,12 +76,12 @@
                 <table class="tbl_home">
                     <tbody>
                         <tr>
-                            <th class="whitefont">상품금액</th>
-                            <td class="whitefont"> 50,000 원</td>
+                            <th class="whitefont">수수료 (5%)</th>
+                            <td class="whitefont">{{fee.toLocaleString()}}원</td>
                         </tr>
                         <tr>
-                            <th class="whitefont">수수료 (10%)</th>
-                            <td class="whitefont">5,000 원</td>
+                            <th class="whitefont">상품금액</th>
+                            <td class="whitefont">{{auction.bid_price.toLocaleString()}}원</td>
                         </tr>
                     </tbody>
                 </table>
@@ -95,7 +97,7 @@
                     <tbody>
                         <tr>
                             <th class="font15">최종입금금액</th>
-                            <td class="font15">55,000 원</td>
+                            <td class="font15">{{paymentAmount.toLocaleString()}}원</td>
                         </tr>
                     </tbody>
                 </table>
@@ -116,9 +118,14 @@
 </template>
 
 <script>
+import Header from '../../components/Header/backHeader.vue';
+import Slide from '../../components/slide.vue';
+
 export default {
+    components: { Header, Slide },
     data() {
         return {
+            headerProps: '경매 결제',
             items: [
             {
                 src: 'https://images.mypetlife.co.kr/content/uploads/2018/06/09160331/strawberries-red-fruit-royalty-free-70746-1024x768.jpeg',
@@ -133,7 +140,27 @@ export default {
                 src: 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg',
             },
             ],
+            auction: null,
+            fee: null,
+            paymentAmount: null,
+            imgData: [],
         }
+    },
+    created() {
+        console.log('arr', this.$route.params.auction);
+        
+        this.auction = JSON.parse(this.$route.params.auction);
+        console.log('경매 정보', this.auction);
+        this.fee = this.auction.bid_price / 100 * 5;
+        this.paymentAmount = this.auction.bid_price + this.fee; 
+
+        // 해당 경매 관련 이미지 여러 개 넣기
+        let auctionImagesLength = this.auction.product_img_name[this.auction.product_img_name.length-1];
+        console.log('img', auctionImagesLength)
+        for(let i = 0; i < auctionImagesLength; i++){
+            this.imgData.push(this.auction.product_img_name.replace('(0)', `(${i})`))
+        }
+        console.log('pushImg', this.imgData);
     },
 }
 </script>

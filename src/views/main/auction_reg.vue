@@ -4,11 +4,13 @@
         <div class="image-box">
             <!-- <input multiple="multiple" @change="upload()" type="file" id="product_img_files" name="product_img_files"
                 accept="image/*"><br> -->
-            <img src="image">
+            <!-- <img src="image"> -->
             <!-- 테스트 해보기 -->
+            <h2 class="img-title">사진을 선택해주세요</h2>
             <input multiple="multiple" style="display: 'none'" @change="imgPreview($event)" class="select-img-hidden" type="file" id="product_img_files" name="product_img_files" accept="image/*"><br>                        
-            <input type="button" value="이미지 파일 올리기"/>
+            <!-- <input type="button" id="input-file" value="이미지 파일 올리기"/> -->
             <div id="image_container" class="image_container">
+                <label for="product_img_files" class="select-img">+</label>
             </div>
             <!-- <Slide/> -->
         </div>
@@ -167,22 +169,28 @@
         },
         methods: {
             imgPreview(event){
-                let reader = new FileReader();
-                reader.onload = function(event){
-                    let img = document.createElement('img');
-                    img.setAttribute('src', event.target.result);
-                    img.setAttribute('width', '100px');
-                    img.setAttribute('height', '100px');
-                    document.getElementById('image_container').appendChild(img);
+                console.log(event.target.files);
+                for(let idx in event.target.files){
+                    let reader = new FileReader();
+                    reader.onload = function(event){
+                        let img = document.createElement('img');
+                        img.setAttribute('src', event.target.result);
+                        img.setAttribute('width', '80px');
+                        img.setAttribute('height', '80px');
+                        document.getElementById('image_container').appendChild(img);
+                    }
+                    console.log(event.target.files[idx]);
+                    reader.readAsDataURL(event.target.files[idx]);
+                    this.product_img_files.push(event.target.files[idx]);
                 }
-                reader.readAsDataURL(event.target.files[0]);
-                console.log(event.target.files[0]);
-                this.upload();
+                console.log(this.product_img_files);
+                
+                // this.upload();
             },
-            upload() {
-                this.product_img_files = document.getElementById("product_img_files");
-                console.log('test', this.product_img_files.files);
-            },
+            // upload() {
+            //     this.product_img_files.push(document.getElementById("product_img_files"));
+            //     console.log('test', this.product_img_files.files);
+            // },
             submitAuction() {
                 let frm = new FormData();
                 console.log(this.isAuctionRegistPage);
@@ -193,8 +201,11 @@
                         return;
                     }
                     if(!confirm(this.productUpdateText)) return;
-
-                    for(let imageFile of this.product_img_files.files) frm.append("product_img_files", imageFile);
+                    console.log(this.product_img_files.files);
+                    // for(let imageFile of this.product_img_files.files) frm.append("product_img_files", imageFile);
+                    for(let i = 0; i < this.product_img_files.length; i++){
+                        frm.append('product_img_files', this.product_img_files[i]);
+                    }
                     frm.append('product_id', this.auction.product_id);
                     frm.append('product_img_name', this.auction.productDTO.product_img_name);
                     frm.append('p_explanation', this.auction.productDTO.p_explanation);
@@ -252,7 +263,11 @@
                     alert('이미지 파일이 없습니다.');
                     return;
                 }
-                for(let imageFile of this.product_img_files.files) frm.append("productDTO.product_img_files", imageFile);
+                // for(let imageFile of this.product_img_files.files) frm.append("productDTO.product_img_files", imageFile);
+                for(let i = 0; i < this.product_img_files.length; i++){
+                    console.log(this.product_img_files[i]);
+                    frm.append("productDTO.product_img_files", this.product_img_files[i]);
+                }
                 frm.append('auction_name', this.auction_name);
                 frm.append('productDTO.product', this.product);
                 frm.append('productDTO.product_kg', this.product_kg);
@@ -267,6 +282,7 @@
                 frm.append('farm_id', this.user.farm_id);
                 frm.append('f_farm_name', this.user.f_farm_name);
 
+                for(let i of frm) console.log(i);
                 // 글 등록
                 axios.post('/api/registAuction', frm, {
                     headers: {
@@ -311,5 +327,19 @@ td{
     margin-left: 10px;
     background-color: #FFC1AA;
     color: #333;
+}
+.img-title{
+    fibt-size: 16px;
+    font-weight: 700;
+}
+.select-img-hidden{
+    display: none;
+}
+.select-img{
+    font-size: 23px;
+    font-weight: 600;
+    // border: 1px solid #333;
+    // border-radius: 10px;
+    padding: 2px 10px;
 }
 </style>

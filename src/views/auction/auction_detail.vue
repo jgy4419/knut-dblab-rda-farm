@@ -19,14 +19,19 @@
                             <td>{{auction.a_starting_price.toLocaleString()}}원</td>
                         </tr>
 
-                        <tr class="">
+                        <tr class="" v-if="auction.bid_status === 1">
                             <th>최대 입찰가</th>
                             <td>{{auction.a_max_price.toLocaleString()}}원</td>
                         </tr>
 
-                        <tr class="">
+                        <tr class="" v-if="auction.bid_status === 1">
                             <th>현재가</th>
                             <td>{{auction.bid_price.toLocaleString()}}원</td>
+                        </tr>
+
+                        <tr class="" v-if="auction.bid_status === 0">
+                            <th>최종 낙찰가</th>
+                            <td>{{auction.a_max_price.toLocaleString()}}원</td>
                         </tr>
 
                         <tr class="">
@@ -36,7 +41,7 @@
 
                         <tr class="">
                             <th>사이즈</th>
-                            <td>{{auction.productDTO.size}} </td>
+                            <td>{{auction.productDTO.size}}</td>
                         </tr>
 
                         <tr class="">
@@ -46,19 +51,25 @@
                     </tbody>
                 </table>
             </div>
-            <div v-if="this.auction.farm_id == user.farm_id" >
-                <v-btn class="delete-button" block @click="deleteAuction()">삭제하기</v-btn>
-                <!-- /auction_reg/:id -->
-                <v-btn class="edit-button" block @click="$router.push({name: `auction_reg_patch`, params: { id: this.auction.auction_Id} })">
-                    수정하기
-                </v-btn>
+            <div>
+                <p class="state _statusName value_color_green _click(nmp.front.order.timeline.home.list.openDeliveryPopup(/o/orderStatus/deliveryTracking/2022020394386781/ORDER_DELIVERY/api)) _stopDefault">
+                                        {{updateDeadlineDate(auction.deadline_date)}} 경매 종료</p>
             </div>
-            <div v-if=" user.consumer_id != undefined">
-                <input type="number" placeholder="입찰할 가격을 입력(숫자만)해주세요!" id="bid_price" v-model="bid_price"/>
-                <!-- <v-text-field placeholder="입찰할 가격을 입력해주세요!" type="number" id="bid_price" v-model="bid_price"></v-text-field> -->
-                <div class="stateBtn">
-                    <Like class="like-button" :key="likeState" @click="likeStateFunc()"/>
-                    <v-btn class="bid-button" block @click="bid()">입찰하기</v-btn>
+            <div v-if="auction.bid_status === 1">
+                <div v-if="this.auction.farm_id == user.farm_id" >
+                    <v-btn class="delete-button" block @click="deleteAuction()">삭제하기</v-btn>
+                    <!-- /auction_reg/:id -->
+                    <v-btn class="edit-button" block @click="$router.push({name: `auction_reg_patch`, params: { id: this.auction.auction_Id} })">
+                        수정하기
+                    </v-btn>
+                </div>
+                <div v-if=" user.consumer_id != undefined">
+                    <input type="number" placeholder="입찰할 가격을 입력(숫자만)해주세요!" id="bid_price" v-model="bid_price"/>
+                    <!-- <v-text-field placeholder="입찰할 가격을 입력해주세요!" type="number" id="bid_price" v-model="bid_price"></v-text-field> -->
+                    <div class="stateBtn">
+                        <Like class="like-button" :key="likeState" @click="likeStateFunc()"/>
+                        <v-btn class="bid-button" block @click="bid()">입찰하기</v-btn>
+                    </div>
                 </div>
             </div>
         </fieldset>
@@ -134,6 +145,7 @@ export default {
         deleteAuctionAlertText: "경매가 삭제되었습니다.",
         FOUR_HOUR: 1000 * 60 * 60 * 4,
         imgData: [],
+        now: 0,
     }),
     created() {
         this.connect()
@@ -155,6 +167,10 @@ export default {
             this.imgData.push(this.auction.productDTO.product_img_name.replace('(0)', `(${i})`))
         }
         console.log('pushImg', this.imgData);
+    },
+    mounted () {
+        this.updateNow();
+        setInterval(this.updateNow.bind(this) , 1000);
     },
     methods: {
         likeStateFunc(){
@@ -273,7 +289,42 @@ export default {
                 //     this.$router.push('/login');
                 // }  
             });
-        }
+        },
+        updateNow() {
+            this.now = Math.round(Date.now() / 1000);
+            // aution들이 가지고 있는 시간 빼기
+        },
+        updateDeadlineDate(deadline){
+            if(this.auction.bid_status === 0) return  '';
+            let date = new Date(); // 2022-07-25 00:00:00.0
+            console.log('date', date); // 현재시간 밀리초
+            console.log('auction', this.auction);
+            console.log('deadline', deadline)
+            date.setFullYear(Number(deadline.substr(0, 4)))
+            date.setMonth(Number(deadline.substr(5, 2))-1)  // 1월~12월 => 0~11
+            date.setDate(Number(deadline.substr(8, 2)))
+            date.setHours(Number(deadline.substr(11, 2)))
+            date.setMinutes(Number(deadline.substr(14, 2)))
+            date.setSeconds(Number(deadline.substr(17, 2)))
+            
+            let remaining_time = Math.round(date.getTime() / 1000) - this.now;
+            
+            // 남은 시간이 ( - )인 경우 경매 마감 처리
+            if (remaining_time < 0) return '';
+
+            let day = Math.floor(remaining_time / (24*60*60));
+            let tmp_time = Math.floor(remaining_time % (24*60*60)); 
+            let hours =  Math.floor(tmp_time / (60*60));
+            let minutes = Math.floor(tmp_time % (60*60) / 60);
+            let seconds = Math.floor(tmp_time % (60*60) % 60);
+            let remainingTime = '';
+      
+            if(day != 0) remainingTime += day + '일 ';
+            if(hours != 0) remainingTime += hours + '시간 ';
+            if(minutes != 0) remainingTime += minutes + '분 ';
+            if(seconds != 0) remainingTime += seconds + '초 후';
+            return remainingTime;
+        },
     },
 
     

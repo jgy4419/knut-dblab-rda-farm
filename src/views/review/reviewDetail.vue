@@ -2,13 +2,15 @@
     <div class="reviewModalDetail">
         <div class="back"/>
         <div class="inner">
-            <p class="close" @click="$emit('closeModal', '모달 닫기')">X</p>
-            <h2 class="title" v-on:click="navigateAuction(clickedData.auction_Id)">{{clickedData.auction_name}}</h2>
-            <p>{{clickedData.auction_Id}}</p>
-            <!-- 이미지..불러오기,, -->
+            <header>
+                <p class="close" @click="$emit('closeModal', '모달 닫기')">X</p>
+                <h2 class="title" v-on:click="navigateAuction(clickedData.auction_Id)">{{clickedData.auction_name}}</h2>
+            </header>
+            <!-- <p>{{clickedData.auction_Id}}</p> -->
             <img class="reviewImg" :src="`/auciton_review_images/${clickedData.review_img_name}.png`" 
             alt="auction 이미지" width="200" height="200">
             <p class="reviewContent">{{clickedData.consumer_review}}</p>
+            <i v-for="star in clickedData.grade_point" :key="star" class="fa fa-star review-star"/>
             <Comment 
                 :auction_id="clickedData.auction_Id"
                 :clickedData="clickedData"/>
@@ -108,6 +110,9 @@ export default {
         .reviewImg{
             // width: 80%;
         }
+        .review-star{
+            color: #FFC1AA;
+        }
         .reviewContent{
             font-size: 15px;
             font-weight: 500;
@@ -116,7 +121,7 @@ export default {
         }
         .reviewComment{
             border-top: 1px solid rgb(232, 232, 232);
-            margin-top: 20px;
+            // margin-top: 20px;
             padding-top: 20px;
         }
     }
@@ -127,6 +132,10 @@ export default {
         .inner{
             .reviewImg{
                 // width: 30%;
+            }
+            .reviewContent{
+                font-weight: 600;
+                margin-bottom: 20px;
             }
         }
     }

@@ -57,8 +57,9 @@
     border: 0.5px solid #333;
 }
 
-.aution_button{
-    position: absolute;
+.aution_button, .more-button{
+    position: fixed;
+    border-bottom: .5px solid #333;
     bottom: 0;
     width: 100%;
     height: 50px;
@@ -66,7 +67,9 @@
     font-weight: 700;
     background-color: #FFC1AA;
 }
-
+.aution_button{
+    border: 0;
+}
 /* .user-component {
     display: flex;
     justify-content: space-between;

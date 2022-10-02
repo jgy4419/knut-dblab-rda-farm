@@ -8,10 +8,10 @@
                 <h2 class="title">회원 탈퇴</h2>
                 <div class="passwordBox">
                     <div class="inputBox">
-                        <span>아이디 : </span> <input class="input" type="text" placeholder="아이디를 입력하세요" v-model="id"/> 
+                        <span>아이디 : </span> <input class="input" type="text" placeholder="아이디를 입력하세요" v-model="email"/> 
                     </div>
                     <div class="inputBox">
-                        <span>비밀번호 : </span> <input class="input" type="password" placeholder="비밀번호를 입력하세요" v-model="pw"/>
+                        <span>비밀번호 : </span> <input class="input" type="password" placeholder="비밀번호를 입력하세요" v-model="password"/>
                     </div>
                     <button @click="userSecession()" class="user_secession_button">회원 탈퇴</button>
                 </div>
@@ -25,8 +25,8 @@ import axios from 'axios';
 export default {
     data(){
         return {
-            id: '',
-            pw: '',
+            email: '',
+            password: '',
             modalState: 0,
             user: JSON.parse(localStorage.getItem("user")),
             checkUser: localStorage.getItem("checkUser"),
@@ -36,15 +36,18 @@ export default {
         userSecession(){
             let user_id = this.checkUser == 'consumer' ? this.user.consumer_id : this.user.farm_id;
             if(window.confirm('정말 회원 탈퇴를 하시겠습니까?')){
-                axios.delete(`/api/member/${this.checkUser}/${user_id}`, {
+                axios.delete(`/api/member/${this.checkUser}/${user_id}/${this.email}/${this.password}`, {
                     headers: {
                         TOKEN: this.user.token
                     }
                 }).then(res => {
+                    console.log('res.data: ' + res.data);
+                    if(res.data === -1) return alert("참여 중인 경매 마감 후 탈퇴해주세요!");
+                    if(res.data === -2) return alert('아이디나 비밀번호가 잘 못 되었습니다!');
                     if(res.data === 1){
                         alert('탈퇴되었습니다!');
-                    }else{
-                        alert('아이디나 비밀번호가 잘 못 되었습니다!');
+                        this.$store.commit('LOGOUT');
+                        this.$router.push('/login');
                     }
                 })
             }else{

@@ -1,75 +1,43 @@
 <template>
-    <div class="alert-contain">
-        <Header :headerProps="headerProps"/>
-        <div class="inner" ref="items">
-            <Spinner v-if="spinnerState === 1"/>
-            <div class="main-screen">
-                <fieldset>
-                    <ul class="goods_group">
-                        <li v-for="alert, i in $store.state.alertList" :key="i">
-                            <div class="user-component">
-                                <div class="user-component__column">
-                                    <img :src="`/product_images/${$store.state.alertList[i].product_img_name}.png`"
-                                        class="user-component__avatar" width="50" height="50">
-                                </div>
-                                <div class="user-component__text">
-                                    <h4 class="user-component__title">{{$store.state.alertList[i].auction_name}}</h4>
-                                    <h5 class="user-component__subtitle">{{$store.state.alertList[i].f_farm_name}}</h5>
-                                    <p class="user-component__content">{{checkUser === 'consumer' ? status.consumerAlert[i] : status.farmAlert[i]}}</p>
-                                    <!-- <h4 class="user-component__title">농가이름</h4>
-                                    <h5 class="user-component__subtitle">제목</h5> -->
-                                </div>
+    <fieldset>
+        <ul class="goods_group">
+            <li v-for="alert, i in $store.state.alertList" :key="i">
+                <div class="user-component">
+                    <div class="user-component__column">
+                        <img :src="`/product_images/${$store.state.alertList[i].product_img_name}.png`"
+                            class="user-component__avatar" width="50" height="50">
+                    </div>
+                    <div class="user-component__text">
+                        <h4 class="user-component__title">{{$store.state.alertList[i].auction_name}}</h4>
+                        <h5 class="user-component__subtitle">{{$store.state.alertList[i].f_farm_name}}</h5>
+                        <p class="user-component__content">{{checkUser === 'consumer' ? status.consumerAlert[i] : status.farmAlert[i]}}</p>
+                        <!-- <h4 class="user-component__title">농가이름</h4>
+                        <h5 class="user-component__subtitle">제목</h5> -->
+                    </div>
 
-                                <div class="user-component__column">
-                                    <p class="user-component__time">{{alert.time.slice(0, 10)}}</p>
-                                    <button class="check-button" @click="checked(alert.alert_id, i)">확인여부  {{alert.checked}}</button>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </fieldset>
-            </div>
-
-            <div id="imageDownloaderSidebarContainer">
-                <div class="image-downloader-ext-container">
-                    <div tabindex="-1" class="b-sidebar-outer">
-                        <div id="image-downloader-sidebar" tabindex="-1" role="dialog" aria-modal="false" aria-hidden="true"
-                            class="b-sidebar shadow b-sidebar-right bg-light text-dark" style="width: 500px; display: none;">
-                            <div class="b-sidebar-body">
-                                <div></div>
-                            </div>
-                        </div>
+                    <div class="user-component__column">
+                        <p class="user-component__time">{{alert.time.slice(0, 10)}}</p>
+                        <button class="check-button" @click="checked(alert.alert_id, i)">확인여부  {{alert.checked}}</button>
                     </div>
                 </div>
-            </div>
-            <div class="main_nav_b_div">
-                <nav class="main_b_nav">
-                    <ul class="main_m_ui_list">
-                        <li class="nav__btn">
-                            <router-link class="nav__link" to="/auction">
-                                <button class="aution_button">경매장으로 가기</button>
-                            </router-link>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-    </div>
+            </li>
+        </ul>
+    </fieldset>
 </template>
 
 <script>
-import Header from '../../components/Header/backHeader.vue';
-import Spinner from '../../components/spinner.vue';
-import axios from 'axios';
-import _ from 'lodash';
 export default {
-    components: {
-        Header,
-        Spinner
+    mounted(){
+        setTimeout(() => {
+            this.spinnerState = 0;
+            this.statusFunc();
+            // this.getData.push();            
+        }, 3000);
+        this.checkUser = localStorage.getItem('checkUser');
+        this.id = this.checkUser == 'consumer' ? this.user.consumer_id : this.user.farm_id;
     },
-    data() {
+    data(){
         return {
-            headerProps: '경매 알림',
             // 나중에 Store나 로컬스토리지에 있는 사용자 데이터로 변경해서 사용
             checkUser: null,
             id: null,
@@ -82,43 +50,14 @@ export default {
                 beforeConsumerAlert: [],
                 farmAlert: [],
             },
-            maxAlertText: "더 이상 가져올 알림이 없습니다.",
-            height: 0,
-            zeroData: 0,
+            maxAlertText: "더 이상 가져올 알림이 없습니다."
         }
     },
-    mounted() {
-        this.height = document.body.scrollHeight;
-        console.log(this.$refs.items.clientHeight);
-        setTimeout(() => {
-            this.spinnerState = 0;
-            this.statusFunc();
-            // this.getData.push();            
-        }, 3000);
-
-        window.addEventListener('scroll', _.throttle(() => {
-            this.infiniteScroll();
-            this.height = document.documentElement.scrollHeight;
-        }, 500), true);
-
-        this.checkUser = localStorage.getItem('checkUser');
-        this.id = this.checkUser == 'consumer' ? this.user.consumer_id : this.user.farm_id;
-        console.log(this.checkUser);
-    },
     methods: {
-        infiniteScroll(){
-            const {innerHeight} = window;
-            if(Math.round(this.$refs.items.scrollTop + innerHeight) === this.$refs.items.scrollHeight){
-                console.log('스크롤 실행');
-                this.getAlertData();
-                // await this.getReviewData();
-            }
-            console.log(innerHeight);
-        },
         getAlertData(){
             if(this.$store.state.isMaxStartLimit) {
-                this.zeroData = 1;
                 return alert(this.maxAlertText);
+                // windodw.removeEventListener('scroll', true);
             }
             axios.get(`/api/alert/${this.checkUser}/${this.id}/${this.$store.state.alertStartLimit}`, {
                 headers: {
@@ -128,7 +67,6 @@ export default {
            .then(res => {
                 console.log(res.data);
                 this.$store.commit('PUSH_ALERT_LIST', res.data);
-                this.statusFunc();
             }).catch(err => {    
                 console.log(err); 
                 // if(res.headers.token != "token"){     
@@ -164,7 +102,6 @@ export default {
         },
         statusFunc(){
             let alertList = this.$store.state.alertList;
-            console.log(alertList);
             for(let i = 0; i < alertList.length; i++){
                 console.log(alertList[i]);
                 switch(alertList[i].d_status){
@@ -225,20 +162,11 @@ export default {
                 console.log('farm', this.status.farmAlert);
             }
         }
-
     }
-
 }
 </script>
 
+
 <style lang="scss" scoped>
-.alert-contain{
-    height: 100vh;
-    overflow-y: hidden;
-    .inner{
-        position: relative;
-        height: 100vh;
-        overflow-y: scroll;
-    }
-}
+
 </style>

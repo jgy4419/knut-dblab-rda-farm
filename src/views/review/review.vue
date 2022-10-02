@@ -14,8 +14,8 @@
             <ReviewList v-for="data, i in infiniteScrollValue" :key="i" class="reviewList"
             :getData="getData"/>
         </div>
-        <Bottom/>
     </div>
+    <Bottom/>
 </template>
 
 <script>
@@ -60,7 +60,7 @@ export default {
             }
         }).then(res => {  
                 this.getData.push(res.data);
-                this.spinnerState = false;``
+                this.spinnerState = false;
                 console.log(res);
                 console.log(this.getData.flat(Infinity));
             }).catch(err => {
@@ -90,7 +90,7 @@ export default {
 <style lang="scss" scoped>
     .reviewContain{
         width: 100%;
-        height: 100vh;
+        height: 95vh;
         .header{
             width: 100%;
             height: 55px;
@@ -117,7 +117,7 @@ export default {
             z-index: 1;
             margin: auto;
             width: 100%;
-            height: 90vh;
+            height: 87vh;
             .reviewBtn{
                 width: 50%;
                 font-weight: 700;

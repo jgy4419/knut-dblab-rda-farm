@@ -47,6 +47,7 @@ i{
     }
 }
 .nav_m_link{
+    font-weight: 700;
     margin-top: 5px;
     font-size: 18px;
 }

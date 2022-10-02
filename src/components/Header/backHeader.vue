@@ -38,6 +38,7 @@ i{
     z-index: 10;
     width: 100%;
     height: 60px;
+    font-weight: 700;
     background-color: #FFC1AA;
     nav{
         width: 400px;

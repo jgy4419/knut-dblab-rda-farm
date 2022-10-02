@@ -96,7 +96,8 @@
                             <th scope="row"><strong>프로필 사진</strong></th>
                             <td>
                                 <div>
-                                    <img class="img" :src="this.user.c_profile_img === '' ? '/member_profile_images/base_image.png' : `/member_profile_images/${this.user.c_profile_img}.png`" alt="프로필 이미지">
+                                    <!-- https://www.ibossedu.co.kr/template/DESIGN_shared/program/theme/01/THUMBNAIL_60_60_icon_rep_box.gif -->
+                                    <img class="img" :src="this.user.c_profile_img === null ? '/member_profile_images/base_image.png' : `/member_profile_images/${this.user.c_profile_img}.png`" alt="프로필 이미지">
                                 </div>
                             </td>
                             <td width="65%">
@@ -339,11 +340,12 @@ export default {
         },
         searchAddressResult(event){
             console.log('event: ', event);
+            if(!confirm(this.addressChangeConfirmation)) return;
             this.addressInfo.zipcode = event.zipcode;
             this.addressInfo.location = event.address;
-            if(!confirm(this.addressChangeConfirmation)) return;
+            this.addressInfo.c_detail_location = event.c_detail_location;
 
-            axios.patch('api/memberAddress', { 
+            axios.patch('/api/memberAddress', { 
                 checkUser: "consumer", 
                 id: this.user.consumer_id, 
                 zipcode: event.zipcode,
@@ -354,9 +356,13 @@ export default {
                         TOKEN: this.user.token
                     }
                 }).then(res => {
-
                     console.log(res.data);
+                    this.user.c_zipcode = event.zipcode;
+                    this.user.c_location = event.address;
+                    this.user.c_detail_location = event.c_detail_location;
+                    localStorage.setItem("user", JSON.stringify(this.user));
                     alert(this.addressChangeSuccess);
+                    location.reload()
                 }).catch(err => {
                     // if(res.headers.token != "token"){
                     //     this.$store.commit('LOGOUT');

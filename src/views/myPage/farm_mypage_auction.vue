@@ -2,7 +2,7 @@
     <div>
         <!--  -->
         <Header :headerProps="headerProps"/>
-        <div class="contain">
+        <div class="contain" ref="items">
             <p :style="[getData.length === 0 ? {display: 'block'} : {display: 'none'}]" class="not-auction-title">경매 내역이 없습니다.</p>
             <div class="item" v-for="data, i in getData.length" :key="i">
                 <img :src='`/product_images/${getData[i].product_img_name}.png`'
@@ -17,19 +17,19 @@
                     </div>
                     <div class="auctionBtns">
                         <button  v-if="getData[i].bid_status === true" class="auctionBtn-ing">경매중</button>                        
-                        <button  v-if="getData[i].bid_status === false && buttonState === 1" class="auctionBtn">경매종료</button>
-                        <button v-if="getData[i].bid_status === false && buttonState === 1" class="auctionBtn">계산하기</button>
-                        <button v-if="writeUrlState[i] === 1" class="reviewBtn-end">작성완료</button>
+                        <button  v-if="getData[i].bid_status === false" class="auctionBtn">경매종료</button>
+                        <button v-if="getData[i].bid_status === false && checkUser === 'consumer'" class="auctionBtn" v-on:click="navigateAuctionPayment(getData[i])">계산하기</button>
+                        <button v-if="writeUrlState[i] === 0" class="reviewBtn-end">작성완료</button>
                         <router-link v-if="getData[i].bid_status === false" :to="`/farm_mypage_auction/writeReview/${getData[i].auction_Id}`">
                         <!-- <router-link v-if="getData[i].bid_status === false" :to="`#`"> -->
-                            <button @click="setReviewData(i)" v-if="buttonState === 0" class="reviewBtn">후기작성</button>
+                            <button @click="setReviewData(i)" v-if="writeUrlState[i] === 1 && checkUser === 'consumer'" class="reviewBtn">후기작성</button>
                         </router-link>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="main_nav_b_div">
+        <!-- <div class="main_nav_b_div">
             <nav class="main_b_nav">
                 <ul class="main_m_ui_list">
                     <li class="nav__btn">
@@ -37,7 +37,7 @@
                     </li>
                 </ul>
             </nav>
-        </div>
+        </div> -->
 
     </div>
 </template>
@@ -45,6 +45,8 @@
 <script>
 import axios from 'axios';
 import Header from '../../components/Header/backHeader.vue';
+import _ from 'lodash';
+
 export default {
     components: {
         Header
@@ -52,53 +54,77 @@ export default {
     data(){
         return{
             headerProps: '경매 내역',
-            buttonState: 1,
+            // buttonState: 1,
+            reviewState: 1,
             getData: [],
             auctionState: true,
             user: JSON.parse(localStorage.getItem("user")),
             checkUser: localStorage.getItem('checkUser'),
             writeUrlState: [],
+            startLimit: 0,
         }
     },
     async mounted(){
-        if(this.checkUser === 'consumer'){
-            this.buttonState = 0;
-        }
+        window.addEventListener('scroll', _.throttle(() => {
+            this.infiniteScroll();
+        }, 500), true);
+        // if(this.checkUser === 'consumer'){
+        //     this.buttonState = 0;
+        // }
         // console.log(this.$store.state.login.userInfo.consumer_id);
         console.log(this.$store.state.user.checkUser);
         console.log(this.$store.state.user.id);
-        await axios.get(`/api/mypageAuctionDetails/${localStorage.getItem('checkUser')}/${localStorage.getItem('id')}/${0}`, {
-            headers: {
-                TOKEN: this.user.token
-            }
-        }).then(res => {
-            console.log(res.data);
-            this.getData.push(res.data);
-            this.getData = this.getData.flat();
-            for(let i = 0; i < this.getData.length; i++){
-                console.log(this.getData[i].consumer_review);
-                if(this.getData[i].consumer_review){
-                    this.writeUrlState.push(1);
-                }else{
-                    this.writeUrlState.push(0);
-                }
-            }
-            console.log(this.writeUrlState);
-        }).catch(err => {
-			console.log(err); 
-			// if(res.headers.token != "token"){     
-			// 	alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-			// 	this.$store.commit('LOGOUT');
-			// 	this.$router.push('/login');
-			// }
-        });
+        await this.getDatas();
     },
     methods: {
+        getDatas(){
+            axios.get(`/api/mypageAuctionDetails/${localStorage.getItem('checkUser')}/${localStorage.getItem('id')}/${this.startLimit}`, {
+                headers: {
+                    TOKEN: this.user.token
+                }
+            }).then(res => {
+                console.log(res.data);
+                this.getData.push(res.data);
+                this.getData = this.getData.flat();
+                for(let i = 0; i < this.getData.length; i++){
+                    console.log(this.getData[i].consumer_review);
+                    if(this.getData[i].consumer_review){
+                        this.writeUrlState.push(0);
+                    }else{
+                        this.writeUrlState.push(1);
+                    }
+                }
+                this.startLimit += 5
+                console.log(this.writeUrlState);
+            }).catch(err => {
+                console.log(err); 
+                // if(res.headers.token != "token"){     
+                // 	alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                // 	this.$store.commit('LOGOUT');
+                // 	this.$router.push('/login');
+                // }
+            });
+        },
+        infiniteScroll(){
+            // console.log(this.$refs.items.scrollTop + innerHeight);
+            // console.log(this.$refs.items.scrollHeight);
+            // console.log(this.$route.path);
+            if(this.$route.path === '/farm_mypage_auction'){
+                const {innerHeight} = window;
+                if(Math.round(this.$refs.items.scrollTop + window.innerHeight) >= this.$refs.items.scrollHeight){
+                    console.log('스크롤 실행');
+                    this.getDatas();
+                }
+            }else{
+                return;
+            }
+            console.log(innerHeight);
+        },      
         setReviewData(index){
             console.log(this.getData[index]);
             this.$store.commit('GET_REVIEW_DATA', this.getData[index]);
         },
-        navigateAuction (auction_Id) {
+        navigateAuction(auction_Id) {
             axios.get(`/api/auctionInfo/${auction_Id}`, {
                 headers: {
                     TOKEN: this.user.token
@@ -114,6 +140,9 @@ export default {
                 // 	this.$router.push('/login');
                 // }
             });
+        },
+        navigateAuctionPayment(auction) {
+            this.$router.push({name:'farm_calculate', params: { id: auction.auction_Id, auction: JSON.stringify(auction) }});
         },
     }
 }
@@ -139,7 +168,8 @@ export default {
     position: relative;
     // background-color: rgb(245, 245, 245);
     width: 100%;
-    height: 30vh;
+    height: 90vh;
+    overflow-y: scroll;
     .not-auction-title{
         font-size: 20px;
         margin-top: 50%;

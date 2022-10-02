@@ -83,7 +83,7 @@
                             <th scope="row"><strong>프로필 사진</strong></th>
                             <td >
                                 <div>
-                                    <img class="img" :src="this.user.f_profile_img === '' ? '/member_profile_images/base_image.png' : `/member_profile_images/${this.user.f_profile_img}.png`" alt="프로필 이미지">
+                                    <img class="img" :src="this.user.c_profile_img === null ? '/member_profile_images/base_image.png' : `/member_profile_images/${this.user.f_profile_img}.png`" alt="프로필 이미지">
                                 </div>
                             </td>
                             <td width="65%">
@@ -314,8 +314,14 @@ export default {
             pro_test: JSON.parse(localStorage.getItem("pro_test")) || "",
             user: JSON.parse(localStorage.getItem("user")) || "",
             addressInfo: {
-                zipcode: JSON.parse(localStorage.getItem("user")).f_zipcode, 
-                address: JSON.parse(localStorage.getItem("user")).f_location
+                zipcode: JSON.parse(localStorage.getItem("user")).f_zipcode === null 
+                ? '아직 주소 설정이 안 되어있습니다.'
+                : JSON.parse(localStorage.getItem("user")).f_zipcode, 
+                address: JSON.parse(localStorage.getItem("user")).f_location === null
+                ? '아직 주소 설정이 안 되어있습니다.'
+                : JSON.parse(localStorage.getItem("user")).f_location,
+                c_detail_location: '',
+                isConsumer: false,
             },
             checkUser: "farm",
             isShow1: false,
@@ -594,11 +600,10 @@ export default {
             console.log(event.target.files[0]);
         },
         searchAddressResult(event){
-            // 인증번호 맞는지 검사하고 맞다면 비밀번호 변경창 띄우기
             console.log('event: ', event);
+            if(!confirm(this.addressChangeConfirmation)) return;
             this.addressInfo.zipcode = event.zipcode;
             this.addressInfo.location = event.address;
-            if(!confirm(this.addressChangeConfirmation)) return;
 
             // 서버에 변경된 데이터 보내기
             axios.patch('api/memberAddress', { 
@@ -611,8 +616,10 @@ export default {
                     TOKEN: this.user.token
                 }
             }).then(res => {
-
                 console.log(res.data);
+                this.user.f_zipcode = event.zipcode;
+                this.user.f_location = event.address;
+                localStorage.setItem("user", JSON.stringify(this.user));
                 alert(this.addressChangeSuccess);
             }).catch(err => {
                 console.log(err); 
@@ -687,9 +694,9 @@ export default {
             let frm = new FormData();
             this.new_bank_img = document.getElementById("bank_img_file").files[0];
             frm.append("farm_id", this.user.farm_id);
-            frm.append("f_bank",this.f_bank);
-            frm.append("f_bank_name", this.f_bank_name);
-            frm.append("f_bank_num",Number(this.f_bank_num));
+            frm.append("f_bank",this.user.f_bank);
+            frm.append("f_bank_name", this.user.f_bank_name);
+            frm.append("f_bank_num",Number(this.user.f_bank_num));
             frm.append("f_bank_img",this.user.f_bank_img);
             console.log(frm);
             if(this.new_bank_img != undefined) frm.append('new_bank_img', this.new_bank_img);
@@ -703,9 +710,6 @@ export default {
 
                 console.log(res);
                 console.log(res.data);
-                this.user.f_bank = this.f_bank;
-                this.user.f_bank_name = this.f_bank_name;
-                this.user.f_bank_num = this.f_bank_num;
                 this.user.f_bank_img = res.data;
                 localStorage.setItem("user", JSON.stringify(this.user));
                 location.reload();

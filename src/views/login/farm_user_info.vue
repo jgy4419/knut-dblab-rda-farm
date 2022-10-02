@@ -58,9 +58,8 @@ export default {
 				f_zipcode: null,
 				f_location: null,
 				f_num: null
-				
-
-			}
+			},
+			addressCheck: false,
 			
 		};
 	},
@@ -75,6 +74,7 @@ export default {
         },
 		submitFuserSignUp() {
 			console.log(this.farm_member_info);
+			if(!this.addressCheck) return alert('주소 입력을 완료해주세요!');
 			axios.post('/api/signupFarmMember', this.farm_member_info)
 			.then(res => {
 				console.log(res);

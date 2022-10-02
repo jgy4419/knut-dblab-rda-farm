@@ -40,7 +40,7 @@ export default {
   props: {
     imgData: Array
   },
-  mounted(){
+  created(){
     console.log(this.$route.fullPath.split('/'));
     console.log('이미지 데이터', this.imgData);
     if(this.imgData !== undefined){
@@ -71,33 +71,6 @@ export default {
       console.log(this.items);
     }   
   },
-  beforeMount(){
-    
-  },
-  created(){
-    // setTimeout(() => {
-    //   if(this.imgData !== undefined){
-    //     if(this.imgData.length > 0){
-    //       this.items = [];
-    //       for(let img of this.imgData){
-    //         this.items.push(`/product_images/${img}.png`);
-    //         console.log('이미지 url', this.items);
-    //       }
-    //     }
-    //   }else{
-    //     let basicImg = [
-    //       '/auciton_slide_images/slide_1.jpg',
-    //       '/auciton_slide_images/slide_2.jpg',
-    //       '/auciton_slide_images/slide_3.jpg',
-    //       '/auciton_slide_images/slide_4.jpg',
-    //     ]
-    //     for(let i = 0; i < basicImg.length; i++){
-    //       this.items.push(basicImg[i]);
-    //     }
-    //   }   
-    // }, 10);
-    
-  },
   data(){
     return {
       modules: [Autoplay, Pagination, Navigation],
@@ -110,13 +83,12 @@ export default {
 <style lang="scss" scoped>
 .swiper {
   width: 100%;
-  height: 250px;
+  height: 200px;
 }
 .slideList{
     width: 100%;
-    height: 250px;
+    height: 200px;
     background-size: contain;
-    
 }
 
 .swiper-slide  {
@@ -141,9 +113,9 @@ export default {
 
 .swiper-slide  img {
   display: block;
-  width: 100%;
+  // width: 100%;
   height: 100%;
-  object-fit: cover;
+  // object-fit: cover;
 }
 
 </style>

@@ -42,7 +42,7 @@
                 <div class="white_div">
                     <div class="goods_pay_section ">
                         <div class="goods_group">
-                            <ul class="goods_group_list">
+                            <ul ref="items" class="goods_group_list">
                                 <li v-for="(auction, index) in this.$store.state.searchAuctionList" :key="auction.auction_Id"
                                     id="_rowLi20220203162708CHK2022020394386781"
                                     class="goods_pay_item _interlockNo20220211200904406814">
@@ -58,8 +58,6 @@
                                                 </p>
                                                 <ul class="info">
                                                     <li><span class="blind">상품금액</span>{{auction.bid_price}}원</li>
-                                                    <li class="date"><span class="blind">등록일</span> {{auction.productDTO.p_reg_date}}
-                                                    </li>
                                                 </ul>
                                             </div>
                                             <p class="state _statusName value_color_green _click(nmp.front.order.timeline.home.list.openDeliveryPopup(/o/orderStatus/deliveryTracking/2022020394386781/ORDER_DELIVERY/api)) _stopDefault">{{auction.bid_status}}
@@ -73,7 +71,8 @@
                                         <div class="inner">
 
                                             <span class="seller">{{auction.f_farm_name}}</span>
-                                            <span class="tel">{{auction.f_phonenum}}</span>
+                                            <span class="tel">0{{auction.f_phonenum.toString().replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{1}|^0[0-9]{4})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-")}}</span>
+                                            <li class="date"><span class="blind">등록일</span> {{auction.productDTO.p_reg_date}}</li>
                                             <!-- <router-link :to="{ name: 'auction_detail', params: { auction}, }"> auction_detail </router-link> -->
                                             <br><br>
                                         </div>
@@ -83,13 +82,11 @@
                         </div>
                     </div>
                 </div>
-                <button class="more-button" @click="searchAuction(this.preKeyword)">더보기</button>
+                <!-- <button class="more-button" @click="searchAuction(this.preKeyword)">더보기</button> -->
             </fieldset>
         </div>
-
-        <bottom-nav/> 
-
     </div>
+    <bottom-nav class="bottom"/> 
 </template>
 
 <script>
@@ -98,6 +95,7 @@ import Stomp from 'webstomp-client';
 import SockJS from 'sockjs-client';
 import Header from '../../components/Header/bellAndBackHeader.vue';
 import bottomNav from '@/components/bottomNav.vue';
+import _ from 'lodash';
 
 export default {
   components: {  Header, bottomNav},
@@ -110,17 +108,42 @@ export default {
         preKeyword: '',
         keyword: '',
         startLimit: 0,
-        NUMBER_OF_AUCTION: 4,
+        NUMBER_OF_AUCTION: 5,
         user: JSON.parse(localStorage.getItem("user")),
+        isMaxLimit: false,
     }
   },
   created(){
     this.connect()
     this.initPopularKeyword()
   },
+  mounted(){
+    window.addEventListener('scroll', _.throttle(() => {
+        this.infiniteScroll();
+        this.height = document.documentElement.scrollHeight;
+    }, 500), true);
+  },
   methods: {
+    infiniteScroll(){
+        if (this.keyword === '') return;
+        console.log(this.$refs.items.scrollTop + innerHeight);
+        console.log(this.$refs.items.scrollHeight);
+        // console.log(this.preKeyword);
+        console.log(this.$route.path);
+        if(this.$route.path === '/search'){
+            const {innerHeight} = window;
+            if(Math.round(this.$refs.items.scrollTop + innerHeight) >= this.$refs.items.scrollHeight){
+                console.log('스크롤 실행');
+                this.searchAuction(this.preKeyword);
+            }
+            console.log(innerHeight);
+        }else{
+            return;
+        }
+    },
     searchAuction(keyword) {
-        if (keyword !== ''){                        //검색어를 입력한 경우
+        // if(this.isMaxLimit) return alert("더 이상 불러올 경매가 없습니다!");
+        if (keyword !== ''){ //검색어를 입력한 경우
             console.log('keyword: ' + keyword);
 
             if(this.preKeyword != keyword) {
@@ -149,10 +172,9 @@ export default {
             .catch(err => {
                 console.log(err);
             });
-
             // 검색어 초기화
             this.keyword = ''
-        } else if(keyword === ''){
+        } else if(keyword === '' && this.preKeyword === ''){
             alert('검색어를 입력해주세요!')  //검색어를 입력하지 않은 경우
         }
     },
@@ -211,13 +233,61 @@ export default {
     min-height: 20vh;
 }
 .more-button{
-    width: 100%;
+    width: 400px;
     height: 50px;
     font-weight: 700;
     background-color: #FFC1AA;
 }
-.inner{
-  position: relative;
-  min-height: 95vh;
+.search-contain{
+    height: 80vh;
+}
+.goods_pay_item{
+    border: 0;
+    position: relative;
+    width: 100%;
+    height: 120px;
+    .goods_item{
+        left: 0;
+        width: 100%;
+        height: 100%;
+        .goods_info{
+            .goods{
+                height: 50px;
+            .info{
+                height: 50px;
+                    li{
+                        border: 0;
+                    }
+                }
+            }
+        }
+    }
+    .seller_item{
+    height: 100px;
+    .inner{
+        height: 50px;
+            .date{
+                border: 0;
+                margin-bottom: 10px;
+                font-size: 10px;
+                color: lightgrey;
+                font-weight: 700;
+            }
+        }
+    }
+}
+.goods_group_list{
+    position: relative;
+    height: 300px;
+    overflow-y: scroll;
+}
+.bottom{
+    position: fixed;
+    bottom: 0;
+}
+@media screen and (max-width: 500px){
+    .more-button{
+        width: 100%;
+    }
 }
 </style>

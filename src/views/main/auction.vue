@@ -4,6 +4,9 @@
       <Header :headerProps="headerProps"/>
       <!-- 사진 데이터 props로 넣어주기 :imgData = "imgData"명으로 넣어주기-->
       <Slide :imgData="imgData"/>
+      <div class="buttonContain">
+        <button @click="reload()" class="reload-button">새로고침</button>
+      </div>
       <AuctionList/>
     </div>
     <bottom-nav/>
@@ -27,14 +30,40 @@ export default{
         imgData: undefined,
       }
   },
+  methods: {
+    reload(){
+      location.reload();
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 .inner{
   position: relative;
-  // min-height: 95vh;
+  .buttonContain{
+    position: fixed;
+    z-index: 100;
+    width: 400px;
+    margin: auto;
+    .reload-button{
+      position: absolute;
+      right: 10px;
+      margin-top: -20px;
+      width: 100px;
+      height: 40px;
+      font-size: 14px;
+      font-weight: 700;
+      background-color: rgb(241, 241, 241);
+      border-radius: 10px;
+    }
+  }
 }
+// @media screen and (max-height: 400px){
+//   .reload-button{
+//     margin-top: -100px;
+//   }
+// }
 </style>
 
 
