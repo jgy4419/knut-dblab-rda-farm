@@ -283,6 +283,7 @@ export default {
 }
 .bottom{
     position: fixed;
+    // position: absolute;
     bottom: 0;
 }
 @media screen and (max-width: 500px){
