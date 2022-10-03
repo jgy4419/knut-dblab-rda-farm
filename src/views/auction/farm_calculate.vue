@@ -107,9 +107,7 @@
         <nav class="main_b_nav">
             <ul class="main_m_ui_list">
                 <li class="nav__btn">
-                    <a class="nav__link" href="farm_calculate_clear">
-                        <h4 class="user-component__title">정산하기</h4>
-                    </a>
+                    <h4 class="user-component__title" v-on:click="pay()">정산하기</h4>
                 </li>
             </ul>
         </nav>
@@ -120,6 +118,7 @@
 <script>
 import Header from '../../components/Header/backHeader.vue';
 import Slide from '../../components/slide.vue';
+import axios from "axios"
 
 export default {
     components: { Header, Slide },
@@ -140,21 +139,44 @@ export default {
                 src: 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg',
             },
             ],
+            user: JSON.parse(localStorage.getItem("user")),
             auction: null,
             fee: null,
             paymentAmount: null,
             imgData: [],
+            orderDTO: {},
         }
     },
     created() {
+        document.cookie = "safeCookie1=foo; SameSite=Lax";
+        document.cookie = "safeCookie2=foo";
+        document.cookie = "crossCookie=bar; SameSite=None; Secure";
+
         console.log('arr', this.$route.params.auction);
-        
+        if(this.$route.params.auction == undefined) this.$router.push({name:'farm_mypage_auction'});
+
         this.auction = JSON.parse(this.$route.params.auction);
         console.log('경매 정보', this.auction);
         this.fee = this.auction.bid_price / 100 * 5;
-        this.paymentAmount = this.auction.bid_price + this.fee; 
+        this.paymentAmount = this.auction.bid_price + this.fee;
+        this.orderDTO.paymentDTO = {};
+        this.orderDTO.paymentDTO.auction_Id = this.auction.auction_Id;
+        this.orderDTO.paymentDTO.payment_amount = this.paymentAmount;
+        this.orderDTO.paymentDTO.pay_method = 'card';
+        this.orderDTO.deliveryDTO = {};
+        this.orderDTO.deliveryDTO.zipcode = this.user.c_zipcode;
+        this.orderDTO.deliveryDTO.destination = this.user.c_location + ' ' + this.user.c_detail_location;
+        this.orderDTO.auction_Id = this.auction.auction_Id;
+        this.orderDTO.bidding = {};
+        this.orderDTO.bidding.auction_Id = this.auction.auction_Id;
+        this.orderDTO.bidding.bid_price = this.paymentAmount;
+        this.orderDTO.bidding.farm_id = this.auction.farm_id;
+        this.orderDTO.bidding.consumer_id = this.auction.consumer_id;
+        this.orderDTO.bidding.auction_name = this.auction.auction_name;
+        this.orderDTO.bidding.f_farm_name = this.auction.f_farm_name;
+        this.orderDTO.bidding.c_name = this.auction.c_name;
+        this.orderDTO.bidding.product_img_name = this.auction.product_img_name;
 
-        // 해당 경매 관련 이미지 여러 개 넣기
         let auctionImagesLength = this.auction.product_img_name[this.auction.product_img_name.length-1];
         console.log('img', auctionImagesLength)
         for(let i = 0; i < auctionImagesLength; i++){
@@ -162,6 +184,52 @@ export default {
         }
         console.log('pushImg', this.imgData);
     },
+    methods: {
+        navigateAuctionPayment() {
+            this.$router.push({name:'payment'});
+        },
+        pay(){
+            IMP.init("imp87328402");
+
+            IMP.request_pay({ // param
+                pg: "html5_inicis",
+                pay_method: "card",
+                merchant_uid: (new Date()).getTime().toString(),
+                // merchant_uid: "ORD20180131-0000012",
+                name: "낙과 경매 플랫폼 PACHI",
+                amount: this.paymentAmount,
+                buyer_email: this.user.c_email,
+                buyer_name: this.user.c_name,
+                buyer_tel: this.user.c_phonenum.replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{1}|^0[0-9]{4})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-"),
+                buyer_addr: this.user.c_location,
+                buyer_postcode: this.user.c_zipcode
+            }, res => {   
+                console.log(res);
+                if (res.success) {
+                    console.log("결제 성공");
+                    axios.post('/api/payment', this.orderDTO, {
+                        headers: {
+                            TOKEN: this.user.token,
+                        }
+                    }).then(res => {
+                        // if(res.headers.token != "token"){           
+                        //     this.$store.commit('LOGOUT');
+                        //     this.$router.push('/login');
+                        // }
+                        console.log(res.data);
+                        this.$router.push({name:'farm_calculate_clear', params: { id: this.orderDTO.paymentDTO.auction_Id, order: JSON.stringify(res.data)}});
+                    })
+                    .catch(err => {
+                        console.log(err);  
+                    });
+                } else {
+                    console.log("결제 실패");
+                    alert("결제 실패하셨습니다.");
+                    this.$router.go(-1);
+                }
+            });
+        }
+    }
 }
 </script>
 

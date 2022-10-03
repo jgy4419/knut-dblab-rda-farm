@@ -110,9 +110,12 @@ CREATE TABLE IF NOT EXISTS `auction` (
   `bid_num` INT NULL DEFAULT 0 COMMENT '입찰수',
   `bid_status` INT NULL COMMENT '경매상태',
   `bid_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '입찰시간',
+  `payment_status` TINYINT(1) NULL DEFAULT 0 COMMENT '결재 상태',
   PRIMARY KEY (`auction_Id`))
 ENGINE = InnoDB
 COMMENT = '	';
+
+
 
 -- -----------------------------------------------------
 -- Table `alert`
@@ -144,6 +147,8 @@ CREATE TABLE IF NOT EXISTS `delivery` (
   `d_status` TINYINT NOT NULL COMMENT '상태',
   `departure_date` DATETIME NULL COMMENT '출발일',
   `arrival_date` DATE NULL COMMENT '도착예정일',
+  `zipcode` INT(11) NULL COMMENT '우편번호',
+  `destination` VARCHAR(100) NULL COMMENT '목적지',
   PRIMARY KEY (`delivery_id`)
 );
 
@@ -203,6 +208,18 @@ CERATE TABLE IF NOT EXISTS `wish` (
   FOREIGN KEY(`auction_Id`) REFERENCES consumer_member(auction_id),
   FOREIGN KEY(`consumer_Id`) REFERENCES consumer_member(consumer_id),
 )
+
+-- -----------------------------------------------------
+-- Table `payment`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `payment`  (
+  `payment_id` INT(11) NOT NULL AUTO_INCREMENT COMMENT '주문 번호',
+  `auction_Id` INT(11) NOT NULL COMMENT '경매 번호',
+  `payment_amount` INT(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '결제 금액',
+  `pay_method` VARCHAR(20) NOT NULL DEFAULT 'card' COMMENT '결제 수단',
+PRIMARY KEY (`payment_id`),
+FOREIGN KEY(`auction_Id`) REFERENCES auction(auction_Id)
+);
 
 
 

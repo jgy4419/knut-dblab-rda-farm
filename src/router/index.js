@@ -127,8 +127,14 @@ const routes = [
     name: 'farm_calculate',
     component: () => import('../views/auction/farm_calculate.vue')
   },
+  // // 결제
+  // {
+  //   path: '/payment',
+  //   name: 'payment',
+  //   component: () => import('../components/payment.vue')
+  // },
   {
-    path: '/farm_calculate_clear',
+    path: '/farm_calculate_clear/:id',
     name: 'farm_calculate_clear',
     component: () => import('../views/auction/farm_calculate_clear.vue')
   },
@@ -236,6 +242,15 @@ const routes = [
     name: 'consumer_loc',
     component: () => import('../views/consumer/consumer_loc.vue')
   },
+  // 404 페이지
+  {
+    path: '/:pathMatch(.*)*',
+    name: '404page',
+    component: () => import('../404.vue')
+  }
+
+  
+  
   
   
 ]

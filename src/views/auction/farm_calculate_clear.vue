@@ -1,6 +1,8 @@
 <template>
 <div>
-    <div class="main_nav_t_div">
+    <Header :headerProps="headerProps"/>
+    <Slide :imgData="imgData"/>
+    <!-- <div class="main_nav_t_div">
         <nav class="main_t_nav">
             <ul class="main_t_nav_list">
                 <li class="nav__btn">
@@ -22,7 +24,7 @@
                 </li>
             </ul>
         </nav>
-    </div>
+    </div> -->
 
     <div class="sh_group">
         <div class="sh_header">
@@ -37,29 +39,45 @@
                         <table class="tbl_home">
                             <tbody>
                                 <tr>
-                                    <th class="font16">주문번호</th>
-                                    <td class="font16">23458921231231234</td>
+                                    <th class="font16">결제 번호</th>
+                                    <td class="font16">{{order.paymentDTO.payment_id}}</td>
                                 </tr>
                                 <tr>
-                                    <th class="font16">제품명</th>
-                                    <td class="font16">맛있는 딸기</td>
+                                    <th class="font16">경매명</th>
+                                    <td class="font16">{{order.bidding.auction_name}}</td>
                                 </tr>
                                 <tr>
-                                    <th class="font16">입금가격</th>
-                                    <td class="font16">55,000 원</td>
+                                    <th class="font16">지불액</th>
+                                    <td class="font16">{{order.paymentDTO.payment_amount}}원</td>
                                 </tr>
                                 <tr>
-                                    <th class="font16">입금수단</th>
-                                    <td class="font16">계좌이체</td>
+                                    <th class="font16">결제 수단</th>
+                                    <td class="font16">카드</td>
+                                </tr>
+                                <tr>
+                                    <th class="font16">배송 번호</th>
+                                    <td class="font16">{{order.deliveryDTO.delivery_id}}</td>
+                                </tr>
+                                <tr>
+                                    <th class="font16">배송 상태</th>
+                                    <td class="font16">{{order.deliveryDTO.d_status}}</td>
+                                </tr>
+                                <tr>
+                                    <th class="font16">우편번호</th>
+                                    <td class="font16">{{order.deliveryDTO.zipcode}}</td>
+                                </tr>
+                                <tr>
+                                    <th class="font16">배송지</th>
+                                    <td class="font16">{{order.deliveryDTO.destination}}</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </fieldset>
 
-                <header class="welcome-header1">
+                <!-- <header class="welcome-header1">
                     <h4 class="user-component__title">입금은 정산일 이후로 <br>7일 정도 소요됩니다.</h4>
-                </header>
+                </header> -->
             </div>
         </div>
         <p></p>
@@ -69,9 +87,7 @@
         <nav class="main_b_nav">
             <ul class="main_m_ui_list">
                 <li class="nav__btn">
-                    <a class="nav__link" href="calculate_clear">
-                        <h4 class="user-component__title">확인</h4>
-                    </a>
+                    <h4 class="user-component__title" v-on:click="navigateMyPageAuction()">확인</h4>
                 </li>
             </ul>
         </nav>
@@ -81,7 +97,43 @@
 
 
 <script>
+import axios from 'axios';
+import Header from '../../components/Header/backHeader.vue';
+import Slide from '../../components/slide.vue';
 
+export default {
+    components: { Header, Slide },
+    data(){
+        return{
+            headerProps: '결제 완료',
+            auctionState: true,
+            user: JSON.parse(localStorage.getItem("user")),
+            checkUser: localStorage.getItem('checkUser'),
+            order: null,
+            imgData: [],
+        }
+    },
+    created() {
+        console.log('arr', this.$route.params.auction);
+        
+        this.order = JSON.parse(this.$route.params.order);
+
+        console.log('주문 정보', this.order);
+
+        // 해당 경매 관련 이미지 여러 개 넣기
+        let auctionImagesLength = this.order.bidding.product_img_name[this.order.bidding.product_img_name.length-1];
+        console.log('img', auctionImagesLength)
+        for(let i = 0; i < auctionImagesLength; i++){
+            this.imgData.push(this.order.bidding.product_img_name.replace('(0)', `(${i})`))
+        }
+        console.log('pushImg', this.imgData);
+    },
+    methods: {
+        navigateMyPageAuction() {
+            this.$router.push({name:'farm_mypage_auction'});
+        },
+    }
+}
 </script>
 
 <style>

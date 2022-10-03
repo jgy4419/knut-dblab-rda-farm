@@ -2,10 +2,11 @@
     <div>
         <Header :headerProps="headerProps"/>
         <!-- 슬라이드 이미지 props로 넘겨주시면 됩니다! -->
-        <Slide :imgData="imgData"/>
+        <Slide :imgData="imgData" class="auction-image"/>
         <fieldset class="auction-info">
             <h2 class="profileh2">상세 정보</h2>
             <h2 class="profileh2">{{auction.auction_name}}</h2>
+            <h3 class="h3_middle">{{auction.productDTO.p_explanation}}</h3>
             <div class="aside_area aside_popular">
                 <h3 class="h_popular"></h3>
                 <table class="tbl_home">
@@ -73,8 +74,6 @@
                 </div>
             </div>
         </fieldset>
-
-        <h3 class="h3_middle">{{auction.productDTO.p_explanation}}</h3>
         <h2 class="profileh2">생산자 정보</h2>
 
             <div class="goods_group" @click="$router.push('/auction_detail/farm_intro')">
@@ -334,8 +333,14 @@ export default {
 
 
 <style lang="scss" scoped>
+.auction-image{
+    margin-top: 20px;
+}
 td, th{
     font-weight: 500;
+}
+.h3_middle{
+    font-weight: 600;
 }
 .auction-info{
     padding: 10px;

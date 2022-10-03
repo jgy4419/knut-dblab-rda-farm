@@ -170,6 +170,7 @@
         methods: {
             imgPreview(event){
                 console.log(event.target.files);
+                if(this.product_img_files.length + event.target.files.length > 9) return alert('상품 이미지는 10개 이상 저장 불가능합니다!');
                 for(let idx in event.target.files){
                     let reader = new FileReader();
                     reader.onload = function(event){
@@ -179,7 +180,7 @@
                         img.setAttribute('height', '80px');
                         document.getElementById('image_container').appendChild(img);
                     }
-                    console.log(event.target.files[idx]);
+                    if(this.product_img_files.length > 9) return alert('이미지는 10 이상 저장 불가능합니다!');
                     reader.readAsDataURL(event.target.files[idx]);
                     this.product_img_files.push(event.target.files[idx]);
                 }

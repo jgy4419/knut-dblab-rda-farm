@@ -9,7 +9,7 @@
       </div>
       <AuctionList/>
     </div>
-    <bottom-nav/>
+    <bottom-nav class="bottom"/>
   </div>
 </template>
 
@@ -58,6 +58,10 @@ export default{
       border-radius: 10px;
     }
   }
+}
+.bottom{
+  position: absolute;
+  bottom: 0;
 }
 // @media screen and (max-height: 400px){
 //   .reload-button{

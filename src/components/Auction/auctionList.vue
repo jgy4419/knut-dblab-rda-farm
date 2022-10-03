@@ -202,7 +202,7 @@ export default{
 .goods_groups{
   .goods_group_list{
     position: relative;
-    height: 280px;
+    height: 370px;
     overflow-y: scroll;
   }
 }
@@ -255,5 +255,12 @@ export default{
 }
 .state{
   font-size: 10px;
+}
+@media screen and (max-width: 500px){
+  .goods_groups{
+    .goods_group_list{
+      height: 280px;
+    }
+  }
 }
 </style>

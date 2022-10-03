@@ -115,8 +115,8 @@ export default {
         }
         .reviewContent{
             font-size: 15px;
-            font-weight: 500;
-            margin-top: 10%;
+            font-weight: 600;
+            margin-bottom: 10px;
             line-height: 1.4;
         }
         .reviewComment{

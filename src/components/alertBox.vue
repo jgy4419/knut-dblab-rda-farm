@@ -148,11 +148,12 @@ export default {
 <style lang="scss" scoped>
 .alert-box-contain{
     position: fixed;
-    width: 100%;
-    right: 0;
+    width: 400px;
+    // right: 0;
     z-index: 100;
     top: 20%;
     transition: .7s;
+    // opacity: 1;
     transform: translateX(200px);
     opacity: 0;
     .alert-box{

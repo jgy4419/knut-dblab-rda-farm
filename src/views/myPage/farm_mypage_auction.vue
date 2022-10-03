@@ -16,9 +16,11 @@
                         </div>
                     </div>
                     <div class="auctionBtns">
-                        <button  v-if="getData[i].bid_status === true" class="auctionBtn-ing">경매중</button>                        
-                        <button  v-if="getData[i].bid_status === false" class="auctionBtn">경매종료</button>
-                        <button v-if="getData[i].bid_status === false && checkUser === 'consumer'" class="auctionBtn" v-on:click="navigateAuctionPayment(getData[i])">계산하기</button>
+                        <button  v-if="getData[i].bid_status" class="auctionBtn-ing">경매중</button>                        
+                        <button  v-if="!getData[i].bid_status" class="auctionBtn">경매종료</button>
+                        <button v-if="!getData[i].bid_status && !getData[i].payment_status && checkUser === 'consumer'" class="auctionBtn" v-on:click="navigateAuctionPayment(getData[i])">결제하기</button>
+                        <button v-if="!getData[i].bid_status && !getData[i].payment_status && checkUser === 'farm'" class="auctionBtn">결제 대기</button>
+                        <button v-if="getData[i].payment_status" class="auctionBtn" v-on:click="navigateAuctionPaymentHistory(getData[i].auction_Id)">결제 내역</button>
                         <button v-if="writeUrlState[i] === 0" class="reviewBtn-end">작성완료</button>
                         <router-link v-if="getData[i].bid_status === false" :to="`/farm_mypage_auction/writeReview/${getData[i].auction_Id}`">
                         <!-- <router-link v-if="getData[i].bid_status === false" :to="`#`"> -->
@@ -144,6 +146,24 @@ export default {
         navigateAuctionPayment(auction) {
             this.$router.push({name:'farm_calculate', params: { id: auction.auction_Id, auction: JSON.stringify(auction) }});
         },
+        navigateAuctionPaymentHistory(auction_Id){
+            // router로 페이지 이동 전에 order 값 가져오기
+            axios.get(`/api/order/${auction_Id}`, {
+                headers: {
+                    TOKEN: this.user.token
+                }
+            }).then(res => {
+                console.log(res.data);
+                this.$router.push({name:'auction_detail', params: { id: auction_Id, auction: JSON.stringify(res.data) }});
+            }).catch(err => {
+                console.log(err); 
+                // if(res.headers.token != "token"){     
+                // 	alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
+                // 	this.$store.commit('LOGOUT');
+                // 	this.$router.push('/login');
+                // }
+            });
+        }
     }
 }
 </script>

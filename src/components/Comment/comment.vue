@@ -6,7 +6,7 @@
                 <hr>
                 <br/>
                 <div class="comment" v-if="inputState === 0">
-                    <h3 class="userName">{{this.user.f_farm_name}}</h3>
+                    <h3 class="userName">{{checkUser === 'consumer' ? getData.f_farm_name : user.f_farm_name}}</h3>
                     <p class="userComment">{{!clickedData.farm_review || clickedData.farm_review === '' ? "아직 답글이 없습니다." : clickedData.farm_review}}</p>
                 </div>
             </div>
@@ -63,6 +63,7 @@ export default {
             }
         })
         .then(res => {
+            console.log(res);
             this.getData = res.data[0];
             console.log(this.getData);
         })
@@ -202,6 +203,9 @@ export default {
                 font-size: 16px;
                 font-weight: 700;
                 margin-bottom: 10px;
+            }
+            .userComment{
+                font-weight: 600;
             }
         }
     }

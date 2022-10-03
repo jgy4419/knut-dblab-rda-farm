@@ -12,7 +12,8 @@
         <div class="inner">
             <Spinner v-if="spinnerState === true"/>
             <ReviewList v-for="data, i in infiniteScrollValue" :key="i" class="reviewList"
-            :getData="getData"/>
+            :getData="getData"
+            :reviewZeroState="reviewZeroState"/>
         </div>
     </div>
     <Bottom/>
@@ -41,6 +42,7 @@ export default {
             infiniteScrollValue: 1,
             getData: [],
             user: JSON.parse(localStorage.getItem("user")),
+            reviewZeroState: 0,
         }
     },
     mounted(){
@@ -61,6 +63,9 @@ export default {
         }).then(res => {  
                 this.getData.push(res.data);
                 this.spinnerState = false;
+                if(res.data.length === 0){
+                    this.reviewZeroState = 1;
+                }
                 console.log(res);
                 console.log(this.getData.flat(Infinity));
             }).catch(err => {
@@ -117,7 +122,7 @@ export default {
             z-index: 1;
             margin: auto;
             width: 100%;
-            height: 87vh;
+            // height: vh;
             .reviewBtn{
                 width: 50%;
                 font-weight: 700;

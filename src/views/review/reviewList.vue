@@ -42,7 +42,6 @@ import ReviewDetail from './reviewDetail.vue';
 export default {
     data(){
         return {
-            reviewZeroState: 0, // 리뷰 작성이 없는지 있는지 
             clickedData: 0,
             reviewState: '내가 쓴 리뷰',
             reviewModalState: 0,
@@ -51,7 +50,8 @@ export default {
         }
     },
     props: {
-        getData: Array
+        getData: Array,
+        reviewZeroState: Number,
     },
     components: {
         ReviewDetail,
@@ -79,9 +79,8 @@ export default {
                         TOKEN: this.user.token
                     }
                 })
-                .then(res => {
-                    console.log(res)
-                    console.log(res.data.length);
+                .then(() => {
+                    location.reload();
                 })
                 .catch(err => {
                     console.log(err);
@@ -99,7 +98,7 @@ export default {
         .reviews{
             position: relative;
             z-index: 1;
-            height: 100%;
+            height: 90%;
             .zero-review-text{
                 color: #333;
                 font-size: 20px;

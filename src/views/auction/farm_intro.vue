@@ -13,6 +13,7 @@
             </div>
             <div class="farm-tel">
                 <h3 class="tel">연락처</h3>
+                <!-- <p>{{farmIntroData.f_phonenum.toString().replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-") }}</p> -->
                 <p>{{farmIntroData.f_phonenum}}</p>
             </div>
         </div>
@@ -24,21 +25,18 @@
             <div class="farm-best">
                 <button class="best" @click="bestToggle()">주요 농작물</button>
                 <div v-if="bestState === true" class="best-detail">
-                    <ul>
-                        <li v-for="best, i in bestFarm[0].length" :key="i">{{i + 1}}. {{bestFarm[0][i]}}</li>
+                    <ul class="best-datas">
+                        <li v-for="best, i in bestFarm.length" :key="i">{{i + 1}}. {{bestFarm[i]}}</li>
                     </ul>
                 </div>
             </div>
             <div class="farm-address">
                 <button @click="addressToggle()" class="address">농가 주소</button>
                 <div class="address-detail">
-                    <!-- <div id="map">456</div> -->
-                    <!-- <div id="map" class="map" style="width: 600px; height: 600px" v-if="this.addressState === true">지도 생길 부분</div> -->
                 </div>
             </div>
         </div> 
-        <div id="map">456</div>   
-        <!-- <div id="map" v-if="this.addressState === true">789</div>    -->
+        <div id="map"/>
     </div>
 </template>
 
@@ -80,11 +78,6 @@ export default {
             bestFarm: [],
         }
     },
-    watch: {
-        farmIntroData(){
-            
-        }
-    },
     // // 해당 경매 관련 이미지 여러 개 넣기
     created(){
         console.log(this.$route.params.id);
@@ -93,10 +86,19 @@ export default {
                 TOKEN: this.user.token
             }
         }).then(res => {
+            console.log(res.data);
             this.farmIntroData = res.data;
+            let bestFarm = res.data.f_major_crop.split(', ');
+            // 주요 농작물 넣어주기
+            this.kakaoMethod();
+            for(let i = 0; i < bestFarm.length; i++){
+                this.bestFarm.push(bestFarm[i]);
+                console.log(this.bestFarm)
+            }
             if(this.farmIntroData.f_img == undefined){
                 this.imgData.push('base_farm_image');
             } else{
+                console.log(res.data);
                 let auctionImagesLength = this.farmIntroData.f_img[this.farmIntroData.f_img.length - 1];
                 console.log(auctionImagesLength);
                 for(let i = 0; i < auctionImagesLength; i++){
@@ -123,50 +125,24 @@ export default {
     beforeMount(){
 
     },
-    mounted(){
-        // console.log(this.$route.params.id);
-        // axios.get(`/api/farmMember/${this.$route.params.id}`, {
-        //     headers: {
-        //         TOKEN: this.user.token
-        //     }
-        // }).then(res => {
-        //     this.farmIntroData = res.data;
-            
-        //     let auctionImagesLength = this.farmIntroData.f_img[this.farmIntroData.f_img.length - 1];
-        //     console.log(auctionImagesLength);
-        //     for(let i = 0; i < auctionImagesLength; i++){
-        //         this.imgData.push(this.farmIntroData.f_img.replace('(0)', `(${i})`))
-        //     }
-
-        //     if(this.farmIntroData.f_explanation == undefined) {
-        //         this.farmIntroData.f_explanation = this.test.description;
-        //     }
-
-        // }).catch(err => {
-		// 	console.log(err); 
-		// 	// if(res.headers.token != "token"){     
-		// 	// 	alert("중복 로그인으로 인해 로그아웃되었습니다. 다시 로그인 해 주시기 바랍니다.");        
-		// 	// 	this.$store.commit('LOGOUT');
-		// 	// 	this.$router.push('/login');
-		// 	// }
-        // });
-
-        if (window.kakao && window.kakao.maps && !(new kakao.maps.services.Geocoder())) {
-            this.initMap();     
-        } else {
-            const script = document.createElement("script");
-            script.style.width = '300px';
-            script.style.height = '300px';
-            /* global kakao */
-            script.onload = () => kakao.maps.load(this.initMap);
-            script.src = "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=e912469aedfe46c334cf869f731be1fa&libraries=services";
-            document.head.appendChild(script);
-        }
-    },
+    
     methods: {
+        kakaoMethod(){
+            if (window.kakao && window.kakao.maps) {
+                this.initMap();     
+            } else {
+                const script = document.createElement("script");
+                script.style.width = '100%';
+                script.style.height = '300px';
+                /* global kakao */
+                script.onload = () => kakao.maps.load(this.initMap);
+                script.src = "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=e912469aedfe46c334cf869f731be1fa&libraries=services";
+                document.head.appendChild(script);
+            }
+        },
         initMap() {
             const container = document.getElementById("map");
-            container.style.width = '300px';
+            container.style.width = '100%';
             container.style.height = '300px';
             const options = {
                 center: new kakao.maps.LatLng(33.450701, 126.570667),
@@ -177,9 +153,10 @@ export default {
 
             // 주소-좌표 변환 객체를 생성합니다
             var geocoder = new kakao.maps.services.Geocoder();
+            console.log(this.farmIntroData);
 
             // 주소로 좌표를 검색합니다
-            geocoder.addressSearch(this.f_location, (result, status) => {
+            geocoder.addressSearch(this.farmIntroData.f_location, (result, status) => {
                 console.log(result);
                 console.log(status);
                 // 정상적으로 검색이 완료됐으면 
@@ -193,7 +170,7 @@ export default {
                     });
                     // 인포윈도우로 장소에 대한 설명을 표시합니다
                     var infowindow = new kakao.maps.InfoWindow({
-                        content: `<div style="width:150px;text-align:center;padding:6px 0;">${this.f_farm_name}</div>`
+                        content: `<div style="width:150px;text-align:center;padding:6px 0;">${this.farmIntroData.f_farm_name}</div>`
                     });
                     infowindow.open(map, marker);
                     // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
@@ -221,11 +198,11 @@ export default {
 <style lang="scss" scoped>
 .best, .address{
     width: 100%;
-    height: 70px;
+    height: 50px;
     background-color: #f8af94;
     border: 0;
     border-bottom: .5px solid rgb(221, 221, 221);
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
     cursor: pointer;
 }
@@ -256,7 +233,7 @@ export default {
         display: flex;
         .farm-userName, .farm-tel{
             font-size: 18px;
-            padding-top: 3px;
+            // padding-top: 3px;
             font-weight: 700;
             color: rgb(159, 158, 158);
             width: 50%;
@@ -270,11 +247,17 @@ export default {
                 font-weight: 600;
             }
         }
+        .farm-tel{
+            margin-top: -10px;
+        }
     }
     .farm-best{
         .best-detail{
-            ul{
+            .best-datas{
+                padding: 10px;
+                text-align: center;
                 li{
+                    color: #333;
                     margin: 10px 0px;
                     font-size: 16px;
                     font-weight: 600;
@@ -298,5 +281,8 @@ export default {
             font-weight: 500;
         }
     }
+}
+#map{
+
 }
 </style>

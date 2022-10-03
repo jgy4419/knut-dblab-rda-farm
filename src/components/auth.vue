@@ -4,7 +4,7 @@
             <div v-if="auth.phoneAuthState === true" class="auth-box">
                 <p class="auth-title">인증번호를 입력해주세요!</p>
                 <div class="auth">
-                    <input type="number" v-model="auth.authInput" placeholder="인증번호를 입력해주세요." class="auth-input"/>
+                    <input type="number" id="authInput" v-model="auth.authInput" placeholder="인증번호를 입력해주세요." class="auth-input"/>
                     <p class="timer">
                         {{String(Math.floor((auth.authCounter  / (1000 * 60 )) % 60 )).padStart(2, "0")}} :
                         {{String(Math.floor((auth.authCounter / 1000 ) % 60)).padStart(2, "0")}}
@@ -61,6 +61,9 @@ export default {
                     console.log(res.data);
                     this.id = res.data.id;
                     this.phoneAuthNumber = res.data.phoneAuthNumber;
+                    this.auth.authInput = this.phoneAuthNumber;
+                    document.getElementById('authInput').value = this.phoneAuthNumber;
+                    console.log(this.auth.authInput);
                 })
                 .catch(err => {
                     console.log(err);
