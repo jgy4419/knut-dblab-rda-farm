@@ -154,7 +154,8 @@ export default {
                 }
             }).then(res => {
                 console.log(res.data);
-                this.$router.push({name:'auction_detail', params: { id: auction_Id, auction: JSON.stringify(res.data) }});
+                
+                this.$router.push({name:'farm_calculate_clear', params: { id: auction_Id, order: JSON.stringify(res.data) }});
             }).catch(err => {
                 console.log(err); 
                 // if(res.headers.token != "token"){     
