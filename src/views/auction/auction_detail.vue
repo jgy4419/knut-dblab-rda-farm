@@ -10,7 +10,7 @@
             <div class="aside_area aside_popular">
                 <h3 class="h_popular"></h3>
                 <table class="tbl_home">
-                    <tbody>
+                    <tbody class="detail-contain">
                         <tr class="">
                             <th>{{auction.productDTO.product}}</th>
                             <td>{{auction.productDTO.product_kg}}kg</td>
@@ -54,7 +54,7 @@
             </div>
             <div>
                 <p class="state _statusName value_color_green _click(nmp.front.order.timeline.home.list.openDeliveryPopup(/o/orderStatus/deliveryTracking/2022020394386781/ORDER_DELIVERY/api)) _stopDefault">
-                                        {{updateDeadlineDate(auction.deadline_date)}} 경매 종료</p>
+                    {{updateDeadlineDate(auction.deadline_date)}} 경매 종료</p>
             </div>
             <div v-if="auction.bid_status === 1">
                 <div v-if="this.auction.farm_id == user.farm_id" >
@@ -64,12 +64,13 @@
                         수정하기
                     </v-btn>
                 </div>
-                <div v-if=" user.consumer_id != undefined">
-                    <input type="number" placeholder="입찰할 가격을 입력(숫자만)해주세요!" id="bid_price" v-model="bid_price"/>
+                <div v-if="user.consumer_id">
+                    <input type="number" placeholder="입찰할 가격을 입력(숫자만)해주세요!" id="bid_price" v-model="bid_price" v-if="!isMyConsumerAuction"/>
                     <!-- <v-text-field placeholder="입찰할 가격을 입력해주세요!" type="number" id="bid_price" v-model="bid_price"></v-text-field> -->
                     <div class="stateBtn">
                         <Like class="like-button" :key="likeState" @click="likeStateFunc()"/>
-                        <v-btn class="bid-button" block @click="bid()">입찰하기</v-btn>
+                        <v-btn class="bid-button" block @click="bid()" v-if="!isMyConsumerAuction">입찰하기</v-btn>
+                        <v-btn class="bid-button" block v-if="isMyConsumerAuction">입찰 완료</v-btn>
                     </div>
                 </div>
             </div>
@@ -145,6 +146,7 @@ export default {
         FOUR_HOUR: 1000 * 60 * 60 * 4,
         imgData: [],
         now: 0,
+        isMyConsumerAuction: false,
     }),
     created() {
         this.connect()
@@ -165,6 +167,7 @@ export default {
         for(let i = 0; i < auctionImagesLength; i++){
             this.imgData.push(this.auction.productDTO.product_img_name.replace('(0)', `(${i})`))
         }
+        this.isMyConsumerAuction = this.user.consumer_id == this.auction.consumer_id
         console.log('pushImg', this.imgData);
     },
     mounted () {
@@ -221,7 +224,10 @@ export default {
                         // product_img_name, farm_name, c_name 추가하기
                         }), {});
                     this.auction.comsumer_id = JSON.parse(localStorage.getItem('user')).consumer_id
+                    isMyConsumerAuction = true;
+                    alert("입찰 완료했습니다!");
                 }
+                
             } else {
                 alert("현재 경매가보다 낮습니다!!")
             }
@@ -245,12 +251,13 @@ export default {
                     const response_bidding = JSON.parse(res.body);
                     console.log(response_bidding);
                     if (response_bidding.auction_Id != undefined) {
-                        this.$store.commit('UPDATE_BID_PRICE', response_bidding);
+                        this.$store.commit('UPDATE_BID_PRICE', response_bidding, this.user.consumer_id == response_bidding.consumer_id);
                         if(this.auction.auction_Id == response_bidding.auction_Id){
                             if(response_bidding.bid_price == -1){                       // bid_price가 -1인 경우(삭제된 경매) 알림 후 뒤로 보내기
                                 alert(this.consumerBidDeletedAuctionText);
                                 this.$router.go(-1);
                             }
+                            this.isMyConsumerAuction = !this.isMyConsumerAuction;
                             this.auction.consumer_id = response_bidding.consumer_id;
                             this.auction.c_name = response_bidding.c_name;
                             this.auction.bid_price = response_bidding.bid_price;
@@ -353,6 +360,9 @@ td, th{
 }
 .edit-button{
     background-color: #FFC1AA;
+}
+.state{
+    color: rgb(85, 148, 54);
 }
 .stateBtn{
     display: flex;

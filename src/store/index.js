@@ -128,7 +128,7 @@ export default createStore({
     RESET_LIMIT: (state) => {
       state.limit = 0;
     },
-    UPDATE_BID_PRICE: (state, response_bidding) => {
+    UPDATE_BID_PRICE: (state, response_bidding, isMyConsumerAuction) => {
       console.log("UPDATE_BID_PRICE");
       console.log(response_bidding);
 
@@ -141,6 +141,7 @@ export default createStore({
           state.auctionList[i].consumer_id = response_bidding.consumer_id;
           state.auctionList[i].c_name = response_bidding.c_name;
           state.auctionList[i].bid_price = response_bidding.bid_price;
+          state.auctionList[i].isMyConsumerAuction = isMyConsumerAuction;
           break;
         }
       }

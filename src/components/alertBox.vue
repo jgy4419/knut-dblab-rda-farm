@@ -28,11 +28,13 @@ export default {
     methods: {
         modalToggle(){
             console.log('열리는 중~~');
+            console.log('받은 데이터3', this.alertData);
             let alertModal = document.querySelector('.alert-box-contain');
             alertModal.classList.add('event');
             setTimeout(() => {
                 alertModal.classList.remove('event');
             }, 3000);
+            console.log('받은 데이터4', this.alertData);
         },
         alertSseInit(){
             this.$sse.create(`https://118.67.134.38:80/api/subscribeAlert/` + this.checkUser + '/' + this.id)
@@ -41,13 +43,12 @@ export default {
                     this.$store.commit('INIT_ALERT_LIST', JSON.parse(init_data));
                 })
                 .on('alert', (alert_data) => {
-                    let data = JSON.parse(alert_data);
-                    console.log('받은 데이터', data);
-                    // 알림 데이터 넣기
-                    this.alertData = data;
+                    this.alertData = JSON.parse(alert_data);
+                    console.log('받은 데이터', this.alertData);
                     // 페이지에 보여줄 코드 작성 
-                    this.$store.commit('UNSHIFT_ALERT_LIST', data);
+                    this.$store.commit('UNSHIFT_ALERT_LIST', this.alertData);
                     this.statusFunc(this.alertData.d_status);
+                    console.log('받은 데이터2', this.alertData);
                     this.modalToggle();
                 })
                 .on('error', (err) => {
@@ -81,7 +82,6 @@ export default {
             }
         },
         statusFunc(status){
-            let alertList = this.$store.state.alertList;
             switch(status){
                 case 0:
                     if(this.checkUser === 'farm'){
@@ -94,21 +94,23 @@ export default {
                 case 1:
                     // console.log('alertList.pre_consumer_id: ' + alertList[i].pre_consumer_id);
                     // console.log('this.user.consumer_id: ' + this.user.consumer_id);
+                    console.log('----' + this.alertData);
                     if(this.checkUser === 'farm'){
                         this.alertText = `${this.alertData.c_name}님이 입찰했습니다.`;
                     }else{
                         if(this.alertData.pre_consumer_id === this.user.consumer_id){
                             this.alertText = `${this.alertData.c_name}님이 ${this.alertData.auction_name}를 더 높은 가격에 입찰했습니다.`;
                         } else {
-                            this.alertText = `${this.aletData.f_farm_name}님 것을 입찰했습니다.`; 
+                            this.alertText = `${this.alertData.f_farm_name}님 것을 입찰했습니다.`; 
                         }
+                        console.log('----' + this.alertText);
                     }
                     break;
                 case 2:
                     if(this.checkUser === 'farm'){
-                        this.alertText = `${this.aletData.c_name}님이 최대가에 입찰해서 마감되었습니다.`;
+                        this.alertText = `${this.alertData.c_name}님이 최대가에 입찰해서 마감되었습니다.`;
                     }else {
-                        this.alertText = `${this.aletData.f_farm_name}님의 경매를 최대가에 입찰했습니다.`;
+                        this.alertText = `${this.alertData.f_farm_name}님의 경매를 최대가에 입찰했습니다.`;
                     }
                     break;
                 case 3:
@@ -116,20 +118,20 @@ export default {
                         if(!this.alertData.consumer_id){
                             this.alertText = '낙찰가 없이 경매가 마감되었습니다.';   
                         }else{
-                            this.alertText = `${this.aletData.c_name}님이 낙찰하셨습니다.`;
+                            this.alertText = `${this.alertData.c_name}님이 낙찰하셨습니다.`;
                         }
                     }else{
-                        this.alertText = `${this.aletData.f_farm_name}님의 경매를 낙찰했습니다.`;
+                        this.alertText = `${this.alertData.f_farm_name}님의 경매를 낙찰했습니다.`;
                     }
                     break;
                 case 4:
                     if(this.checkUser === 'farm'){
-                        this.alertText = `${this.aletData.c_name}님이 ${this.aletData.auction_name}에 리뷰를 남겼습니다.`;   
+                        this.alertText = `${this.alertData.c_name}님이 ${this.alertData.auction_name}에 리뷰를 남겼습니다.`;   
                     }
                     break;
                 case 5:
                     if(this.checkUser === 'consumer'){
-                        this.alertText = `${this.aletData.f_farm_name}님이 ${this.aletData.auction_name}의 리뷰에 댓글을 남겼습니다.`;
+                        this.alertText = `${this.alertData.f_farm_name}님이 ${this.alertData.auction_name}의 리뷰에 댓글을 남겼습니다.`;
                     }
                     break;
                 default:
@@ -137,7 +139,6 @@ export default {
             }
             console.log('message', this.alertText);
         }
-        
     },
     mounted(){
         setInterval(this.checkAlert, 3000);
@@ -181,16 +182,17 @@ export default {
             text-overflow: ellipsis;
         }
         .alert-user{
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 700;
             color: rgb(124, 122, 122);
         }
         .alert-title{
-            margin-top: 10px;
+            margin-top: 8px;
             font-weight: 600;
         }
         .alert-text{
             white-space: pre-wrap;
+            line-height: 1.3;
             font-size: 10px;
             font-weight: 500;
         }

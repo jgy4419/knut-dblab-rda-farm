@@ -23,7 +23,7 @@
         </div>
 
     </div>
-    <bottom-nav/>
+    <bottom-nav class="bottom"/>
 </template>
 
 
@@ -68,21 +68,20 @@ export default{
         
     //     this.$storage.setStorageSync("test-key", "5");
     // },
-
-    
-
-
-
 }
 </script>
 <style lang="scss" scoped>
 .main-contain{
-    min-height: 95vh;
+    height: 90%;
     fieldset{
         margin-top: -50px;
     }
     .main_text{
         line-height: 1.3;
     }
+}
+.bottom{
+    position: fixed;
+    bottom: 0;
 }
 </style>

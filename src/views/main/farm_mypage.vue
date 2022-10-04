@@ -46,7 +46,7 @@
         </fieldset>
     </div>
 
-    <bottom-nav/>
+    <bottom-nav class="bottom"/>
 </div>
 </template>
 
@@ -126,5 +126,9 @@ export default {
             }
         }
     }
+}
+.bottom{
+    position: fixed;
+    bottom: 0;
 }
 </style>

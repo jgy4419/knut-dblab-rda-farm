@@ -44,7 +44,7 @@
                 </ul>
             </fieldset>
         </div>
-        <bottom-nav></bottom-nav>
+        <bottom-nav class="bottom"></bottom-nav>
     </div>
 </template>
 
@@ -142,5 +142,9 @@ img{
     text-align: center;
     color: #333;
     font-weight: 600;
+}
+.bottom{
+    position: fixed;
+    bottom: 0;
 }
 </style>

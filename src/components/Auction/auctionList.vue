@@ -6,7 +6,7 @@
               <div class="goods_pay_section ">
                   <div class="goods_groups">
                       <ul ref="items" class="goods_group_list">
-                          <li v-on:click="navigateAuction(auction)"  v-for="auction in this.$store.state.auctionList" :key="auction.auction_Id"
+                          <li v-on:click="navigateAuction(auction)"  v-for="auction, i in this.$store.state.auctionList" :key="i"
                               id="_rowLi20220203162708CHK2022020394386781"
                               class="goods_pay_item _interlockNo20220211200904406814">
                               <div class="goods_item">
@@ -39,6 +39,9 @@
                                       <span class="seller">{{auction.f_farm_name}}</span>
                                       <span class="tel">Tel : 0{{auction.f_phonenum.toString().replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{1}|^0[0-9]{4})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-")}}</span>
                                       <span class="date">{{auction.productDTO.p_reg_date}}</span>
+                                      <br/>
+                                      <b v-if="auction.isMyConsumerAuction" class="bid-price">입찰했습니다.</b>
+                                      <!-- <b v-if="bidPrice[i] === 1" class="bid-price">입찰했습니다.</b> -->
                                       <br><br>
                                   </div>
                               </div>
@@ -72,13 +75,16 @@ export default{
   },
   data() {
       return {     
+        user: JSON.parse(localStorage.getItem('user')),
         spinnerState: false,   
         limit: 0,
         // infiniteId: +new Date(),
         now: 0,
+        bidPrice: [],
       }
   },
   mounted () {
+    console.log(this.bidPrice);
     window.addEventListener('scroll', _.throttle(() => {
         this.infiniteScroll();
     }, 500), true);
@@ -169,7 +175,14 @@ export default{
             if(response_data.length){
                 for (let i = 0; i < response_data.length; i++) {
                   this.$store.commit('PUSH_AUCTION', response_data[i]);
+                  if(this.$store.state.auctionList[i].consumer_id === this.user.consumer_id){
+                    this.$store.state.auctionList[i].isMyConsumerAuction = true;
+                    this.bidPrice.push(1);
+                  }else{
+                    this.bidPrice.push(0);
+                  }
                 }
+                console.log(this.bidPrice)
                 this.$store.commit('UP_LIMIT', 4);
             }
           });
@@ -178,7 +191,13 @@ export default{
             const response_bidding = JSON.parse(res.body);
             console.log(response_bidding);
             if (response_bidding != undefined) {
-              this.$store.commit('UPDATE_BID_PRICE', response_bidding);
+              this.$store.commit('UPDATE_BID_PRICE', response_bidding, this.user.consumer_id == response_bidding.consumer_id);
+              // for (let i = 0; i < this.$store.state.auctionList.length; i++) {
+              //   if(this.$store.state.auctionList[i].auction_Id === this.response_bidding.auction_Id){
+              //     this.bidPrice[i] = 0;
+              //     break;
+              //   }
+              // }
             }
             // response_data.auction_id로 현재 가지고 있는 리스트의 가격을 변경
           });
@@ -202,14 +221,22 @@ export default{
 .goods_groups{
   .goods_group_list{
     position: relative;
-    height: 370px;
+    height: 45vh;
     overflow-y: scroll;
+  }
+  @media screen and (min-height: 850px){
+    .goods_group_list{
+      height: 70vh;
+    }
   }
 }
 
-.date{
+.date, .bid-price{
   font-size: 12px;
   color: rgb(183, 183, 183);
+}
+.bid-price{
+  color: rgb(137, 133, 133);
 }
 .main_nav_t_div{
   position: relative;
@@ -258,9 +285,9 @@ export default{
 }
 @media screen and (max-width: 500px){
   .goods_groups{
-    .goods_group_list{
-      height: 280px;
-    }
+    // .goods_group_list{
+    //   height: 280px;
+    // }
   }
 }
 </style>

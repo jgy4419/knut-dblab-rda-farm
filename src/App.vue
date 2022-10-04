@@ -30,9 +30,10 @@ export default {
 <style lang="scss">
 @import url(./assets/css/main.css);
 .app{
+    min-height: 90vh;
   margin: auto;
   width: 400px;
-  height: 100vh;
+  // height: 90vh;
   overflow-x: hidden;
 }
 .header-icon-size{
@@ -44,7 +45,7 @@ export default {
   .app{
     margin: auto;
     width: 100vw;
-    height: 100vh;
+    min-height: 90vh;
   }  
 }
 </style>

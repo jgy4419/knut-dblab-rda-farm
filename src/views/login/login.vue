@@ -86,7 +86,7 @@ export default {
             axios.post('/api/login',  { email: this.email, checkUser: this.checkUser, password: this.password})
             .then(res => {
                 if (res.data == "") {
-                    alert("아이디 또는 비밀번호가 틀렸습니다!")
+                    alert("아이디 또는 비밀번호가 틀렸습니다! 그리고 소비자 및 농가 체크 다시 확인해주세요!")
                     console.log("....");
                 } else if (res.data.consumer_id == 0){
 					alert("중복 로그인입니다! 다시 한번 로그인 해주세요!")

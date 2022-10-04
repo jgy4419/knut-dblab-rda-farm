@@ -60,14 +60,9 @@ export default{
   }
 }
 .bottom{
-  position: absolute;
+  position: fixed;
   bottom: 0;
 }
-// @media screen and (max-height: 400px){
-//   .reload-button{
-//     margin-top: -100px;
-//   }
-// }
 </style>
 
 

@@ -70,7 +70,7 @@ export default {
     position: fixed;
     top: 0;
     z-index: 100;
-    width: 28vw;
+    width: 100%;
     height: 100vh;
     .back{
         position: absolute;

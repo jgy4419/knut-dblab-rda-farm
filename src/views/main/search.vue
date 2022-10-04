@@ -60,8 +60,12 @@
                                                     <li><span class="blind">상품금액</span>{{auction.bid_price}}원</li>
                                                 </ul>
                                             </div>
-                                            <p class="state _statusName value_color_green _click(nmp.front.order.timeline.home.list.openDeliveryPopup(/o/orderStatus/deliveryTracking/2022020394386781/ORDER_DELIVERY/api)) _stopDefault">{{auction.bid_status}}
-                                                ({{auction.deadline_date}} 경매 종료)</p>
+                                            <p class="state _statusName value_color_green _click(nmp.front.order.timeline.home.list.openDeliveryPopup(/o/orderStatus/deliveryTracking/2022020394386781/ORDER_DELIVERY/api)) _stopDefault"
+                                            v-if="auction.bid_status === 1">
+                                                {{updateDeadlineDate(auction.deadline_date)}} 경매 종료</p>
+                                            <p class="state _statusName value_color_green _click(nmp.front.order.timeline.home.list.openDeliveryPopup(/o/orderStatus/deliveryTracking/2022020394386781/ORDER_DELIVERY/api)) _stopDefault"
+                                            v-if="auction.bid_status === 0">
+                                                최종 낙찰가 {{auction.a_max_price.toLocaleString()}}원</p>
                                             <p class="guide">
                                                 {{auction.productDTO.p_explanation}}
                                             </p>
@@ -86,6 +90,7 @@
             </fieldset>
         </div>
     </div>
+    <p style="display: none">{{now}}</p>
     <bottom-nav class="bottom"/> 
 </template>
 
@@ -111,6 +116,7 @@ export default {
         NUMBER_OF_AUCTION: 5,
         user: JSON.parse(localStorage.getItem("user")),
         isMaxLimit: false,
+        now: 0,
     }
   },
   created(){
@@ -122,6 +128,10 @@ export default {
         this.infiniteScroll();
         this.height = document.documentElement.scrollHeight;
     }, 500), true);
+    this.updateNow();
+    console.log(this.updateNow.bind(this));
+    setInterval(this.updateNow.bind(this) , 1000);
+    console.log('-----updateNow--');
   },
   methods: {
     infiniteScroll(){
@@ -140,6 +150,38 @@ export default {
         }else{
             return;
         }
+    },
+    updateNow() {
+        console.log('-------');
+        this.now = Math.round(Date.now() / 1000);
+        // aution들이 가지고 있는 시간 빼기
+    },
+    updateDeadlineDate(deadline){
+      let date = new Date(); // 2022-07-25 00:00:00.0
+      date.setFullYear(Number(deadline.substr(0, 4)))
+      date.setMonth(Number(deadline.substr(5, 2))-1)  // 1월~12월 => 0~11
+      date.setDate(Number(deadline.substr(8, 2)))
+      date.setHours(Number(deadline.substr(11, 2)))
+      date.setMinutes(Number(deadline.substr(14, 2)))
+      date.setSeconds(Number(deadline.substr(17, 2)))
+      
+      let remaining_time = Math.round(date.getTime() / 1000) - this.now;
+      
+      // 남은 시간이 ( - )인 경우 경매 마감 처리
+      if (remaining_time < 0) return ''
+
+      let day = Math.floor(remaining_time / (24*60*60));
+      let tmp_time = Math.floor(remaining_time % (24*60*60)); 
+      let hours =  Math.floor(tmp_time / (60*60));
+      let minutes = Math.floor(tmp_time % (60*60) / 60);
+      let seconds = Math.floor(tmp_time % (60*60) % 60);
+      let remainingTime = '';
+
+      if(day != 0) remainingTime += day + '일 ';
+      if(hours != 0) remainingTime += hours + '시간 ';
+      if(minutes != 0) remainingTime += minutes + '분 ';
+      if(seconds != 0) remainingTime += seconds + '초 후';
+      return remainingTime;
     },
     searchAuction(keyword) {
         // if(this.isMaxLimit) return alert("더 이상 불러올 경매가 없습니다!");
