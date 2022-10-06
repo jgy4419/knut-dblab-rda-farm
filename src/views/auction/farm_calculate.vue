@@ -2,73 +2,24 @@
 <div>
     <Header :headerProps="headerProps"/>
     <Slide :imgData="imgData"/>
-    <!-- <div class="main_nav_t_div">
-        <nav class="main_t_nav">
-            <ul class="main_t_nav_list">
-                <li class="nav__btn">
-                    <div class="nav__notification-dot"></div>
-                    <a class="nav__link"><i class="fas fa-bars fa-2x" aria-hidden="true"></i>
-                    </a>
-                </li>
-
-
-                <li class="main_m_li_list">
-                    <a class="nav_m_link" href="workout.html">
-                        <h4 class="user-component__title">정산금액 입금</h4><i class=" fa-2x" aria-hidden="true" image
-                            src="../image/123.jpg"></i>
-                    </a>
-                </li>
-
-                <li class="nav__btn">
-                    <a class="nav__link" onclick="goBack()"><i class="fas fa-chevron-left fa-2x" aria-hidden="true"></i>
-                    </a>
-                </li>
-
-            </ul>
-        </nav>
-    </div> -->
     <h2 class="profile_loc_h2">결제 상품</h2>
-
-  <!-- <v-carousel>
-    <v-carousel-item
-      v-for="(item,i) in items"
-      :key="i"
-      :src="item.src"
-      reverse-transition="fade-transition"
-      transition="fade-transition"
-    ></v-carousel-item>
-  </v-carousel> -->
 
     <fieldset>
         <div class="aside_area aside_popular">
             <h3 class="h_popular"><span></span></h3>
             <table class="tbl_home">
                 <tbody>
-                    <tr>
-                        <th>맛있는 딸기</th>
-                        <td>10kg</td>
-                    </tr>
-                    <tr>
-                        <th>낙과 일자</th>
-                        <td>{{auction.p_drop_date.slice(0, 19).replace('T', ' ')}}</td>
-                    </tr>
-                    <tr>
-                        <th>사이즈</th>
-                        <td>{{auction.size}}</td>
-                    </tr>
-                    <tr>
-                        <th>상태</th>
-                        <td>{{auction.p_status}}</td>
-                    </tr>
-                    <tr>
-                        <th>낙찰된 가격</th>
-                        <td>{{auction.bid_price.toLocaleString()}}원</td>
+                    <tr 
+                    v-for="data, i in [auction.auction_name, `${auction.product_kg}kg`, auction.p_drop_date.slice(0, 19).replace('T', ' '),
+                    auction.size, auction.p_status, `${auction.bid_price.toLocaleString()}원`]" :key="i">
+                        <th>{{title[i]}}</th>
+                        <td>{{data}}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </fieldset>
-
+    <hr class="line"/>
     <fieldset>
         <div class="aside_area aside_popular">
             <div class="gray_div">
@@ -87,9 +38,8 @@
                 </table>
             </div>
         </div>
-
     </fieldset>
-
+    <hr class="line"/>
     <fieldset>
         <div class="aside_area aside_popular">
             <h3 class="h_popular"></h3>
@@ -107,7 +57,7 @@
         <nav class="main_b_nav">
             <ul class="main_m_ui_list">
                 <li class="nav__btn">
-                    <h4 class="user-component__title" v-on:click="pay()">정산하기</h4>
+                    <button class="user-component__button" @click="pay()">정산하기</button>
                 </li>
             </ul>
         </nav>
@@ -145,6 +95,7 @@ export default {
             paymentAmount: null,
             imgData: [],
             orderDTO: {},
+            title: ['상품이름', '무게', '낙과 일자', '사이즈', '상태', '낙찰된 가격']
         }
     },
     created() {
@@ -183,6 +134,12 @@ export default {
             this.imgData.push(this.auction.product_img_name.replace('(0)', `(${i})`))
         }
         console.log('pushImg', this.imgData);
+    },
+    watch: {
+        '$route'(){
+            alert('초기화 되었습니다.');
+            location.reload();
+        }
     },
     methods: {
         navigateAuctionPayment() {
@@ -233,6 +190,41 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+.aside_area{
+    padding: 10%;
+    th{
+        font-weight: 600;
+        color: #333;
+        margin-top: 10px;
+    }
+    td{
+        font-weight: 600;
+        color: #fd8b61;
+        // margin-top: 10px;
+    }
+}
+.whitefont{
+    background-color: #fff;
+}
+.user-component__button{
+    position: fixed;
+    width: 350px;
+    height: 50px;
+    background-color: #FFC1AA;
+    color: #333;
+    font-weight: 700;
+    border-radius: 20px;
+    bottom: 0;
+    left: 0; right: 0;
+    margin: auto;
+}
+.line{
+    border: 1px solid rgb(231, 231, 231);
+}
+@media screen and (max-width: 500px){
+    .user-component__button{
+        width: 90%;
+    }
+}
 </style>

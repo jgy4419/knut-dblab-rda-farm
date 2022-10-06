@@ -26,22 +26,20 @@
 
         <fieldset>
             <ul class="check button1">
-                <li><button type="button" class="fpmgBt2" onclick="location.href='/#'">경매횟수</button></li>
-                <li><button type="button" class="fpmgBt2" onclick="location.href='/#'">나의 파치포인트</button></li>
-                <li><button type="button" class="fpmgBt1" onclick="location.href='/#'">{{pachiCount}}</button></li>
-                <li><button type="button" class="fpmgBt1" onclick="location.href='/#'">{{pachiPoint}}</button></li>
+                <li v-for="data, i in ['경매횟수', '나의 파치포인트', pachiCount, pachiPoint]" :key="i">
+                    <button type="button" :class="usingData.className[i]">{{data}}</button>
+                </li>
             </ul>
         </fieldset>
 
         <fieldset>
             <ul class="button-100">
-                
-                <li><button type="button" class="fpmgBt1" onclick="location.href='farm_mypage_auction'"><router-link to='/farm_mypage_auction'>경매 내역</router-link></button></li>
-                <li v-if=" user.consumer_id != undefined"><button type="button" class="fpmgBt1" onclick="location.href='farm_mypage_keep'">찜한목록</button></li>
-                <li><button type="button" class="fpmgBt1" onclick="location.href='farm_mypage_get_review'">이용후기</button></li>
-                <li><button type="button" class="fpmgBt1" onclick="location.href='ServiceCenter'">고객센터</button></li>
-                <li><button type="button" class="fpmgBt1" onclick="location.href='farm_profile'">개인정보 수정</button></li>
-                <li><button type="button" class="fpmgBt1" @click="logout()">로그아웃</button></li>
+                <li v-for="data, i in usingData.title.length" :key="i">
+                    <router-link :to='usingData.url[i]'>
+                        <button type="button" class="fpmgBt1">{{usingData.title[i]}}</button>
+                    </router-link>
+                </li>
+                <li><button type="button" class="logout-button" @click="logout()">로그아웃</button></li>
             </ul>
         </fieldset>
     </div>
@@ -64,6 +62,12 @@ export default {
             pachiPoint: 0,
             pachiCount: 0,
             user: JSON.parse(localStorage.getItem("user")),
+            usingData: {
+                className: ['fpmgBt2', 'fpmgBt2', 'fpmgBt1', 'fpmgBt1'],
+                url: ['/farm_mypage_auction', '/farm_mypage_get_review', 
+                '/ServiceCenter', '/farm_profile'],
+                title: ['경매 내역', '이용후기', '고객센터', '개인정보 수정']
+            }
         }
     },
     methods: {
@@ -130,5 +134,17 @@ export default {
 .bottom{
     position: fixed;
     bottom: 0;
+}
+.fpmgBt1{
+    height: 40px;
+    font-size: 16x;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+}
+.logout-button{
+    font-size: 16px;
+    margin-top: -10px;
+    font-weight: 600;
 }
 </style>

@@ -11,42 +11,42 @@
                 <h3 class="h_popular"></h3>
                 <table class="tbl_home">
                     <tbody class="detail-contain">
-                        <tr class="">
-                            <th>{{auction.productDTO.product}}</th>
+                        <tr class="itemContain">
+                            <th class="title">{{auction.productDTO.product}}</th>
                             <td>{{auction.productDTO.product_kg}}kg</td>
                         </tr>
-                        <tr class="">
-                            <th>시작가</th>
+                        <tr class="itemContain">
+                            <th class="title">시작가</th>
                             <td>{{auction.a_starting_price.toLocaleString()}}원</td>
                         </tr>
 
-                        <tr class="" v-if="auction.bid_status === 1">
-                            <th>최대 입찰가</th>
+                        <tr class="itemContain" v-if="auction.bid_status === 1">
+                            <th class="title">최대 입찰가</th>
                             <td>{{auction.a_max_price.toLocaleString()}}원</td>
                         </tr>
 
-                        <tr class="" v-if="auction.bid_status === 1">
-                            <th>현재가</th>
+                        <tr class="itemContain" v-if="auction.bid_status === 1">
+                            <th class="title">현재가</th>
                             <td>{{auction.bid_price.toLocaleString()}}원</td>
                         </tr>
 
-                        <tr class="" v-if="auction.bid_status === 0">
-                            <th>최종 낙찰가</th>
+                        <tr class="itemContain" v-if="auction.bid_status === 0">
+                            <th class="title">최종 낙찰가</th>
                             <td>{{auction.a_max_price.toLocaleString()}}원</td>
                         </tr>
 
-                        <tr class="">
-                            <th>낙과 일자</th>
+                        <tr class="itemContain">
+                            <th class="title">낙과 일자</th>
                             <td>{{auction.productDTO.p_drop_date.slice(0, 19)}}</td>
                         </tr>
 
-                        <tr class="">
-                            <th>사이즈</th>
+                        <tr class="itemContain">
+                            <th class="title">사이즈</th>
                             <td>{{auction.productDTO.size}}</td>
                         </tr>
 
-                        <tr class="">
-                            <th>상태</th>
+                        <tr class="itemContain">
+                            <th class="title">상태</th>
                             <td>{{auction.productDTO.p_status}}</td>
                         </tr>
                     </tbody>
@@ -85,21 +85,11 @@
                                 <img :src="user.f_profile_img == null || user.f_profile_img == '' ? '/member_profile_images/base_image.png' : `/member_profile_images/${auction.f_profile_img}.png`"
                                     alt="" width="90" height="90" /></p>
                                 <!-- <img src="https://suhofarm.com/_upload/mall/20220112173148_86227.jpg" alt="" width="90" height="90"> -->
-                            <div class="goods_info">
+                            <div class="goods_info">                            
+                                <p class="guide2" v-for="data, i in [auction.f_farm_name, auction.f_name, auction.f_phonenum, auction.f_location]" :key="i">
+                                    {{detail.farmInfo[i]}} : {{data}}
+                                </p>
 
-                                <p class="guide2">
-                                    농가명 : {{auction.f_farm_name}}
-                                </p>
-                                <p class="guide2">
-                                    대표자 : {{auction.f_name}}
-                                </p>
-                                <p class="guide2">
-                                    연락처 : {{auction.f_phonenum}}
-                                </p>
-                                <p class="guide2">
-                                    농가 주소 : {{auction.f_location}}
-                                </p>
-                                
                             </div>
                         </div>
                     </li>                
@@ -147,6 +137,10 @@ export default {
         imgData: [],
         now: 0,
         isMyConsumerAuction: false,
+        detail: {
+            detailInfo: ['시작가', '최대 입찰가', '현재가', '최종 낙찰가', '낙과 일자', '사이즈', '상태'],
+            farmInfo: ['농가명', '대표자', '연락처', '농가 주소']
+        }
     }),
     created() {
         this.connect()
@@ -224,7 +218,7 @@ export default {
                         // product_img_name, farm_name, c_name 추가하기
                         }), {});
                     this.auction.comsumer_id = JSON.parse(localStorage.getItem('user')).consumer_id
-                    isMyConsumerAuction = true;
+                    this.isMyConsumerAuction = true;
                     alert("입찰 완료했습니다!");
                 }
                 
@@ -331,9 +325,7 @@ export default {
             if(seconds != 0) remainingTime += seconds + '초 후';
             return remainingTime;
         },
-    },
-
-    
+    },  
 }
 
 </script>
@@ -343,8 +335,16 @@ export default {
 .auction-image{
     margin-top: 20px;
 }
-td, th{
-    font-weight: 500;
+.title{
+    font-weight: 600;
+    color: #333;
+}
+tr{
+    padding-top: 10px;
+}
+td{
+    font-weight: 600;
+    color: #fd8b61; 
 }
 .h3_middle{
     font-weight: 600;

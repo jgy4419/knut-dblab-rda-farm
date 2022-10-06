@@ -26,7 +26,7 @@
         <h2 class="title">사진 등록</h2>
         <div class="file-img-container">
             <label for="input-file" class="select-img">+</label>
-            <input @change="imgPreview($event)" id="input-file" class="select-img-hidden" type="file"/>
+            <input @change="imgPreview($event)" id="input-file" class="select-img-hidden" type="file" accept="image/*"/>
             <!-- 파일 크기 조절하기 -->
             <div id="image_container" class="image_container"></div>
         </div>

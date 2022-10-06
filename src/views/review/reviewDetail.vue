@@ -70,7 +70,7 @@ export default {
     position: fixed;
     top: 0;
     z-index: 100;
-    width: 100%;
+    width: 400px;
     height: 100vh;
     .back{
         position: absolute;
@@ -128,7 +128,7 @@ export default {
 }
 @media screen and (max-width: 400px){
     .reviewModalDetail{
-        width: 100vw;
+        width: 100%;
         .inner{
             .reviewImg{
                 // width: 30%;

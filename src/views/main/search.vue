@@ -125,23 +125,22 @@ export default {
   },
   mounted(){
     window.addEventListener('scroll', _.throttle(() => {
+        console.log('scroll 실행');
         this.infiniteScroll();
         this.height = document.documentElement.scrollHeight;
     }, 500), true);
     this.updateNow();
-    console.log(this.updateNow.bind(this));
     setInterval(this.updateNow.bind(this) , 1000);
     console.log('-----updateNow--');
   },
   methods: {
     infiniteScroll(){
-        if (this.keyword === '') return;
-        console.log(this.$refs.items.scrollTop + innerHeight);
-        console.log(this.$refs.items.scrollHeight);
-        // console.log(this.preKeyword);
         console.log(this.$route.path);
         if(this.$route.path === '/search'){
+            console.log('계산');
             const {innerHeight} = window;
+            console.log(this.$refs.items.scrollTop + innerHeight);
+            console.log(this.$refs.items.scrollHeight);
             if(Math.round(this.$refs.items.scrollTop + innerHeight) >= this.$refs.items.scrollHeight){
                 console.log('스크롤 실행');
                 this.searchAuction(this.preKeyword);
@@ -152,7 +151,6 @@ export default {
         }
     },
     updateNow() {
-        console.log('-------');
         this.now = Math.round(Date.now() / 1000);
         // aution들이 가지고 있는 시간 빼기
     },

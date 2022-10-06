@@ -51,9 +51,6 @@
               </div>
           </div>
       </fieldset>
-      <!-- <div>
-        <button class="more-data" @click="moreProduct()">더보기</button>
-      </div> -->
       <p style="display: none">{{now}}</p>
       <InfiniteLoading :comments="auction" @infinite="moreProduct()"/>
   </div>
@@ -105,6 +102,8 @@ export default{
               console.log('스크롤 실행');
               this.moreProduct();
           }
+        }else{
+          return;
         }
         console.log(innerHeight);
     },

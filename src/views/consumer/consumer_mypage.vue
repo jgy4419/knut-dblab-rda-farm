@@ -24,23 +24,20 @@
 
             <fieldset>
                 <ul class="check button1">
-                    <li><button type="button" class="fpmgBt2" onclick="location.href='/#'">경매횟수</button></li>
-                    <li><button type="button" class="fpmgBt2" onclick="location.href='/#'">나의 파치포인트</button></li>
-                    <li><button type="button" class="fpmgBt1" onclick="location.href='/#'">{{pachiCount}}</button></li>
-                    <li><button type="button" class="fpmgBt1" onclick="location.href='/#'">{{pachiPoint.toLocaleString()}}원</button></li>
+                    <li v-for="data, i in ['경매횟수', '나의 파치포인트', pachiCount, `${pachiPoint.toLocaleString()}원`]" :key="i">
+                        <p :class="checkButtonClass[i]">{{data}}</p>
+                    </li>
                 </ul>
             </fieldset>
 
             <fieldset>
                 <ul class="button-100">
-                    
-                    <li><button type="button" class="fpmgBt1" onclick="location.href='farm_mypage_auction'">
-                        <router-link to='/farm_mypage_auction'>경매 내역</router-link></button></li>
-                    <li><button type="button" class="fpmgBt1" onclick="location.href='farm_mypage_keep'">찜한목록</button></li>
-                    <li><router-link to="/farm_mypage_get_review"><button type="button" class="fpmgBt1">이용후기</button></router-link></li>
-                    <li><router-link to="/ServiceCenter"><button type="button" class="fpmgBt1">고객센터</button></router-link></li>
-                    <li><router-link to="/consumer_profile"><button type="button" class="fpmgBt1">개인정보 수정</button></router-link></li>
-                    <li><button type="button" class="fpmgBt1" @click="logout()">로그아웃</button></li>
+                    <li v-for="data, i in menuList.title.length" :key="i">
+                        <router-link :to="menuList.urlLink[i]">
+                            <button type="button" class="menu-button">{{menuList.title[i]}}</button>
+                        </router-link>
+                    </li>
+                    <li><button type="button" class="menu-button" @click="logout()">로그아웃</button></li>
                 </ul>
             </fieldset>
         </div>
@@ -62,6 +59,12 @@ export default {
             pachiPoint: 0,
             pachiCount: 0,
             user: JSON.parse(localStorage.getItem("user")),
+            checkButtonClass: ['fpmgBt2', 'fpmgBt2', 'fpmgBt1', 'fpmgBt1'],
+            menuList: {
+                title: ['경매 내역', '찜한목록', '이용후기', '고객센터', '개인정보 수정'],
+                urlLink: ['/farm_mypage_auction', '/farm_mypage_keep', '/farm_mypage_get_review',
+                            '/ServiceCenter', '/consumer_profile']
+            }
         }
     },
     methods: {
@@ -135,7 +138,17 @@ img{
         }
     }
 }
-.fpmgBt1{
+.fpmgBt1, .fpmgBt2{
+    width: 100%;
+    height: 50px;
+    font-size: 17px;
+    text-align: center;
+    padding-top: 15px;
+    color: #333;
+    font-weight: 600;
+    box-sizing: border-box;
+}
+.menu-button{
     width: 100%;
     height: 45px;
     font-size: 17px;

@@ -17,7 +17,6 @@
 
         <fieldset class="reg-contain">
             <table class="table-100 table-contain">
-
                 <tbody>
                     <tr>
                         <td class="table-100-tyfk">경매명</td>
@@ -57,13 +56,13 @@
                     </tr>
                     <tr>
                         <td class="table-100-tyfk">낙과 일자</td>
-                        <td class="table-100-1pky" colspan="3" v-if="isAuctionRegistPage"><input type="datetime-local" v-model="p_drop_date"></td>
+                        <td class="table-100-1pky" colspan="3" v-if="isAuctionRegistPage"><input type="datetime-local" v-model="p_drop_date"/></td>
                         <td class="table-100-0pky" colspan="3" v-if="!isAuctionRegistPage"><p id="td_input_text" type="text" name="text"
                             size="20" style="width:100%;">{{auction.productDTO.p_drop_date.slice(0, 16)}}</p></td>
                     </tr>
                     <tr>
                         <td class="table-100-tyfk">마감일</td>
-                        <td class="table-100-1pky" colspan="3" v-if="isAuctionRegistPage"><input type="datetime-local" v-model="deadline_date"></td>
+                        <td class="table-100-1pky" colspan="3" v-if="isAuctionRegistPage"><input type="datetime-local" v-model="deadline_date"/></td>
                         <td class="table-100-0pky" colspan="3" v-if="!isAuctionRegistPage"><p id="td_input_text" type="text" name="text"
                             size="20" style="width:100%;">{{auction.deadline_date.slice(0, 16)}}</p></td>
                     </tr>
@@ -312,6 +311,16 @@
 </script>
 
 <style lang="scss" scoped>
+input[type="datetime-local"]
+{
+    display:block;
+     -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    min-height: 1.2em; 
+  
+    /* Solution 2 */
+    min-width: 96%;
+}
 .reg-contain{
     padding: 10px;
 }

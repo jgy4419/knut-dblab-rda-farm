@@ -241,4 +241,12 @@ export default {
         overflow-y: scroll;
     }
 }
+.aution_button{
+    width: 400px;
+}
+@media screen and (max-width: 500px){
+    .aution_button{
+        width: 100%;
+    }   
+}
 </style>

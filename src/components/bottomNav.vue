@@ -4,11 +4,6 @@
         <span class="icon-text">{{button.text[i]}}</span>
         <v-icon class="icon">{{button.icon[i]}}</v-icon>
     </v-btn>
-    <!-- <v-btn to="/trand">
-        <span>Trand</span>
-
-        <v-icon>mdi-chart-box-outline</v-icon>
-    </v-btn> -->
 
     <v-btn v-on:click="navigatedivision()" class="button">
         <span class="icon-text">My Page</span>
