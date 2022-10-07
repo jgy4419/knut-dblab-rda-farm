@@ -11,9 +11,11 @@
         </header>
         <div class="inner">
             <Spinner v-if="spinnerState === true"/>
-            <ReviewList v-for="data, i in infiniteScrollValue" :key="i" class="reviewList"
-            :getData="getData"
-            :reviewZeroState="reviewZeroState"/>
+            <div :key="listState" @click="listStateFunc()">
+                <ReviewList class="reviewList"
+                :getData="getData"
+                :reviewZeroState="reviewZeroState"/>
+            </div>
         </div>
     </div>
     <Bottom/>
@@ -43,11 +45,11 @@ export default {
             getData: [],
             user: JSON.parse(localStorage.getItem("user")),
             reviewZeroState: 0,
+            listState: 0,
         }
     },
     mounted(){
         this.getReviewData();
-
         window.addEventListener('scroll', _.throttle(() => {
             this.infiniteScroll()
         }, 300));
@@ -66,6 +68,7 @@ export default {
                 if(res.data.length === 0){
                     this.reviewZeroState = 1;
                 }
+                this.listStateFunc();
                 console.log(res);
                 console.log(this.getData.flat(Infinity));
             }).catch(err => {
@@ -88,6 +91,10 @@ export default {
             }
             console.log(innerHeight);
         },
+        listStateFunc(){
+            this.listState === 0 ? this.listState = 1 : this.listState = 0;
+            console.log(this.listState);
+        }
     }
 }
 </script>

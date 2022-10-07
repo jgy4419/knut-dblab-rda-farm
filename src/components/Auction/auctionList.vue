@@ -36,9 +36,12 @@
                               </div>
                               <div class="seller_item">
                                   <div class="inner">
-                                      <span class="seller">{{auction.f_farm_name}}</span>
+                                    <span :class="className[i]"
+                                    v-for="data, i in [auction.f_farm_name, `Tel : 0${auction.f_phonenum.toString().replace(/[^0-9]/g, ``).replace(/(^02|^0505|^1[0-9]{1}|^0[0-9]{4})([0-9]+)?([0-9]{4})$/,`$1-$2-$3`).replace(`--`, `-`)}`, auction.productDTO.p_reg_date]" :key="i">
+                                    {{data}}</span>
+                                      <!-- <span class="seller">{{auction.f_farm_name}}</span>
                                       <span class="tel">Tel : 0{{auction.f_phonenum.toString().replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{1}|^0[0-9]{4})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-")}}</span>
-                                      <span class="date">{{auction.productDTO.p_reg_date}}</span>
+                                      <span class="date">{{auction.productDTO.p_reg_date}}</span> -->
                                       <br/>
                                       <b v-if="auction.isMyConsumerAuction" class="bid-price">입찰했습니다.</b>
                                       <!-- <b v-if="bidPrice[i] === 1" class="bid-price">입찰했습니다.</b> -->
@@ -78,6 +81,7 @@ export default{
         // infiniteId: +new Date(),
         now: 0,
         bidPrice: [],
+        className: ['seller', 'tel', 'date'],
       }
   },
   mounted () {

@@ -1,5 +1,6 @@
 <template>
     <div class="contain">
+        <Spinner v-if="spinnerState === 1"/>
         <BackHeader :headerProps="headerProps"/>
         <div class="reviewInformation">
             <img class="review-image" :src="`/product_images/${getData.product_img_name}.png`" alt="리뷰할 사진">
@@ -40,8 +41,10 @@
 <script>
 import axios from 'axios';
 import BackHeader from '../../components/Header/backHeader.vue';
+import Spinner from '../../components/spinner.vue';
 export default {
     components: {
+        Spinner,
         BackHeader
     },
     data(){
@@ -65,13 +68,9 @@ export default {
             user: JSON.parse(localStorage.getItem("user")),
             editState: 0, // 리뷰 수정 페이지인지 작성 페이지인지 구별하기
             editData: {},
+            spinnerState: 0,
         }
     },
-            //     <!-- <div class="reviewBtns">
-            //     <button class="reviewBtn" @click="reviewBtnActivate" v-for="review, i in reviewButton" :key="i">
-            //         {{review}}
-            //     </button>
-            // </div> -->
     mounted(){
         // url에 edit이 포함되어 있으면 수정페이지로 감지하기
         if(this.$route.fullPath.includes('edit')){
@@ -125,6 +124,7 @@ export default {
             imgData 
         */
         reqDatas(){ 
+            this.spinnerState = 1;
             // 이미지 2, 3개 들어왔을 때는 자를 수 있게
             // 리뷰 등록 요청 시 JSON 데이터에 "checkUser: consumer or farm" 추가해주기
             console.log(this.getData.farm_id);
@@ -148,6 +148,7 @@ export default {
                 }})
                 .then(res => {                
                     this.$router.push('/consumer_mypage');
+                    this.spinnerState = 0;
                 }).catch(err => {
                     console.log(err); 
                     // if(res.headers.token != "token"){     
@@ -165,6 +166,7 @@ export default {
                         'Content-Type': 'multipart/form-data'
                 }})
                 .then(res => {
+                    this.spinnerState = 0;
                     alert('수정이 완료되었습니다.');
                     this.$router.push('/consumer_mypage');
                 }).catch(err => {

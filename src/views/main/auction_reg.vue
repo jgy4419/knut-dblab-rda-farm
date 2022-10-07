@@ -14,7 +14,7 @@
             </div>
             <!-- <Slide/> -->
         </div>
-
+        <Spinner v-if="spinnerState === 1"/>
         <fieldset class="reg-contain">
             <table class="table-100 table-contain">
                 <tbody>
@@ -118,11 +118,13 @@
     import axios from "axios"
     import Header from '../../components/Header/bellAndBackHeader.vue';
     import Slide from '../../components/slide.vue';
+    import Spinner from '@/components/spinner.vue';
 
     export default {
         components: {
             Header,
-            Slide
+            Slide,
+            Spinner
         },
         name: 'submitProduct',
         data() {
@@ -153,6 +155,7 @@
                 auctionRegistText: "경매 등록하시겠습까?\n주의사항: 경매 삭제는 마감시간 기준 4시간 이전 경매만 가능합니다.",
                 productUpdateText: "상품 내용을 수정하시겠습까?",
                 FIVE_MINUTE: 1000 * 60 * 5,                // millisecond 단위
+                spinnerState: 0,
             };
         },
         mounted(){
@@ -192,6 +195,7 @@
             //     console.log('test', this.product_img_files.files);
             // },
             submitAuction() {
+                this.spinnerState = 1;
                 let frm = new FormData();
                 console.log(this.isAuctionRegistPage);
                 // 글 수정
@@ -202,7 +206,6 @@
                     }
                     if(!confirm(this.productUpdateText)) return;
                     console.log(this.product_img_files.files);
-                    // for(let imageFile of this.product_img_files.files) frm.append("product_img_files", imageFile);
                     for(let i = 0; i < this.product_img_files.length; i++){
                         frm.append('product_img_files', this.product_img_files[i]);
                     }
@@ -210,15 +213,18 @@
                     frm.append('product_img_name', this.auction.productDTO.product_img_name);
                     frm.append('p_explanation', this.auction.productDTO.p_explanation);
 
+                    for(let data of frm) console.log(data);
+
                     axios.patch('/api/product', frm, {
                         headers: {
                             TOKEN: this.user.token,
                             'Content-Type': 'multipart/form-data'
                         }
                     }).then(res => {
+                        this.spinnerState = 0;
                         console.log(res.data);
                         alert('수정 완료!');
-                        this.$router.push('/auction');
+                        // this.$router.push('/auction');
                     })
                     .catch(err => {
                         console.log(err); 
@@ -289,11 +295,12 @@
                         TOKEN: this.user.token,
                         'Content-Type': 'multipart/form-data'
                     }
-                }).then(res => {
+                }).then(() => {
                     // if(res.headers.token != "token"){           
                     //     this.$store.commit('LOGOUT');
                     //     this.$router.push('/login');
                     // }
+                    this.spinnerState = 0;
                     alert('등록 완료!');
                     this.$router.push('/auction');
                 })

@@ -5,21 +5,6 @@ const routes = [
     path: '/',
     redirect : localStorage.getItem('user') ? '/main' : '/login',
   },
-  {
-    path: '/test',
-    name: 'test',
-    component: () => import('../views/test.vue')
-  },
-  {
-    path: '/test1',
-    name: 'test1',
-    component: () => import('../views/test1.vue')
-  },
-  // {
-  //   path: '*',
-  //   redirect : '/login',
-  //   component: () => import('../views/NotfoundPage.vue')
-  // },
 
   // 로그인 회원가입
   {
@@ -171,11 +156,6 @@ const routes = [
     name: 'farm_mypage_get_review',
     // component: () => import('../views/myPage/farm_mypage_get_review.vue')
     component: () => import('../views/review/review.vue')
-  },
-  {
-    path: '/farm_mypage_post_review',
-    name: 'farm_mypage_post_review',
-    component: () => import('../views/myPage/farm_mypage_post_review.vue')
   },
   {
     path: '/farm_mypage_keep',

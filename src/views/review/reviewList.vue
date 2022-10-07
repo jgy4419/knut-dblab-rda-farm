@@ -2,30 +2,30 @@
     <div class="reviewListContain">
         <ReviewDetail v-if="reviewModalState === 1"
         @closeModal="reviewModalState = 0"
-        :clickedData="getData[0][clickedData]"
+        :clickedData="reloadData[clickedData]"
         :reviewModalState="reviewModalState"/>
         <infinite-loading @infinite="infineteHandler"></infinite-loading>
         <!-- // -->
         <div class="reviews" >
             <h2 class="zero-review-text" v-if="reviewZeroState === 1">리뷰가 없습니다.</h2>
-            <div class="review" v-for="reviewCount, i in getData.flat(Infinity).length" :key="i">
-                <img @click="reviewModalState = 1, clickedData = i" :src="!getData[0][i].review_img_name ? '/member_profile_images/base_image.png' : `/auciton_review_images/${getData[0][i].review_img_name}.png`" 
+            <div class="review" v-for="reviewCount, i in reloadData.length" :key="i">
+                <img @click="reviewModalState = 1, clickedData = i" :src="!reloadData[i].review_img_name ? '/member_profile_images/base_image.png' : `/auciton_review_images/${reloadData[i].review_img_name}.png`" 
                 alt="상품 이미지" width="50" height="50"/>
                 <div class="reviewContent"  @click="reviewModalState = 1, clickedData = i">
-                    <p class="reviewTitle">{{userState === 0 ? getData[0][i].f_name : getData[0][i].c_name}}</p>
-                    <p class="reviewTitle">{{getData[0][i].auction_name}}</p>
+                    <p class="reviewTitle">{{userState === 0 ? reloadData[i].f_farm_name : reloadData[i].c_name}}</p>
+                    <p class="reviewTitle">{{reloadData[i].auction_name}}</p>
                     <div class="stars">
                         <!-- testData.star[i] -->
-                        <i v-for="star, j in getData[0][i].grade_point" :key="j" class="fa fa-star reviewStar"/>
+                        <i v-for="star, j in reloadData[i].grade_point" :key="j" class="fa fa-star reviewStar"/>
                     </div>
                 </div>
                 <div class="rightInfo">
                     <!-- 리뷰가 달려있을 때 작성가능 -->
                     <div class="button-contain">
-                        <button v-if="userState === 0 && getData[0][i].consumer_review" @click="$store.commit('GET_REVIEW_DATA', getData[0][i]), $router.push(`/farm_mypage_auction/writeReview/edit/${getData[0][i].auction_Id}`)" class="write-button">
+                        <button v-if="userState === 0 && reloadData[i].consumer_review" @click="$store.commit('GET_REVIEW_DATA', reloadData[i]), $router.push(`/farm_mypage_auction/writeReview/edit/${reloadData[i].auction_Id}`)" class="write-button">
                             수정하기
                         </button>
-                        <button v-if="userState === 0 && getData[0][i].consumer_review" @click="deleteReview(getData[0][i].auction_Id, getData[0][i].consumer_id, getData[0][i].review_img_name)" class="delete-button">
+                        <button v-if="userState === 0 && reloadData[i].consumer_review" @click="deleteReview(getData[0][i].auction_Id, reloadData[i].consumer_id, reloadData[i].review_img_name)" class="delete-button">
                             삭제하기
                         </button>
                     </div>
@@ -47,6 +47,7 @@ export default {
             reviewModalState: 0,
             userState: 0,
             user: JSON.parse(localStorage.getItem('user')),
+            reloadData: [],
         }
     },
     props: {
@@ -58,7 +59,18 @@ export default {
     },
     mounted(){
         console.log( localStorage.getItem('checkUser'));
-        console.log(this.getData.length);
+        // setTimeout(() => {
+            if(this.getData.length !== 0){
+                console.log(this.getData);
+                for(let i = 0; i < this.getData[0].length; i++){
+                    this.reloadData.push(this.getData[0][i]);
+                }
+                console.log(this.reloadData);
+
+            }
+            // console.log(this.getData);
+        // }, 1000);
+        // console.log(this.getData[0]);
         // setTimeout(() => {
         //     if(this.getData.length === 0){
         //         alert('리뷰가 없습니다');

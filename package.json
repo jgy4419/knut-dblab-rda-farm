@@ -23,6 +23,7 @@
     "vue": "^3.2.33",
     "vue-router": "^4.0.3",
     "vue-sse": "^2.5.2",
+    "vue3-dropzone": "^2.0.1",
     "vue3-storage": "^0.1.11",
     "vue3-table-lite": "^1.2.0",
     "vuetify": "npm:@vuetify/nightly@next",

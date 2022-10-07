@@ -5,10 +5,6 @@
             <p class="welcome-header__text1">{{$route.path === '/login/searchId' ? '아이디 찾기' : '비밀번호 찾기'}}</p>
             <!-- {{this.$store.state.test.id}} -->
         </header>
-        <!-- @ 는 v-on 과 같은 표현식이다. 폼 내부에서 버튼을 누르면 submit 이벤트가 form 으로 전송되고 v-on:submit이 실행된다.
-		이때 페이지가 새로고침되므로 .prevent를 통해 새로고침을 막고 methods의 함수롤 호출하게 한다. -->
-
-
         <v-form class="form-contain" ref="form" v-model="valid" lazy-validation @submit.prevent="submitForm">
             <div class="login_keep_wrap" id="login_keep_wrap">
                 <div class="keep_check">

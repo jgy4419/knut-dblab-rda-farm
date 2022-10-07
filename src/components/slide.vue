@@ -112,6 +112,7 @@ export default {
 }
 
 .swiper-slide  img {
+  border-radius: 10px;
   display: block;
   // width: 100%;
   height: 100%;

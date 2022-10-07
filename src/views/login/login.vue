@@ -18,10 +18,6 @@
 
             <div class="login_keep_wrap" id="login_keep_wrap">
                 <div class="keep_check">
-                    <!-- <input type="checkbox" id="keep" name="nvlong" class="input_keep" value="on">
-                    <label for="keep" class="keep_text">로그인 상태 유지</label>
-                    <br>
-                    <br> -->
                     <div>
                         <input type="radio" id="consumer" value="consumer" v-model="checkUser">
                         <label id="consumer-text" for="consumer">소비자</label>

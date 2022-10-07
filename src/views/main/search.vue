@@ -11,7 +11,6 @@
             <fieldset class="recentSearchBox">
                 <h2 class="profileh2">최근 검색어</h2>
                 <div class="main_div-1">
-                    
                     <div v-for="(keyword, index) in this.$store.state.keywordList" :key="index" >
                         <span class="btn_file">
                             <label for="inputImage" class=""><b id="btnChangeProfile" class="popularityList" @click="searchAuction(keyword)"><em>{{index + 1}}.</em> {{keyword}}</b></label>
@@ -43,10 +42,10 @@
                     <div class="goods_pay_section ">
                         <div class="goods_group">
                             <ul ref="items" class="goods_group_list">
-                                <li v-for="(auction, index) in this.$store.state.searchAuctionList" :key="auction.auction_Id"
+                                <li v-for="(auction) in this.$store.state.searchAuctionList" :key="auction.auction_Id"
                                     id="_rowLi20220203162708CHK2022020394386781"
                                     class="goods_pay_item _interlockNo20220211200904406814">
-                                    <div @click="navigateProduct(auction.auction_Id, index)" class="goods_item">
+                                    <div @click="navigateProduct(auction)" class="goods_item">
                                     <!-- a 태그 -> router 태그 -->
                                         <p class="goods_thumb">
                                             <img :src='`/product_images/${auction.productDTO.product_img_name}.png`'
@@ -73,7 +72,6 @@
                                     </div>
                                     <div class="seller_item">
                                         <div class="inner">
-
                                             <span class="seller">{{auction.f_farm_name}}</span>
                                             <span class="tel">0{{auction.f_phonenum.toString().replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{1}|^0[0-9]{4})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-")}}</span>
                                             <li class="date"><span class="blind">등록일</span> {{auction.productDTO.p_reg_date}}</li>
@@ -260,9 +258,11 @@ export default {
             //     this.$router.push('/login');
         })
     },
-    navigateProduct (auction_Id, index) {
-
-      this.$router.push({name:'auction_detail', params: { id: auction_Id, index: index }});
+    navigateProduct (auction) {
+        this.auction = auction;
+        console.log(this.auction);
+        localStorage.setItem('auction', JSON.stringify(this.auction));
+        this.$router.push(`/auction_detail/${auction.auction_Id}`);
     }
   }
 };
