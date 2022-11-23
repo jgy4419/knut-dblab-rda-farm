@@ -1,6 +1,6 @@
 <p float='left' align="center"><img src="https://user-images.githubusercontent.com/76980526/203225675-d4840962-6c2a-4031-853a-7e1bc31fa998.PNG" width="40%" height="30%"></p>
 
-# 낙과 경매 플랫폼
+# 농진청 과제 | 낙과 경매 플랫폼 프로젝트
 ## 개발 참여자
 FRONT-END | 정규영, 박세승, 이원범
 - UI 설계 및 구현 : 정규영, 이원범, 박세승
@@ -95,3 +95,8 @@ GIT | https://github.com/knut-dblab-rda-farm/
     <img width="150" alt="image" src="https://user-images.githubusercontent.com/76980526/203466210-a902bffe-ab8b-4ed2-8663-759c8032422b.PNG">
     <img width="150" alt="image" src="https://user-images.githubusercontent.com/76980526/203466282-026c136e-6198-49f0-947a-780ac703bfe7.PNG">
 </p>
+
+## 느낀 점
+> 처음으로 실제 사용자들이 사용해본 프로젝트였습니다. 농부들이 직접 사용하는 프로젝트라 평균 연령대를 생각하며 UX 적으로 연세가 있으신 분들, 젊은 사람들 모두 고려하면서 최대한 사용하기 쉽도록 구현하는데 노력했습니다.
+
+> 저는 프로젝트 중간에 투입되어서 작업을 했었습니다. 그래서 기존에 있던 전체적인 코드의 흐름을 이해하는 작업도 필요했고, 기존 코드에서 변경 필요성이 있는 코드들은 수정하고 프로젝트를 이어서 진행함으로써 마무리하는 것이 많은 도움이 되었던 것 같습니다. 
