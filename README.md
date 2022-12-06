@@ -18,7 +18,7 @@ GIT | https://github.com/knut-dblab-rda-farm/
 주소 | https://118.67.134.38:80/
 
 #### NET::ERR_CERT_INVALID 우회 접속하기
-> 마우스 아무 곳이나 클릭 후 `thisisunsage` 입력.
+> 마우스 아무 곳이나 클릭 후 `thisisunsafe` 입력.
 
 ## 진행 기간
 > 2022년 3월 2일 -> 2022년 9월 30일
